@@ -1,0 +1,114 @@
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">var sfLang = "sv";</script>
+<script src="http://julius.hj.se/searchfeature/universalsearch/assets/js/infield.label.jquery.js" type="text/javascript"></script>
+<script src="http://julius.hj.se/searchfeature/universalsearch/assets/js/sitevision.search.js" type="text/javascript"></script>
+<link rel="stylesheet" media="screen" href="http://julius.hj.se/searchfeature/universalsearch/assets/css/style.css" />
+<style>#search-feature-outer-wrapper{ height:auto; }</style><!-- QUICK FIX DURING TEST -->
+<style>.sv-randomimage-portlet img{ display:block; }</style>
+<!--[if lte IE 8]>
+<style type="text/css">
+#search-feature-wrapper .searchfield {line-height:44px;}
+</style>
+<![endif]-->
+<div id="search-feature-outer-wrapper">
+	<div id="search-feature-inner-wrapper">
+		<div id="search-function-wrapper">
+			<div id="sf-options-popout" class="popout above">
+				<ul>
+					<li class="options-main" data-service="sf-primo-all"><a href="#all">Allt: böcker, artiklar, rapporter m.m. (Primo)<span>Allt: böcker, artiklar, rapporter m.m. (Primo)</span></a></li>
+					<li class="options-sub" data-service="sf-primo-books"><a href="#books">- böcker</a></li>
+					<li class="options-sub" data-service="sf-primo-articles"><a href="#articles">- artiklar</a></li>
+					<li class="options-main" data-service="sf-journals"><a href="#journals">Tidskrifter</a></li>
+					<li class="options-main" data-service="sf-databases"><a href="#databases">Databaser</a></li>
+					<li class="options-remember-choice"><label><input id="sf-remember-choice" type="checkbox" /> Kom ihåg mitt val</label></li>
+				</ul>
+			</div>
+			<div id="sf-options-desktop" class="sf-options">
+				<span class="sf-options-display" data-service="sf-primo-all">Allt</span>
+				<span class="sf-options-display" data-service="sf-primo-books">Böcker</span>
+				<span class="sf-options-display" data-service="sf-primo-articles">Artiklar</span>
+				<span class="sf-options-display" data-service="sf-journals">Tidskrifter</span>
+				<span class="sf-options-display" data-service="sf-databases">Databaser</span>
+			</div>
+			<div id="sf-options-mobile" class="sf-options">
+				<select class="view-mobile">
+					<option data-service="sf-primo-all">Allt: böcker, artiklar, rapporter m.m. (Primo)</option>
+					<option data-service="sf-primo-books"> - böcker</option>
+					<option data-service="sf-primo-articles"> - artiklar</option>
+					<option data-service="sf-journals">Tidskrifter</option>
+					<option data-service="sf-databases">Databaser</option>
+				</select>
+			</div>
+			<div id="sf-primo-all" class="sf-searcharea">
+				<form name="form-primo" action="http://julius.hj.se/searchfeature/search-forward.php" data-searchtype="Primo">
+					<input type="hidden" name="lang" value="sv_SE" />
+					<input type="hidden" name="scope" value="all" />
+                    <input type="text" id="searchfield-primo" class="searchfield" placeholder="Sök i Primo - böcker, artiklar, rapporter m.m" name="query" autocomplete="off" />
+					<button type="submit" name="submit-primo">Sök</button>
+				</form>
+			</div>
+			<div id="sf-primo-books" class="sf-searcharea">
+				<form name="form-primo" action="http://julius.hj.se/searchfeature/search-forward.php" data-searchtype="Primo">
+					<input type="hidden" name="lang" value="sv_SE" />
+					<input type="hidden" name="scope" value="books" />
+                    <input type="text" id="searchfield-primo-books" class="searchfield" placeholder="Sök i Primo - böcker" name="query" autocomplete="off" />
+					<button type="submit" name="submit-primo">Sök</button>
+				</form>
+			</div>
+			<div id="sf-primo-articles" class="sf-searcharea">
+				<form name="form-primo" action="http://julius.hj.se/searchfeature/search-forward.php" data-searchtype="Primo">
+					<input type="hidden" name="lang" value="sv_SE" />
+					<input type="hidden" name="scope" value="articles" />
+					<input type="text" id="searchfield-primo-articles" class="searchfield" placeholder="Sök i Primo - artiklar" name="query" autocomplete="off" />
+					<button type="submit" name="submit-primo">Sök</button>
+				</form>
+			</div>
+			<div id="sf-journals" class="sf-searcharea">
+				<form id="form-journals" name="form-journals" action="http://julius.hj.se/searchfeature/search-forward.php" data-searchtype="Journals">
+					<input type="hidden" name="lang" value="swe" />
+					<input type="hidden" name="scope" value="journals" />
+                    <input type="text" id="searchfield-journals" class="searchfield" placeholder="Sök tidskrift" name="query" autocomplete="off" />
+					<button type="submit" name="submit-journals">Sök</button>
+				</form>
+			</div>
+			<div id="sf-databases" class="sf-searcharea">
+				<form id="form-databases" name="form-databases" action="http://julius.hj.se/searchfeature/search-forward.php" data-searchtype="Databases">
+					<input type="hidden" name="lang" value="se" />
+					<input type="hidden" name="scope" value="databases" />
+                    <input type="text" id="searchfield-databases" class="searchfield" placeholder="Sök databas" name="query" autocomplete="off" />
+					<button type="submit" name="submit-databases">Sök</button>
+				</form>
+			</div>
+			<div id="autocomplete-wrapper">
+				<div id="autocomplete-db" class="autocomplete"></div>
+				<div id="autocomplete-jrnl" class="autocomplete"></div>
+			</div>
+		</div>
+		<ul id="shortcuts">
+			<li class="sc-subject-guides">       
+                <a href="http://hj.se/bibl/sok---skrivhjalp/amnesguider.html">
+                    <img class="sc-icon" src="http://julius.hj.se/searchfeature/universalsearch/assets/img/subjects.png" alt="">
+                    <p>Ämnesguider</p>
+                </a> 
+            </li>
+			<li class="sc-databases">       
+                <a href="http://login.bibl.proxy.hj.se/login?url=http://julius.hj.se/dblist/index.php?lang=sv">
+                    <img class="sc-icon" src="http://julius.hj.se/searchfeature/universalsearch/assets/img/databases.png" alt="">
+                    <p>Databaser A-Ö</p>
+                </a> 
+            </li>
+			<li class="sc-journals">       
+                <a href="http://login.bibl.proxy.hj.se/login?url=http://sfxeu10.hosted.exlibrisgroup.com/sfxjon/az/JON?lang=swe">
+                    <img class="sc-icon" src="http://julius.hj.se/searchfeature/universalsearch/assets/img/journals.png" alt="">
+                    <p>Tidskrifter A-Ö</p>
+                </a> 
+            </li>
+			<li class="sc-my-pages">       
+                <a href="http://julius.hj.se/primoforward/index.php?lang=sv_SE">
+                    <img class="sc-icon" src="http://julius.hj.se/searchfeature/universalsearch/assets/img/my-pages.png" alt="">
+                    <p>Mina sidor</p>
+                </a> 
+            </li>
+		</ul>
+	</div>
+</div>
