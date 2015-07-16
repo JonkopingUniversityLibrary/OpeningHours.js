@@ -1,0 +1,39 @@
+/* WEB INTERFACE
+---------------
+Theme used for the web version of the widget
+--------------- */
+
+.oh-web.oh-opening-hours {
+    .oh-todays-hours {
+        margin: 0 0 20px 0;
+    }
+    .oh-days {
+        display: table;
+        padding: 15px 20px;
+        background: #f0f2f6;
+        color: $blue;
+        font-size: 17px;
+        line-height: 0.5;
+        .oh-day {
+            display: table-row;
+            //background: #f7f7f7;
+            .oh-day-label {
+                display: table-cell;
+                padding: 10px 0;
+                text-align: right;
+            }
+            .oh-day-hours {
+                display: table-cell;
+                padding: 10px 0 10px 20px;
+                
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+
+.oh-opening, .oh-closing {
+    padding: 0 3px;
+    border-radius: 5px;
+}

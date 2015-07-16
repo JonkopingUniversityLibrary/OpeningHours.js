@@ -1,0 +1,11 @@
+/* RESET
+---------------
+Reset certain default browsaer styling
+--------------- */
+
+ul {
+    // Reset for lists in webkit browsers
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-padding-start: 0;
+}

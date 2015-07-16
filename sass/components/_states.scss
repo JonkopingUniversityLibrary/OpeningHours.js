@@ -1,0 +1,31 @@
+/* STATES
+---------------
+Styling for the various data states
+--------------- */
+
+[data-state="open"] {
+    color: $green;
+}
+
+[data-state="closed"] {
+    color: $red;
+}
+
+[current-day] {
+    font-weight: 700;
+    
+    [data-state="open"] {
+        .oh-opening, .oh-closing {
+            background: $green;
+            color: white;
+        }
+    }
+
+    [data-state="closed"] {
+        .oh-opening, .oh-closing {
+            background: $red;
+            color: white;
+        }
+    }
+    
+}

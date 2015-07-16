@@ -1,0 +1,147 @@
+{
+  "timeZone": "+0200",
+  "weeks": {
+    "29": [
+      {
+        "status": "open",
+        "day": "Monday",
+        "date": "2015-07-13",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Tuesday",
+        "date": "2015-07-14",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Wednesday",
+        "date": "2015-07-15",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Thursday",
+        "date": "2015-07-16",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Friday",
+        "date": "2015-07-17",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "closed",
+        "day": "Saturday",
+        "date": "2015-07-18"
+      },
+      {
+        "status": "closed",
+        "day": "Sunday",
+        "date": "2015-07-19",
+        "note": "Test"
+      }
+    ],
+    "30": [
+      {
+        "status": "open",
+        "day": "Monday",
+        "date": "2015-07-20",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Tuesday",
+        "date": "2015-07-21",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Wednesday",
+        "date": "2015-07-22",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Thursday",
+        "date": "2015-07-23",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Friday",
+        "date": "2015-07-24",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "closed",
+        "day": "Saturday",
+        "date": "2015-07-25"
+      },
+      {
+        "status": "closed",
+        "day": "Sunday",
+        "date": "2015-07-26"
+      }
+    ],
+    "31": [
+      {
+        "status": "open",
+        "day": "Monday",
+        "date": "2015-07-27",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Tuesday",
+        "date": "2015-07-28",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Wednesday",
+        "date": "2015-07-29",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Thursday",
+        "date": "2015-07-30",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "open",
+        "day": "Friday",
+        "date": "2015-07-31",
+        "openingTime": "10:00",
+        "closingTime": "16:00"
+      },
+      {
+        "status": "closed",
+        "day": "Saturday",
+        "date": "2015-08-01"
+      },
+      {
+        "status": "closed",
+        "day": "Sunday",
+        "date": "2015-08-02"
+      }
+    ]
+  }
+}
