@@ -26,7 +26,7 @@ function currentlyOpen(){
 
 
 /**
- *  Returns the current opening hours
+ *  Returns opening hours a specified amount of weeks forward
  *  @param {Number} weeks 
  */
 function openingHours(weeks){
@@ -77,10 +77,15 @@ function openingHours(weeks){
         }
     });
     
-    // Translate from number (Array 0-6) to the weekday.
-    function getWeekDay(weekNumber){
+    // 
+    /**
+     *  Translate from number (Array 0-6) to the weekday.
+     *  @param {Number} number of the day of the week
+     *  @return {String} weekday
+     */
+    function getWeekDay(weekDayNumber){
         var day;
-        switch (weekNumber) {
+        switch (weekDayNumber) {
             case 0:
                 day = "Monday";
                 break;
