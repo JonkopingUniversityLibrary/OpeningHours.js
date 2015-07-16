@@ -1,19 +1,45 @@
-/* jshint browser: true */
-/* global jQuery, $, console, moment*/
+/**
+ * @fileOverview
+ * @name openingHours
+ * @author Gustav Lindqvist gustav.lindqvist@ju.se
+ *
+ * jshint browser: true
+ * global jQuery, $, console, moment
+ */
 
-function openingHours(weeks){
-    console.log("STEP 1: Getting data from API");
+
+/**
+ *  Checks if the library is currently opened.
+ *  @return {Boolean} status
+ */
+function currentlyOpen(){
     var ajax;
+    $.ajax({
+        url: "https://api3.libcal.com/api_hours_today.php?iid=3237&lid=0&format=json&callback=response",
+        jsonpCallback: "response",
+        dataType: "jsonp",
+    }).then(function(content){
+        console.log(content.locations[0].times.currently_open);
+        return content.locations[0].times.currently_open;
+    });
+}
+
+
+/**
+ *  Returns the current opening hours
+ *  @param {Number} weeks 
+ */
+function openingHours(weeks){
+    // Grab data from the API with JSONP
     $.ajax({
         url: "https://api3.libcal.com/api_hours_grid.php?iid=3237&format=json&weeks="+weeks+"&callback=response",
         jsonpCallback: "response",
         dataType: "jsonp",
+    
+    // When data is grabbed from API, format it into our own JSON-format
     }).then(function(content){
         var data = content.locations[0].weeks;
-        console.log(data);
-        console.log("STEP 2: Starting formatting");
-        var response = {};    
-        response.timeZone = "+0200";
+        var response = {};
 
         // Loop through all the weeks.
         response.weeks = {};
@@ -24,30 +50,34 @@ function openingHours(weeks){
 
             // Create a moment object of the date of the day.
             momentObject = moment(data[i].Monday.date, "YYYY-MM-DD");
-            var weekNumber = momentObject.format("W");
-            console.log("-------------------------------------\nSTEP 2: Formatting week "+weekNumber+" ("+i+")");
-            var weekDay;
+            var weekNumber = momentObject.format("W"),
+                weekDay;
             response.weeks[weekNumber] = [];
+            
+            // Loop through the days of the week
             for(var d = 0; d < 7; d++){
                 weekDay = getWeekDay(d);
-                console.log("STEP 2: Formatting week "+weekNumber+": "+weekDay+" ("+d+")");
                 response.weeks[weekNumber][d] = {};
                 response.weeks[weekNumber][d].status = data[i][weekDay].times.status;
                 response.weeks[weekNumber][d].day = weekDay;
                 response.weeks[weekNumber][d].date = data[i][weekDay].date;
+                
+                // If it's open, write out the times it is open.
                 if(data[i][weekDay].times.status == "open"){
                     momentObjectOpening = moment(data[i][weekDay].times.hours[0].from, "ha");
                     momentObjectClosing = moment(data[i][weekDay].times.hours[0].to, "ha");
                     response.weeks[weekNumber][d].openingTime = momentObjectOpening.format("HH:mm");
                     response.weeks[weekNumber][d].closingTime = momentObjectClosing.format("HH:mm");
+                    
+                // If it's closed, see if there is a note on why it's closed.
                 } else if (response.weeks[weekNumber][d].status == "closed" && typeof data[i][weekDay].times.note != 'undefined') {
                     response.weeks[weekNumber][d].note = data[i][weekDay].times.note;
                 }
             }
         }
-        console.log("STEP 2: Formatting complete");
-        console.log(JSON.stringify(response));
     });
+    
+    // Translate from number (Array 0-6) to the weekday.
     function getWeekDay(weekNumber){
         var day;
         switch (weekNumber) {
@@ -76,8 +106,3 @@ function openingHours(weeks){
         return day;
     }
 }
-
-
-/*if(typeof theObject.key != 'undefined'){
-    //object exists, do stuff
-}*/
