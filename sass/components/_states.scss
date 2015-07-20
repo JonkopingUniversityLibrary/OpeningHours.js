@@ -4,28 +4,31 @@ Styling for the various data states
 --------------- */
 
 [data-state="open"] {
-    color: $green;
+    //color: $blue;
 }
 
 [data-state="closed"] {
-    color: $red;
+    //color: $blue;
 }
 
 [current-day] {
     font-weight: 700;
     
-    [data-state="open"] {
+    /*[data-state="open"] {
         .oh-opening, .oh-closing {
-            background: $green;
+            background: $blue;
             color: white;
         }
     }
 
     [data-state="closed"] {
         .oh-opening, .oh-closing {
-            background: $red;
+            background: $blue;
             color: white;
         }
+    }*/
+    .oh-days-hours {
+        font-weight: 900;
     }
     
 }

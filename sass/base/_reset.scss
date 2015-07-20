@@ -3,9 +3,11 @@
 Reset certain default browsaer styling
 --------------- */
 
-ul {
+ul, ol {
     // Reset for lists in webkit browsers
     -webkit-margin-before: 0;
     -webkit-margin-after: 0;
     -webkit-padding-start: 0;
+    margin: 0;
+    padding: 0;
 }

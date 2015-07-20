@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="http://julius.hj.se/openinghours/assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="assets/js/openingHours.js"></script>
   <title>Opening Hours</title>
