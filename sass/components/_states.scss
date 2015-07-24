@@ -10,25 +10,3 @@ Styling for the various data states
 [data-state="closed"] {
     //color: $blue;
 }
-
-[current-day] {
-    font-weight: 700;
-    
-    /*[data-state="open"] {
-        .oh-opening, .oh-closing {
-            background: $blue;
-            color: white;
-        }
-    }
-
-    [data-state="closed"] {
-        .oh-opening, .oh-closing {
-            background: $blue;
-            color: white;
-        }
-    }*/
-    .oh-days-hours {
-        font-weight: 900;
-    }
-    
-}

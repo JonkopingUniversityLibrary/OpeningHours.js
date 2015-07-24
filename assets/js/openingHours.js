@@ -330,16 +330,16 @@ return letter.toUpperCase();
             en: "."
         },
         closedRelative: {
-            sv: "Vi har stängt och öppnar igen om ",
-            en: "We are currently closed and are opening again in "
+            sv: "Vi har stängt och öppnar om ",
+            en: "We are currently closed and are opening in "
         },
         openAbsolute: {
-            sv: "Vi har öppet fram till klockan ",
+            sv: "Vi har öppet till klockan ",
             en: "We are open until "
         },
         closedAbsolute: {
-            sv: "Vi har stängt och öppnar igen ",
-            en: "We are currently closed and are opening again "
+            sv: "Vi har stängt och öppnar ",
+            en: "We are currently closed and are opening "
         },
         open: {
             sv: "öppet",
