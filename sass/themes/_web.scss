@@ -3,13 +3,14 @@
 Theme used for the web version of the widget
 --------------- */
 
-.oh-web.oh-opening-hours {
+.oh-opening-hours {
     margin-bottom: 15px;
     .oh-todays-hours {
         margin: 0 0 20px 0;
     }
     .oh-week {
         display: table;
+        position: relative;
         box-sizing: border-box;
         width: 100%;
         min-width: 215px;
@@ -17,11 +18,40 @@ Theme used for the web version of the widget
         font-size: 17px;
         .oh-day {
             display: table-row;
+            font-weight: 300;
             .oh-day-label {
                 display: table-cell;
+                cursor: default;
             }
             .oh-day-hours {
                 display: table-cell;
+                text-align: right;
+                cursor: default;
+            }
+            .oh-day-note {
+                position: absolute;
+                visibility: hidden;
+                font-size: 13px;
+                background-color: #000;
+                padding: 0px 10px;
+                left: -15px;
+                color: white;
+                pointer-events: none;
+                transform: translateX(-100%);
+                &:before {
+                    height: 0;
+                    position: absolute;
+                    right: -8px;
+                    top: 7px;
+                    width: 0;
+                    border-bottom: 8px solid transparent;
+                    border-left: 8px solid #000;
+                    content: '';
+                    border-top: 8px solid transparent;
+                }
+            }
+            &:hover .oh-day-note {
+                visibility: visible;
             }
             &[current-day]{
                 .oh-day-label, .oh-day-hours {

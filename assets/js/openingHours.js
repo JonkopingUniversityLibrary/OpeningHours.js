@@ -11,7 +11,7 @@
  */
 var OpeningHours = {
     language: "",
-    
+
     /**
      * ## Initialize
      * Initializes the Opening Hours script.
@@ -23,11 +23,11 @@ var OpeningHours = {
     initialize: function(lang) {
         // Set the language attribute to the specified in the initialize function.
         OpeningHours.language = lang;
-        
+
         // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
         OpeningHours.getData(4,OpeningHours.showCountdown, OpeningHours.showOpeningHours);
     },
-     
+
     /**
      *  ### Currently Open
      *  Checks if the library is currently opened.
@@ -42,7 +42,7 @@ var OpeningHours = {
             jsonpCallback: "response",
             dataType: "jsonp",
         }).then(function(content){
-            outputLocation(strings.closedcontent.locations[0].times.currently_open)
+            outputLocation(strings.closedcontent.locations[0].times.currently_open);
         });
 
         function currentlyOpenOutput(content){
@@ -67,26 +67,32 @@ var OpeningHours = {
             var currentDay,
                 week;
             currentDay = moment().startOf("day");
-            
+
             week = $("<ul>").addClass("oh-week");
-            
+
             // Loop through the days of the week
             for (var d = 0; d < weeks[w].length; d++){
                 var day;
-                day = $("<li>").addClass("oh-day")
-                
+                day = $("<li>").addClass("oh-day");
+
                 // If it is the current day, add current-day attribute.
-                if(moment(weeks[w][d].date).diff(currentDay, "days") == 0){
+                if(moment(weeks[w][d].date).diff(currentDay, "days") === 0){
                     day.attr("current-day", "");
                 }
-                
+
                 // Create day element & add the weekday to it
-                day.append($("<span>")
-                    .addClass("oh-day-label")
-                    .text(strings.weekdays[weeks[w][d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
-return letter.toUpperCase();
-})));
+                var label = $("<span>")
+                           .addClass("oh-day-label")
+                           .text(strings.weekdays[weeks[w][d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                    return letter.toUpperCase();
+                }));
+
+                // Add sign showing theres an exception with a note
+                if(weeks[w][d].note){
+                    label.text(label.text()+'*');
+                }
                 
+                // Show the opening/closed message
                 var hours = $("<span>");
                 hours.addClass("oh-day-hours");
                 if(weeks[w][d].status === "open"){
@@ -95,10 +101,21 @@ return letter.toUpperCase();
                 } else {
                     hours.attr("data-state", "closed");
                     hours.html(strings.closed[language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
-return letter.toUpperCase();
-}));
-                } 
+                        return letter.toUpperCase();
+                    }));
+                }
+                day.append(label);
                 day.append(hours);
+
+                // Add note if there is one
+                if(weeks[w][d].note){
+                    console.log(weeks[w][d].note);
+                    var note = $("<span>");
+                    note.attr("class","oh-day-note");
+                    console.log(weeks[w][d].note[language]);
+                    note.text(weeks[w][d].note[language]);
+                    day.append(note);
+                }
                 week.append(day);
             }
             $(".oh-week").replaceWith(week);
@@ -108,7 +125,7 @@ return letter.toUpperCase();
 
 
 
-    /**
+            /**
      *  ## Countdown
      *  Next day and time when the library is set to open.
      *
@@ -151,45 +168,45 @@ return letter.toUpperCase();
                                 countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.singular[language] +  strings.openRelativeSuffix[language]);
                                 break week;
 
-                            // If it's 60 minutes or less show relative time.
+                                // If it's 60 minutes or less show relative time.
                             } else if(closingTime.diff(now, "minutes") < 60){
                                 countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.plural[language] +  strings.openRelativeSuffix[language]);
                                 break week;
 
-                            // Otherwise show absolute time.
+                                // Otherwise show absolute time.
                             } else {
                                 countdownOutput(strings.openAbsolute[language] + openingNext.closingTime + " " + strings.today[language]+".");
                                 break week;
                             }     
 
-                        // Is the date in the future?
+                            // Is the date in the future?
                         } else if (openingTime.isAfter(now)){
 
                             // Is it the same date?
-                            if (moment(weeks[w][d].date).diff(currentDay, "days") == 0){
+                            if (moment(weeks[w][d].date).diff(currentDay, "days") === 0){
 
                                 // If it's 1 minute or less left, change to singular suffix
                                 if(openingTime.diff(now, "minutes") <= 1){
-                                    countdownOutput(strings.closedRelative[language]+openingTime.diff(now, "minutes")+strings.time.minutes.singular[language]+".");
+                                    countdownOutput(strings.closedRelative[language]+strings.lessThanOne[language]+strings.time.minutes.singular[language]+".");
                                     break week;
 
-                                // If it's 60 minutes or less show relative time.
+                                    // If it's 60 minutes or less show relative time.
                                 } else if(openingTime.diff(now, "minutes") < 60){
                                     countdownOutput(strings.closedRelative[language]+openingTime.diff(now, "minutes")+strings.time.minutes.plural[language]+".");
                                     break week;
 
-                                // Otherwise show absolute time.
+                                    // Otherwise show absolute time.
                                 } else {
                                     countdownOutput(strings.closedAbsolute[language]+" "+strings.today[language]+" "+strings.at[language]+openingNext.openingTime+".");
                                     break week;
                                 } 
 
-                            // Is it tomorrow?
+                                // Is it tomorrow?
                             } else if(moment(weeks[w][d].date).diff(currentDay, "days") == 1){
                                 countdownOutput(strings.closedAbsolute[language]+strings.weekdays.tomorrow[language]+strings.at[language]+openingNext.openingTime+".");
                                 break week;
 
-                            // Is it further in the future?
+                                // Is it further in the future?
                             } else if(moment(weeks[w][d].date).diff(currentDay, "days") >= 2){
                                 countdownOutput(strings.closedAbsolute[language]+strings.on[language]+strings.weekdays[openingNext.day][language]+strings.at[language]+openingNext.openingTime+".");
                                 break week;
@@ -197,16 +214,15 @@ return letter.toUpperCase();
                         }
                     }
                 }
-
             }
         }
-        
+
         // Run the calculations once.
         calculateTime();
-        
+
         // Then run the calculation once every minute.
-        setInterval(calculateTime, 60 * 1000);
-        
+        setInterval(calculateTime, 30 * 1000);
+
         /**
          *  ## countdownOutput
          *  Print out the output for countDown.
@@ -234,7 +250,7 @@ return letter.toUpperCase();
             jsonpCallback: "response",
             dataType: "jsonp",
 
-        // When data is grabbed from API, format it into our own JSON-format
+            // When data is grabbed from API, format it into our own JSON-format
         }).then(function(content){
             var data = content.locations[0].weeks;
             var response = {};
@@ -259,17 +275,20 @@ return letter.toUpperCase();
                     response.weeks[weekNumber][d].status = data[i][weekday].times.status;
                     response.weeks[weekNumber][d].day = weekday;
                     response.weeks[weekNumber][d].date = data[i][weekday].date;
-
+                    if(data[i][weekday].times.note){
+                        response.weeks[weekNumber][d].note = {};
+                        var note = data[i][weekday].times.note.split('/');
+                        console.log("sv: "+note[0]+"; en: "+note[1]+";");
+                        response.weeks[weekNumber][d].note.sv = note[0];
+                        response.weeks[weekNumber][d].note.en = note[1];
+                    }
                     // If it's open, write out the times it is open.
                     if(data[i][weekday].times.status == "open"){
                         momentObjectOpening = moment(data[i][weekday].times.hours[0].from, "ha");
                         momentObjectClosing = moment(data[i][weekday].times.hours[0].to, "ha");
                         response.weeks[weekNumber][d].openingTime = momentObjectOpening.format("HH:mm");
                         response.weeks[weekNumber][d].closingTime = momentObjectClosing.format("HH:mm");
-
-                    // If it's closed, see if there is a note on why it's closed.
-                    } else if (response.weeks[weekNumber][d].status == "closed" && typeof data[i][weekday].times.note != 'undefined') {
-                        response.weeks[weekNumber][d].note = data[i][weekday].times.note;
+                    // If there's a custom message write out the message instead.
                     }
                 }
             }
@@ -320,126 +339,130 @@ return letter.toUpperCase();
      *
      *  @private
      */
-    strings: {
-        openRelative: {
-            sv: "Vi har öppet i ",
-            en: "We are open another "
-        },
-        openRelativeSuffix: {
-            sv: " till.",
-            en: "."
-        },
-        closedRelative: {
-            sv: "Vi har stängt och öppnar om ",
+strings: {
+openRelative: {
+    sv: "Vi har öppet i ",
+        en: "We are open another "
+},
+openRelativeSuffix: {
+    sv: " till.",
+        en: "."
+},
+    closedRelative: {
+        sv: "Vi har stängt och öppnar om ",
             en: "We are currently closed and are opening in "
-        },
+    },
         openAbsolute: {
             sv: "Vi har öppet till klockan ",
-            en: "We are open until "
+                en: "We are open until "
         },
-        closedAbsolute: {
-            sv: "Vi har stängt och öppnar ",
-            en: "We are currently closed and are opening "
-        },
-        open: {
-            sv: "öppet",
-            en: "open"
-        },
-        closed: {
-            sv: "stängt",
-            en: "closed"
-        },
-        today: {
-            sv: "i dag",
-            en: "today"
-        },
-        time: {
-            minutes: {
-                singular: {
-                    sv: " minut",
-                    en: " minute",
+            closedAbsolute: {
+                sv: "Vi har stängt och öppnar ",
+                    en: "We are currently closed and are opening "
+            },
+                open: {
+                    sv: "öppet",
+                        en: "open"
                 },
-                plural: {
-                    sv: " minuter",
-                    en: " minutes",
-                } 
-            },
-            hours: {
-                singular: {
-                    sv: " timme",
-                    en: " hour",
-                },
-                plural: {
-                    sv: " timmar",
-                    en: " hours",
-                }
-            },
-            days: {
-                singular: {
-                    sv: " dag",
-                    en: " day",
-                },
-                plural: {
-                    sv: " dagar",
-                    en: " days",
-                }
-            },
-            week: {
-                singular: {
-                    sv: "vecka",
-                    en: "week",
-                },
-                plural: {
-                    sv: "veckor",
-                    en: "weeks",
-                }
-            }  
-        },
-        weekdays: {
-            Monday: {
-                sv: "måndag",
-                en: "Monday"
-            },
-            Tuesday: {
-                sv: "tisdag",
-                en: "Tuesday"
-            },
-            Wednesday: {
-                sv: "onsdag",
-                en: "Wednesday"
-            },
-            Thursday: {
-                sv: "torsdag",
-                en: "Thursday"
-            },
-            Friday: {
-                sv: "fredag",
-                en: "Friday"
-            },
-            Saturday: {
-                sv: "lördag",
-                en: "Saturday"
-            },
-            Sunday: {
-                sv: "söndag",
-                en: "Sunday"
-            },
-            tomorrow: {
-                sv: "i morgon",
-                en: "tomorrow"
-            }
-        },
-        at: {
-            sv: " klockan ",
-            en: " at "
-        },
-        on: {
-            sv: " på ",
-            en: "on "
-        },
-        and: {
-            sv: " och ",
-            en: " and "
-        }
-    }
-};
+                    closed: {
+                        sv: "stängt",
+                            en: "closed"
+                    },
+                        today: {
+                            sv: "i dag",
+                                en: "today"
+                        },
+                            lessThanOne: {
+                                sv: " mindre än en",
+                                    en: " less than one"
+                            },
+                                time: {
+                                    minutes: {
+                                        singular: {
+                                            sv: " minut",
+                                                en: " minute",
+                                        },
+                                            plural: {
+                                                sv: " minuter",
+                                                    en: " minutes",
+                                            }
+                                            },
+                                                hours: {
+                                                    singular: {
+                                                        sv: " timme",
+                                                            en: " hour",
+                                                    },
+                                                        plural: {
+                                                            sv: " timmar",
+                                                                en: " hours",
+                                                        }
+                                                        },
+                                                            days: {
+                                                                singular: {
+                                                                    sv: " dag",
+                                                                        en: " day",
+                                                                },
+                                                                    plural: {
+                                                                        sv: " dagar",
+                                                                            en: " days",
+                                                                    }
+                                                                    },
+                                                                        week: {
+                                                                            singular: {
+                                                                                sv: "vecka",
+                                                                                    en: "week",
+                                                                            },
+                                                                                plural: {
+                                                                                    sv: "veckor",
+                                                                                        en: "weeks",
+                                                                                }
+                                                                                }
+                                                                            },
+                                                                                weekdays: {
+                                                                                    Monday: {
+                                                                                        sv: "måndag",
+                                                                                            en: "Monday"
+                                                                                    },
+                                                                                        Tuesday: {
+                                                                                            sv: "tisdag",
+                                                                                                en: "Tuesday"
+                                                                                        },
+                                                                                            Wednesday: {
+                                                                                                sv: "onsdag",
+                                                                                                    en: "Wednesday"
+                                                                                            },
+                                                                                                Thursday: {
+                                                                                                    sv: "torsdag",
+                                                                                                        en: "Thursday"
+                                                                                                },
+                                                                                                    Friday: {
+                                                                                                        sv: "fredag",
+                                                                                                            en: "Friday"
+                                                                                                    },
+                                                                                                        Saturday: {
+                                                                                                            sv: "lördag",
+                                                                                                                en: "Saturday"
+                                                                                                        },
+                                                                                                            Sunday: {
+                                                                                                                sv: "söndag",
+                                                                                                                    en: "Sunday"
+                                                                                                            },
+                                                                                                                tomorrow: {
+                                                                                                                    sv: "i morgon",
+                                                                                                                        en: "tomorrow"
+                                                                                                                }
+                                                                                    },
+                                                                                        at: {
+                                                                                            sv: " klockan ",
+                                                                                                en: " at "
+                                                                                        },
+                                                                                            on: {
+                                                                                                sv: " på ",
+                                                                                                    en: "on "
+                                                                                            },
+                                                                                                and: {
+                                                                                                    sv: " och ",
+                                                                                                        en: " and "
+                                                                                                }
+                                                                            }
+                                                                    };
