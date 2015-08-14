@@ -21,11 +21,22 @@ var OpeningHours = {
      * @returns {Void}
      */
     initialize: function(lang) {
-        // Set the language attribute to the specified in the initialize function.
-        OpeningHours.language = lang;
+        if (typeof jQuery !== 'undefined') {
 
-        // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
-        OpeningHours.getData(4,OpeningHours.showCountdown, OpeningHours.showOpeningHours);
+            // Load the dependencies
+            $('head').append('<link rel="stylesheet" href="http://julius.hj.se/openinghours/assets/css/openingHours.css">')
+            $.getScript("http://julius.hj.se/openinghours/assets/js/moment.js", function() {
+
+                // Set the language attribute to the specified in the initialize function.
+                OpeningHours.language = lang;
+
+                // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
+                OpeningHours.getData(4,OpeningHours.showCountdown, OpeningHours.showOpeningHours);
+            });
+        } else {
+          console.error('OpeningHours - Dependency missing: jQuery');
+        }
+
     },
 
     /**
@@ -109,10 +120,8 @@ var OpeningHours = {
 
                 // Add note if there is one
                 if(weeks[w][d].note){
-                    console.log(weeks[w][d].note);
                     var note = $("<span>");
                     note.attr("class","oh-day-note");
-                    console.log(weeks[w][d].note[language]);
                     note.text(weeks[w][d].note[language]);
                     day.append(note);
                 }
@@ -278,7 +287,6 @@ var OpeningHours = {
                     if(data[i][weekday].times.note){
                         response.weeks[weekNumber][d].note = {};
                         var note = data[i][weekday].times.note.split('/');
-                        console.log("sv: "+note[0]+"; en: "+note[1]+";");
                         response.weeks[weekNumber][d].note.sv = note[0];
                         response.weeks[weekNumber][d].note.en = note[1];
                     }

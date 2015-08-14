@@ -13,7 +13,7 @@ gulp.task('styles', function() {
     gulp.src(['sass/main.scss'])
     .pipe(sourcemaps.init())
     .pipe(rename({
-        basename: 'style'
+        basename: 'openingHours'
     }))
     .pipe(sass())
     .pipe(autoprefixer())
