@@ -39,6 +39,15 @@ var OpeningHours = {
 
     },
 
+
+    /**
+     * ## Config
+     * Contains the Instance ID required for the API.
+     */
+    config: {
+        iid: '3237'
+    },
+
     /**
      *  ### Currently Open
      *  Checks if the library is currently opened.
@@ -49,7 +58,7 @@ var OpeningHours = {
      */
     currentlyOpen: function(output){
         $.ajax({
-            url: "https://api3.libcal.com/api_hours_today.php?iid=3237&lid=0&format=json&callback=response",
+            url: 'https://api3.libcal.com/api_hours_today.php?iid='+config.iid+'&lid=0&format=json&callback=response',
             jsonpCallback: "response",
             dataType: "jsonp",
         }).then(function(content){
@@ -134,7 +143,7 @@ var OpeningHours = {
 
 
 
-            /**
+    /**
      *  ## Countdown
      *  Next day and time when the library is set to open.
      *
@@ -347,130 +356,130 @@ var OpeningHours = {
      *
      *  @private
      */
-strings: {
-openRelative: {
-    sv: "Vi har öppet i ",
-        en: "We are open another "
-},
-openRelativeSuffix: {
-    sv: " till.",
-        en: "."
-},
-    closedRelative: {
-        sv: "Vi har stängt och öppnar om ",
+    strings: {
+        openRelative: {
+            sv: "Vi har öppet i ",
+            en: "We are open another "
+        },
+        openRelativeSuffix: {
+            sv: " till.",
+            en: "."
+        },
+        closedRelative: {
+            sv: "Vi har stängt och öppnar om ",
             en: "We are currently closed and are opening in "
-    },
+        },
         openAbsolute: {
             sv: "Vi har öppet till klockan ",
-                en: "We are open until "
+            en: "We are open until "
         },
-            closedAbsolute: {
-                sv: "Vi har stängt och öppnar ",
-                    en: "We are currently closed and are opening "
-            },
-                open: {
-                    sv: "öppet",
-                        en: "open"
+        closedAbsolute: {
+            sv: "Vi har stängt och öppnar ",
+            en: "We are currently closed and are opening "
+        },
+        open: {
+            sv: "öppet",
+            en: "open"
+        },
+        closed: {
+            sv: "stängt",
+            en: "closed"
+        },
+        today: {
+            sv: "i dag",
+            en: "today"
+        },
+        lessThanOne: {
+            sv: " mindre än en",
+            en: " less than one"
+        },
+        time: {
+            minutes: {
+                singular: {
+                    sv: " minut",
+                    en: " minute",
                 },
-                    closed: {
-                        sv: "stängt",
-                            en: "closed"
-                    },
-                        today: {
-                            sv: "i dag",
-                                en: "today"
-                        },
-                            lessThanOne: {
-                                sv: " mindre än en",
-                                    en: " less than one"
-                            },
-                                time: {
-                                    minutes: {
-                                        singular: {
-                                            sv: " minut",
-                                                en: " minute",
-                                        },
-                                            plural: {
-                                                sv: " minuter",
-                                                    en: " minutes",
-                                            }
-                                            },
-                                                hours: {
-                                                    singular: {
-                                                        sv: " timme",
-                                                            en: " hour",
-                                                    },
-                                                        plural: {
-                                                            sv: " timmar",
-                                                                en: " hours",
-                                                        }
-                                                        },
-                                                            days: {
-                                                                singular: {
-                                                                    sv: " dag",
-                                                                        en: " day",
-                                                                },
-                                                                    plural: {
-                                                                        sv: " dagar",
-                                                                            en: " days",
-                                                                    }
-                                                                    },
-                                                                        week: {
-                                                                            singular: {
-                                                                                sv: "vecka",
-                                                                                    en: "week",
-                                                                            },
-                                                                                plural: {
-                                                                                    sv: "veckor",
-                                                                                        en: "weeks",
-                                                                                }
-                                                                                }
-                                                                            },
-                                                                                weekdays: {
-                                                                                    Monday: {
-                                                                                        sv: "måndag",
-                                                                                            en: "Monday"
-                                                                                    },
-                                                                                        Tuesday: {
-                                                                                            sv: "tisdag",
-                                                                                                en: "Tuesday"
-                                                                                        },
-                                                                                            Wednesday: {
-                                                                                                sv: "onsdag",
-                                                                                                    en: "Wednesday"
-                                                                                            },
-                                                                                                Thursday: {
-                                                                                                    sv: "torsdag",
-                                                                                                        en: "Thursday"
-                                                                                                },
-                                                                                                    Friday: {
-                                                                                                        sv: "fredag",
-                                                                                                            en: "Friday"
-                                                                                                    },
-                                                                                                        Saturday: {
-                                                                                                            sv: "lördag",
-                                                                                                                en: "Saturday"
-                                                                                                        },
-                                                                                                            Sunday: {
-                                                                                                                sv: "söndag",
-                                                                                                                    en: "Sunday"
-                                                                                                            },
-                                                                                                                tomorrow: {
-                                                                                                                    sv: "i morgon",
-                                                                                                                        en: "tomorrow"
-                                                                                                                }
-                                                                                    },
-                                                                                        at: {
-                                                                                            sv: " klockan ",
-                                                                                                en: " at "
-                                                                                        },
-                                                                                            on: {
-                                                                                                sv: " på ",
-                                                                                                    en: "on "
-                                                                                            },
-                                                                                                and: {
-                                                                                                    sv: " och ",
-                                                                                                        en: " and "
-                                                                                                }
-                                                                            }
-                                                                    };
+                plural: {
+                    sv: " minuter",
+                    en: " minutes",
+                }
+            },
+            hours: {
+                singular: {
+                    sv: " timme",
+                    en: " hour",
+                },
+                plural: {
+                    sv: " timmar",
+                    en: " hours",
+                }
+            },
+            days: {
+                singular: {
+                    sv: " dag",
+                    en: " day",
+                },
+                plural: {
+                    sv: " dagar",
+                    en: " days",
+                }
+            },
+            week: {
+                singular: {
+                    sv: "vecka",
+                    en: "week",
+                },
+                plural: {
+                    sv: "veckor",
+                    en: "weeks",
+                }
+            }
+        },
+        weekdays: {
+            Monday: {
+                sv: "måndag",
+                en: "Monday"
+            },
+            Tuesday: {
+                sv: "tisdag",
+                en: "Tuesday"
+            },
+            Wednesday: {
+                sv: "onsdag",
+                en: "Wednesday"
+            },
+            Thursday: {
+                sv: "torsdag",
+                en: "Thursday"
+            },
+            Friday: {
+                sv: "fredag",
+                en: "Friday"
+            },
+            Saturday: {
+                sv: "lördag",
+                en: "Saturday"
+            },
+            Sunday: {
+                sv: "söndag",
+                en: "Sunday"
+            },
+            tomorrow: {
+                sv: "i morgon",
+                en: "tomorrow"
+            }
+        },
+        at: {
+            sv: " klockan ",
+            en: " at "
+        },
+        on: {
+            sv: " på ",
+            en: "on "
+        },
+        and: {
+            sv: " och ",
+            en: " and "
+        }
+    }
+};
