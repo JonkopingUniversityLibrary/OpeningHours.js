@@ -4,12 +4,13 @@ Colors used in the design
 --------------- */
 
 $purple: rgb(172, 32, 167);
-$blue: rgb(0, 56, 101);
+$darkblue: rgb(0, 56, 101);
 $lightblue: rgb(36, 170, 225);
-$yellow: rgb(252, 184, 20);
+$orange: rgb(252, 184, 20);
 $green: rgb(0, 122, 51);
 $red: rgb(195, 52, 46);
 $grey: rgb(120, 120, 119);
+$beige: #EBEBDF;
 
 /* FONTS
 ---------------
@@ -17,3 +18,18 @@ Fonts used in the design
 --------------- */
 
 $sans-serif: "Open Sans", Helvetica, Arial, sans-serif;
+
+$breakpoints: (
+    'small': 500px,
+    'medium': 900px,
+    'large': 1200px
+);
+
+/// Get a z-index value from a layer name
+/// @access public
+/// @param {String} $layer - Layer’s name
+/// @return {Number}
+/// @require $z-indexes
+@function width($breakpoint) {
+  @return map-get($breakpoints, $breakpoint);
+}

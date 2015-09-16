@@ -1,10 +1,16 @@
+$respond-to-breakpoints: (
+  'small'  : (max-width: width(small)),
+  'medium' : (max-width: width(medium)),
+  'large'  : (max-width: width(large))
+);
+
 /// Responsive manager.
 /// @access public
 /// @param {String} $breakpoint - Breakpoint
 /// @requires $breakpoints
 @mixin respond-to($breakpoint) {
-    @if map-has-key($breakpoints, $breakpoint) {
-        @media #{inspect(map-get($breakpoints, $breakpoint))} {
+    @if map-has-key($respond-to-breakpoints, $breakpoint) {
+        @media #{inspect(map-get($respond-to-breakpoints, $breakpoint))} {
             @content;
         }
     } @else {

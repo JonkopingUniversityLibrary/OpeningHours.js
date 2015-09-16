@@ -8,9 +8,11 @@ var gulp = require('gulp'),
     csscomb = require('gulp-csscomb'),
     minifycss = require('gulp-minify-css');
     rename = require('gulp-rename');
+    plumber = require('gulp-plumber');
 
 gulp.task('styles', function() {
     gulp.src(['sass/main.scss'])
+    .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(rename({
         basename: 'openingHours'
@@ -24,11 +26,14 @@ gulp.task('styles', function() {
 });
 
 gulp.task('serve', ['styles'], function() {  
-    browsersync();
+    browsersync.init({
+        server: '',
+        port: 3000
+    });
     
     gulp.watch('sass/**/*.scss', ['styles']);
-    gulp.watch('*.html').on('change', reload);
-    gulp.watch('*.js').on('change', reload);
+    gulp.watch('./**/*.html').on('change', reload);
+    gulp.watch('./**/*.js').on('change', reload);
     
 });
 

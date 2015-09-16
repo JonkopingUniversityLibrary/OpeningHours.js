@@ -3,12 +3,12 @@
  *  Opening Hours script for Jönköping University Library
  *  
  *  @author Gustav Lindqvist (gustav.lindqvist@ju.se)
- *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string.
+ *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  *
  *  jshint browser: true
- *  global jQuery, $, console, moment
- *
+ *  global $, jQuery, moment
  */
+
 var OpeningHours = {
     language: "",
 
@@ -21,17 +21,24 @@ var OpeningHours = {
      * @returns {Void}
      */
     initialize: function(lang) {
+        var setLanguage = OpeningHours.setLanguage,
+            getData = OpeningHours.getData,
+            showCountdown = OpeningHours.showCountdown,
+            showWeek = OpeningHours.showWeek,
+            showMonth = OpeningHours.showMonth;
+
         if (typeof jQuery !== 'undefined') {
 
             // Load the dependencies
-            $('head').append('<link rel="stylesheet" href="http://julius.hj.se/openinghours/assets/css/openingHours.css">')
+            $('head').append('<link rel="stylesheet" href="http://julius.hj.se/openinghours/assets/css/openingHours.css">');
             $.getScript("http://julius.hj.se/openinghours/assets/js/moment.js", function() {
 
-                // Set the language attribute to the specified in the initialize function.
-                OpeningHours.language = lang;
+                // Set the language attribute to the specified in the initialize function and the moment instance.
+                setLanguage(lang);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
-                OpeningHours.getData(4,OpeningHours.showCountdown, OpeningHours.showOpeningHours);
+                getData(showCountdown, showWeek, showMonth);
+
             });
         } else {
           console.error('OpeningHours - Dependency missing: jQuery');
@@ -39,34 +46,14 @@ var OpeningHours = {
 
     },
 
-
     /**
      * ## Config
      * Contains the Instance ID required for the API.
      */
     config: {
-        iid: '3237'
-    },
-
-    /**
-     *  ### Currently Open
-     *  Checks if the library is currently opened.
-     *
-     *  @private
-     *  @param {String} output
-     *  @returns {Boolean} status
-     */
-    currentlyOpen: function(output){
-        $.ajax({
-            url: 'https://api3.libcal.com/api_hours_today.php?iid='+config.iid+'&lid=0&format=json&callback=response',
-            jsonpCallback: "response",
-            dataType: "jsonp",
-        }).then(function(content){
-            outputLocation(strings.closedcontent.locations[0].times.currently_open);
-        });
-
-        function currentlyOpenOutput(content){
-            $("#oh-todays-hours").text(content);
+        iid: '3237',
+        calendar: {
+            template: '<div class="oh-cal-controls"> <div class="oh-cal-prev">&lsaquo;</div> <div class="oh-cal-next">&rsaquo;</div> <div class="oh-cal-current-month"><%= month %></div> </div> <div class="oh-cal-grid"> <div class="oh-cal-header"><div class="oh-week-number"></div><!-- <% _.each(daysOfTheWeek, function(day) { %> --><div class="oh-cal-header-day"><%= day %></div><!-- <% }); %> --></div> <div class="oh-cal-content"><!-- <% _.each(days, function(day) { %> --><div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>"> <div class="oh-cal-day-number"><%= day.day %></div> <div class="oh-cal-hours"> <% for(var event in day.events) { %> <% if(day.events[event].status.check == "open"){ %> <span><%= day.events[event].opening %></span><span><%= day.events[event].closing %></span> <% } else {%> <%= day.events[event].status.output %> <% } %> <% } %></div> <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %> </div><!-- <% }); %> --></div> </div>'
         }
     },
 
@@ -78,46 +65,44 @@ var OpeningHours = {
      *  @param {Object} API data from openingHours() 
      *  @returns {String} Next day and time when the library is set to open. 
      */
-    showOpeningHours: function(data){
-        var weeks = data.weeks;
-        var language = OpeningHours.language;
-        var strings = OpeningHours.strings;
+    showWeek: function(data){
+        var weeks = data.weeks,
+            language = OpeningHours.language,
+            strings = OpeningHours.strings,
+            week;
 
-        for (var w in weeks){
-            var currentDay,
-                week;
-            currentDay = moment().startOf("day");
+        for (var w = 0; w < 1; w++){
 
+            var currentDay = moment().startOf("day");
             week = $("<ul>").addClass("oh-week");
 
             // Loop through the days of the week
-            for (var d = 0; d < weeks[w].length; d++){
-                var day;
-                day = $("<li>").addClass("oh-day");
+            for (var d = 0; d < weeks[w].days.length; d++){
+                var day = $("<li>").addClass("oh-day");
 
                 // If it is the current day, add current-day attribute.
-                if(moment(weeks[w][d].date).diff(currentDay, "days") === 0){
+                if(moment(weeks[w].days[d].date).diff(currentDay, "days") === 0){
                     day.attr("current-day", "");
                 }
 
                 // Create day element & add the weekday to it
                 var label = $("<span>")
                            .addClass("oh-day-label")
-                           .text(strings.weekdays[weeks[w][d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                           .text(strings.weekdays[weeks[w].days[d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
                     return letter.toUpperCase();
                 }));
 
                 // Add sign showing theres an exception with a note
-                if(weeks[w][d].note){
-                    label.text(label.text()+'*');
+                if(weeks[w].days[d].note){
+                    label.html(label.html()+'<span class="oh-note">*</span>');
                 }
                 
                 // Show the opening/closed message
                 var hours = $("<span>");
                 hours.addClass("oh-day-hours");
-                if(weeks[w][d].status === "open"){
+                if(weeks[w].days[d].status === "open"){
                     hours.attr("data-state", "open");
-                    hours.html('<span class="oh-opening">'+weeks[w][d].openingTime+'</span> - <span class="oh-closing">'+weeks[w][d].closingTime+'</span>');
+                    hours.html('<span class="oh-opening">'+weeks[w].days[d].openingTime+'</span> - <span class="oh-closing">'+weeks[w].days[d].closingTime+'</span>');
                 } else {
                     hours.attr("data-state", "closed");
                     hours.html(strings.closed[language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
@@ -128,20 +113,123 @@ var OpeningHours = {
                 day.append(hours);
 
                 // Add note if there is one
-                if(weeks[w][d].note){
+                if(weeks[w].days[d].note){
                     var note = $("<span>");
                     note.attr("class","oh-day-note");
-                    note.text(weeks[w][d].note[language]);
+                    note.text(weeks[w].days[d].note[language]);
                     day.append(note);
                 }
                 week.append(day);
             }
-            $(".oh-week").replaceWith(week);
-            break;
         }
+        $('.oh-week').replaceWith(week);
     },
 
+    /**
+     *  ## Show Monthly Hours
+     *  Returns opening hours for 3 months
+     *
+     *  @private
+     *  @param {Object} API data from openingHours()
+     *  @returns {Void} Next day and time when the library is set to open.
+     */
+    showMonth: function(data){
+        var hasMonth = OpeningHours.hasMonth,
+            language = OpeningHours.language,
+            strings = OpeningHours.strings,
+            template = OpeningHours.config.calendar.template;
 
+        if(hasMonth()){
+
+            // Load dependencies
+            $.when(
+                $.getScript("http://julius.hj.se/openinghours/assets/js/underscore-min.js"),
+                $.getScript("http://julius.hj.se/openinghours/assets/js/clndr.min.js")
+
+            // Run function when dependencies are loaded
+            ).done(function(){
+                var events = weeksToEvents(data.weeks);
+
+                // Initialize the calendar widget
+                $('#oh-month').clndr({
+                    template: template,
+                    weekOffset: 1,
+                    daysOfTheWeek: daysOfTheWeek(language),
+                    constraints: {
+                        startDate: events[0].date,
+                        endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
+                      },
+                    targets: {
+                        nextButton: 'oh-cal-next',
+                        previousButton: 'oh-cal-prev',
+                        todayButton: 'oh-cal-today',
+                        day: 'day',
+                        empty: 'empty'
+                    },
+                    events: events,
+                    extras: {
+                        today: strings.goTo[language]+' '+strings.today[language]
+                    }
+
+                });
+
+                /**
+                 *  ## Days of the Week
+                 *  Return the abbreviations of the days of the week according to language
+                 *
+                 *  @private
+                 *  @param {String} Language
+                 *  @returns {Array} Weekdays
+                 *
+                 */
+                function daysOfTheWeek(language){
+                    if(language == 'sv') {
+                        return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
+                    } else {
+                        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    }
+                }
+
+                /**
+                 *  ## Weeks to Events
+                 *  Transform the weekly data from API into event data for the calendar
+                 *
+                 *  @private
+                 *  @param {Object} Weekly Data
+                 *  @returns {Array} Events
+                 */
+                function weeksToEvents(weeks){
+                    var events = [];
+                    for(var w in weeks){
+                        for(var d in weeks[w].days){
+                            var status = weeks[w].days[d].status;
+                            if(weeks[w].days[d].status == 'closed' && language == 'sv'){
+                                status = 'stängt';
+                            } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
+                                status = 'öppet';
+                            }
+                            var note = '';
+                            if(typeof weeks[w].days[d].note != 'undefined'){
+                                note = weeks[w].days[d].note[language];
+                            }
+                            events.push({
+                                date: weeks[w].days[d].date,
+                                status: {
+                                    check: weeks[w].days[d].status,
+                                    output: status,
+                                },
+                                opening: weeks[w].days[d].openingTime,
+                                closing: weeks[w].days[d].closingTime,
+                                note: note,
+                            });
+                        }
+                    }
+                    return events;
+
+                }
+            });
+        }
+    },
 
     /**
      *  ## Countdown
@@ -152,31 +240,30 @@ var OpeningHours = {
      *  @returns {Void} 
      */
     showCountdown: function(data){
-        var language = OpeningHours.language;
-        var strings = OpeningHours.strings;
-        var openingNext = {};
-        var weeks = data.weeks;
+        var language = OpeningHours.language,
+            strings = OpeningHours.strings,
+            openingNext = {},
+            weeks = data.weeks;
 
         function calculateTime() {
             // Loop through the weeks
             week:
-            for (var w in weeks){
+            for (var w = 0; w < weeks.length; w++){
                 var day, now, currentDay;
-
                 // Loop through the days of the week
-                for (var d = 0; d < weeks[w].length; d++){    
-                    openingTime = moment(weeks[w][d].date+" "+weeks[w][d].openingTime, "YYYY-MM-DD HH:m");
-                    closingTime = moment(weeks[w][d].date+" "+weeks[w][d].closingTime, "YYYY-MM-DD HH:m");
+                for (var d = 0; d < weeks[w].days.length; d++){
+                    var openingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].openingTime, "YYYY-MM-DD HH:m"),
+                        closingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].closingTime, "YYYY-MM-DD HH:m");
 
                     now = moment();
                     currentDay = moment().startOf("day");
 
                     // If the current working day is going to open
-                    if(weeks[w][d].status == "open"){
-                        openingNext.day = weeks[w][d].day;
-                        openingNext.openingTime = weeks[w][d].openingTime;
-                        openingNext.closingTime = weeks[w][d].closingTime;
-                        openingNext.date = weeks[w][d].date;
+                    if(weeks[w].days[d].status == "open"){
+                        openingNext.day = weeks[w].days[d].day;
+                        openingNext.openingTime = weeks[w].days[d].openingTime;
+                        openingNext.closingTime = weeks[w].days[d].closingTime;
+                        openingNext.date = weeks[w].days[d].date;
 
                         // If we are currently open, print out the time to closing
                         if((openingTime.diff(now, "seconds") <= 0 && closingTime.diff(now, "seconds") > 0)){
@@ -201,7 +288,7 @@ var OpeningHours = {
                         } else if (openingTime.isAfter(now)){
 
                             // Is it the same date?
-                            if (moment(weeks[w][d].date).diff(currentDay, "days") === 0){
+                            if (moment(weeks[w].days[d].date).diff(currentDay, "days") === 0){
 
                                 // If it's 1 minute or less left, change to singular suffix
                                 if(openingTime.diff(now, "minutes") <= 1){
@@ -220,12 +307,12 @@ var OpeningHours = {
                                 } 
 
                                 // Is it tomorrow?
-                            } else if(moment(weeks[w][d].date).diff(currentDay, "days") == 1){
+                            } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") == 1){
                                 countdownOutput(strings.closedAbsolute[language]+strings.weekdays.tomorrow[language]+strings.at[language]+openingNext.openingTime+".");
                                 break week;
 
                                 // Is it further in the future?
-                            } else if(moment(weeks[w][d].date).diff(currentDay, "days") >= 2){
+                            } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") >= 2){
                                 countdownOutput(strings.closedAbsolute[language]+strings.on[language]+strings.weekdays[openingNext.day][language]+strings.at[language]+openingNext.openingTime+".");
                                 break week;
                             }
@@ -258,59 +345,75 @@ var OpeningHours = {
      *  Returns opening hours a specified amount of weeks forward
      *
      *  @private
-     *  @param {Number} weeks 
      */
-    getData: function(weeks, callback, callbackTwo){
+    getData: function(countdownCallback, weekCallback, monthCallback){
+        var weeks,
+            hasMonth = OpeningHours.hasMonth,
+            iid = OpeningHours.config.iid;
+
+        if(hasMonth()){
+            weeks = 14;
+        } else {
+            weeks = 4;
+        }
 
         // Grab data from the API with JSONP
         $.ajax({
-            url: "https://api3.libcal.com/api_hours_grid.php?iid=3237&format=json&weeks="+weeks+"&callback=response",
+            //url: 'http://localhost:3000/assets/js/libcal.json',
+            url: 'https://api3.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
             jsonpCallback: "response",
             dataType: "jsonp",
 
             // When data is grabbed from API, format it into our own JSON-format
         }).then(function(content){
-            var data = content.locations[0].weeks;
-            var response = {};
+            var data = content.locations[0].weeks,
+                response = {};
 
             // Loop through all the weeks.
-            response.weeks = {};
-            for(var i = 0; i < data.length; i++){
+            response.weeks = [];
+            for(var w = 0; w < data.length; w++){
                 var momentObject,
                     momentObjectClosing,
                     momentObjectOpening;
 
                 // Create a moment object of the date of the day.
-                momentObject = moment(data[i].Monday.date, "YYYY-MM-DD");
-                var weekNumber = momentObject.format("W"),
-                    weekDay;
-                response.weeks[weekNumber] = [];
+                momentObject = moment(data[w].Monday.date, "YYYY-MM-DD");
+                var weekNumber = String(momentObject.format("W")),
+                    weekDay,
+                    currentWeek = {};
+
+                currentWeek.weekNumber = weekNumber;
+                currentWeek.days = [];
 
                 // Loop through the days of the week
                 for(var d = 0; d < 7; d++){
-                    weekday = getWeekday(d);
-                    response.weeks[weekNumber][d] = {};
-                    response.weeks[weekNumber][d].status = data[i][weekday].times.status;
-                    response.weeks[weekNumber][d].day = weekday;
-                    response.weeks[weekNumber][d].date = data[i][weekday].date;
-                    if(data[i][weekday].times.note){
-                        response.weeks[weekNumber][d].note = {};
-                        var note = data[i][weekday].times.note.split('/');
-                        response.weeks[weekNumber][d].note.sv = note[0];
-                        response.weeks[weekNumber][d].note.en = note[1];
+                    var weekday = getWeekday(d);
+                    currentWeek.days[d] = {};
+                    currentWeek.days[d].status = data[w][weekday].times.status;
+                    currentWeek.days[d].day = weekday;
+                    currentWeek.days[d].date = data[w][weekday].date;
+
+                    // If there is a note add that to object
+                    if(data[w][weekday].times.note){
+                        currentWeek.days[d].note = {};
+                        var note = data[w][weekday].times.note.split('/');
+                        currentWeek.days[d].note.sv = note[0];
+                        currentWeek.days[d].note.en = note[1];
                     }
+
                     // If it's open, write out the times it is open.
-                    if(data[i][weekday].times.status == "open"){
-                        momentObjectOpening = moment(data[i][weekday].times.hours[0].from, "ha");
-                        momentObjectClosing = moment(data[i][weekday].times.hours[0].to, "ha");
-                        response.weeks[weekNumber][d].openingTime = momentObjectOpening.format("HH:mm");
-                        response.weeks[weekNumber][d].closingTime = momentObjectClosing.format("HH:mm");
-                    // If there's a custom message write out the message instead.
+                    if(data[w][weekday].times.status == "open"){
+                        momentObjectOpening = moment(data[w][weekday].times.hours[0].from, "ha");
+                        momentObjectClosing = moment(data[w][weekday].times.hours[0].to, "ha");
+                        currentWeek.days[d].openingTime = momentObjectOpening.format("HH:mm");
+                        currentWeek.days[d].closingTime = momentObjectClosing.format("HH:mm");
                     }
                 }
+                response.weeks.push(currentWeek);
             }
-            callback(response);
-            callbackTwo(response);
+            countdownCallback(response);
+            weekCallback(response);
+            monthCallback(response);
         });
 
         /**
@@ -480,6 +583,49 @@ var OpeningHours = {
         and: {
             sv: " och ",
             en: " and "
+        },
+        goTo: {
+            sv: "Gå till",
+            en: "Go to"
         }
-    }
+    },
+
+    /**
+     *  ## Has month?
+     *  Check if a monthly calendar is present on the page
+     *
+     *  @private
+     */
+    hasMonth: function(){
+        if($('#oh-month').length > 0){
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    /**
+     *  ## Set language
+     *  Set language of Moment.js and OpeningHours
+     *
+     *  @param {String} Language
+     *  @private
+     */
+    setLanguage: function(language){
+        OpeningHours.language = language;
+        if(language == 'sv'){
+            moment.locale('sv', {
+                months : [
+                    "januari", "februari", "mars", "april", "maj", "juni", "juli",
+                    "augusti", "september", "oktober", "november", "december"
+                ],
+                weekdays : [
+                    "söndag", "måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag"
+                ],
+                weekdaysShort : ["sön", "mån", "tis", "ons", "tor", "fre", "lör"]
+            });
+        } else {
+
+        }
+    },
 };

@@ -1,0 +1,198 @@
+/* VARIABLES
+---------------
+Variables used to control certain aspects of the monthly calendar widget
+--------------- */
+
+// SIZES
+$control-height: 40px;
+
+// GENERIC COLORS
+$inactive: $beige;
+$open: $darkblue;
+$closed: $red;
+
+// SPECIFIC COLORS
+$today: $open;
+$today-closed: $closed;
+
+// ELEMENTS
+$button: $purple;
+$inactive-button: $inactive;
+
+
+/* CSS
+---------------
+Theme used for the web version of the widget
+--------------- */
+
+.oh-month {
+    font-size: 13px;
+    line-height: 100%;
+    overflow: hidden;
+}
+
+.oh-cal-controls {
+    position: relative;
+    margin-bottom: 5px;
+    line-height: $control-height;
+    cursor: default;
+    user-select: none;
+    .oh-cal-prev, .oh-cal-next {
+        box-sizing: border-box;
+        width: $control-height;
+        height: $control-height;
+        border: 1px solid $button;
+        border-radius: 2px;
+        color: $button;
+        text-align: center;
+        font-size: $control-height * 0.8333333;
+        line-height: $control-height * 0.733333;
+        cursor: pointer;
+        transition: all 0.2s;
+        &:hover {
+            background: $button;
+
+            color: white;
+            transition: none;
+        }
+        &.inactive {
+            background:$inactive-button;
+            color: darken($inactive-button, 40%);
+            border-color: $inactive-button;
+            cursor: default;
+        }
+    }
+    .oh-cal-prev {
+        float: left;
+    }
+    .oh-cal-next {
+        float: right;
+    }
+    .oh-cal-today {
+        box-sizing: border-box;
+        height: $control-height;
+        border: 1px solid $button;
+        border-radius: 2px;
+        color: $purple;
+        text-align: center;
+        font-size: 13px;
+        line-height: $control-height - 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: absolute;
+        left: 45px;
+        padding: 0 10px;
+        &:hover {
+            transition: none;
+            background: $button;
+            color: white;
+        }
+    }
+
+    .oh-cal-current-month {
+        font-weight: 300;
+        font-size: 30px;
+        color: $darkblue;
+        display: block;
+        text-align: center;
+    }
+}
+
+.oh-cal-grid {
+    cursor: default;
+    margin: -1px;
+    user-select: none;
+    .oh-cal-header {
+        display: block;
+        .oh-cal-header-day {
+            float: left;
+            width: 14.2857%;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 13px;
+            line-height: $control-height;
+        }
+    }
+    .oh-cal-content {
+        display: block;
+        .day {
+            position: relative;
+            float: left;
+            box-sizing: border-box;
+            padding: 5px;
+            min-height: 80px;
+            width: 14.2857%;
+            border: 1px solid white;
+            //border-radius: 4px;
+            background: rgba($open, 0.25);
+            color: $open;
+
+            @include respond-to(small){
+                min-height: 65px;
+            }
+
+            &:nth-of-type(7n+1){
+                clear: left;
+            }
+            &.adjacent-month {
+                background: rgba($open, 0.1);
+                color: rgba($open, 0.5)
+            }
+            &.today {
+                background: $today;
+                color: white;
+                &.closed {
+                    background: $today-closed;
+                }
+            }
+            &.closed {
+                background: rgba($closed, 0.25);
+                color: $closed;
+                &.adjacent-month {
+                    background: rgba($closed, 0.1);
+                    color: rgba($closed, 0.5)
+                }
+            }
+            &.past, &.inactive {
+                background:$inactive !important;
+                color: darken($inactive, 40%) !important;
+                .oh-cal-hours {
+                    display: none;
+                }
+            }
+            &.currently-open {
+                background: $green;
+                color: white;
+            }
+
+        }
+        .oh-cal-hours {
+            margin: 0.5em 0;
+
+            text-transform: capitalize;
+            font-weight: 700;
+            span {
+                display: inline-block;
+                width: 100%;
+                &:first-child:after {
+                    content: " - ";
+                }
+            }
+
+            @include respond-to(small){
+                font-size: 10px;
+                span:first-child:after {
+                    content: none;
+                }
+            }
+        }
+        .oh-cal-day-number{
+        }
+        .oh-day-note {
+            font-size: 10px;
+            @include respond-to(small){
+                display: none;
+            }
+        }
+    }
+}
