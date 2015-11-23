@@ -53,7 +53,50 @@ var OpeningHours = {
     config: {
         iid: '3237',
         calendar: {
-            template: '<div class="oh-cal-controls"> <div class="oh-cal-prev">&lsaquo;</div> <div class="oh-cal-next">&rsaquo;</div> <div class="oh-cal-current-month"><%= month %></div> </div> <div class="oh-cal-grid"> <div class="oh-cal-header"><div class="oh-week-number"></div><!-- <% _.each(daysOfTheWeek, function(day) { %> --><div class="oh-cal-header-day"><%= day %></div><!-- <% }); %> --></div> <div class="oh-cal-content"><!-- <% _.each(days, function(day) { %> --><div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>"> <div class="oh-cal-day-number"><%= day.day %></div> <div class="oh-cal-hours"> <% for(var event in day.events) { %> <% if(day.events[event].status.check == "open"){ %> <span><%= day.events[event].opening %></span><span><%= day.events[event].closing %></span> <% } else {%> <%= day.events[event].status.output %> <% } %> <% } %></div> <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %> </div><!-- <% }); %> --></div> </div>'
+            template:  '\
+<div class="oh-cal-controls">\
+    <div class="oh-cal-prev">&lsaquo;</div>\
+    <div class="oh-cal-next">&rsaquo;</div>\
+    <div class="oh-cal-current-month"><%= month %></div>\
+</div>\
+<div class="oh-cal-grid">\
+    <div class="oh-cal-header"><div class="oh-week-number"></div>\
+    <% _.each(daysOfTheWeek, function(day) { %>\
+        <div class="oh-cal-header-day"><%= day %></div>\
+    <% }); %>\
+    </div>\
+    <div class="oh-cal-content">\
+    <% _.each(days, function(day) { %>\
+        <div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>">\
+            <div class="oh-cal-day-number"><%= day.day %></div>\
+                <% for(var event in day.events) { %>\
+                <div class="oh-cal-hours">\
+                    <% if(day.events[event].status.check == "open"){ %>\
+                        <span><%= day.events[event].opening %></span>\
+                        <span><%= day.events[event].closing %></span>\
+                    <% } else {%>\
+                        <%= day.events[event].status.output %>\
+                    <% } %>\
+                </div>\
+                <div class="oh-overlay" style="height: <%= day.events[event].overlay.duration %>%; top: <%= day.events[event].overlay.starting %>%;">\
+                    <div class="oh-overlay-content" style="top: -<%= day.events[event].overlay.starting*(100/day.events[event].overlay.duration) %>%;">\
+                        <div class="oh-cal-day-number"><%= day.day %></div>\
+                        <div class="oh-cal-hours">\
+                            <% if(day.events[event].status.check == "open"){ %>\
+                                <span><%= day.events[event].opening %></span>\
+                                <span><%= day.events[event].closing %></span>\
+                            <% } else {%>\
+                                <%= day.events[event].status.output %>\
+                            <% } %>\
+                        </div>\
+                    </div>\
+                </div>\
+                <% } %>\
+            <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\
+        </div>\
+    <% }); %>\
+    </div>\
+</div>'
         }
     },
 
@@ -87,10 +130,10 @@ var OpeningHours = {
 
                 // Create day element & add the weekday to it
                 var label = $("<span>")
-                           .addClass("oh-day-label")
-                           .text(strings.weekdays[weeks[w].days[d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
-                    return letter.toUpperCase();
-                }));
+                   .addClass("oh-day-label")
+                   .text(strings.weekdays[weeks[w].days[d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                        return letter.toUpperCase();
+                    }));
 
                 // Add sign showing theres an exception with a note
                 if(weeks[w].days[d].note){
@@ -166,13 +209,17 @@ var OpeningHours = {
                         day: 'day',
                         empty: 'empty'
                     },
+                    clickEvents: {
+                        onMonthChange: pointer
+                    },
                     events: events,
                     extras: {
                         today: strings.goTo[language]+' '+strings.today[language]
                     }
 
                 });
-
+                pointer();
+                setInterval(pointer, 50000);
                 /**
                  *  ## Days of the Week
                  *  Return the abbreviations of the days of the week according to language
@@ -188,6 +235,24 @@ var OpeningHours = {
                     } else {
                         return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                     }
+                }
+                
+                /**
+                 *  ## Days of the Week
+                 *  Return the abbreviations of the days of the week according to language
+                 *
+                 *  @private
+                 *  @param {String} Language
+                 *  @returns {Array} Weekdays
+                 *
+                 */
+                function pointer(){
+                    if(moment().isAfter(moment().startOf('day').hour(8).minute(0)) && moment().isBefore(moment().startOf('day').hour(20).minute(0)) && $('.oh-pointer').length == 0){
+                        $('.oh-month .open.today').append('<div class="oh-pointer"></div>')
+                    } else if(moment().isBefore(moment().startOf('day').hour(8).minute(0)) || moment().isAfter(moment().startOf('day').hour(20).minute(0))){
+                        $('.oh-pointer').remove();
+                    }
+                    $('.oh-pointer').css('top', (moment().diff(moment().startOf('day').hour(8).minute(0), 'hours', true)/12)*100+'%');
                 }
 
                 /**
@@ -221,12 +286,30 @@ var OpeningHours = {
                                 opening: weeks[w].days[d].openingTime,
                                 closing: weeks[w].days[d].closingTime,
                                 note: note,
+                                overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
                             });
                         }
                     }
                     return events;
 
                 }
+                /**
+                 *  ## Time to percentage
+                 *  Transform the weekly data from API into event data for the calendar
+                 *
+                 *  @private
+                 *  @param {Object} Weekly Data
+                 *  @returns {Array} Events
+                 */
+                function timeToPercentage(date, opening, closing){
+                    moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
+                    var duration = (moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true)/12)*100,
+                        starting = (moment(date+' '+opening).diff(moment(date+' 08:00'), 'hours', true)/12)*100;
+                    return {
+                        duration: duration,
+                        starting: starting
+                    };
+                };
             });
         }
     },
