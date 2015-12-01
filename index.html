@@ -1,23 +1,50 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script src="assets/js/moment.js"></script>
-  <script src="assets/js/async.js"></script>
-  <script src="assets/js/openingHours.js"></script>
-  <script>
-OpeningHours.initialize("sv");</script>
-  <title>Opening Hours</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/openingHours.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-ju.css">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="assets/js/OpeningHours.js"></script>
+    <script>
+        OpeningHours.initialize("en");</script>
+    <title>Opening Hours</title>
 </head>
 
 <body>
-    <aside class="oh-opening-hours oh-web">
-        <p class="oh-countdown" id="oh-todays-hours"></p>
-        <ul class="oh-week">
-        </ul>
-    </aside>
+<main class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>OpeningHours.js</h1>
+            <a href="https://github.com/JonkopingUniversityLibrary/OpeningHours.js">Source Code and installation</a>
+            <h2>Dependencies</h2>
+            <ul>
+                <li>Springshare's LibCal <em>(For the API and data)</em></li>
+                <li>jQuery</li>
+            </ul>
+            <h2>Results</h2>
+
+        </div>
+        <div class="col-md-4"> <h3>Basic countdown and current week</h3>
+            <div class="well">
+                <aside class="oh-opening-hours oh-web">
+                    <p class="oh-countdown" id="oh-todays-hours"></p>
+                    <ul class="oh-week">
+                    </ul>
+                </aside>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3>Monthly calendar view</h3>
+            <div class="well">
+                <aside class="oh-opening-hours oh-web">
+                    <div class="oh-month" id="oh-month"></div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

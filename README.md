@@ -1,9 +1,10 @@
 ## Usage
 
-Requires jQuery to load.
-
+1. Load jQuery.
+2. Change the instance id in `OpeningHours.config.idd`
+3. Run the script with:
 ```
-$.getScript('http://julius.hj.se/openinghours/assets/js/OpeningHours.js', function(){
+$.getScript('YOURPATH/assets/js/OpeningHours.js', function(){
    OpeningHours.initialize("sv");
 });
 ```
