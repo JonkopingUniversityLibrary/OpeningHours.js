@@ -15,7 +15,7 @@ gulp.task('styles', function() {
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(rename({
-        basename: 'openingHours'
+        basename: 'OpeningHours'
     }))
     .pipe(sass())
     .pipe(autoprefixer())
