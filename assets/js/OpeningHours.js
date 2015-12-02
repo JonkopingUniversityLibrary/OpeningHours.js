@@ -17,10 +17,9 @@ var OpeningHours = {
      * Initializes the Opening Hours script.
      *
      * @public
-     * @param {String} Language, written out as either sv (swedish) or en (english).
-     * @returns {Void}
+     * @param {String} language, written out as either sv (swedish) or en (english).
      */
-    initialize: function(lang) {
+    initialize: function(language) {
         var setLanguage = OpeningHours.setLanguage,
             getData = OpeningHours.getData,
             showCountdown = OpeningHours.showCountdown,
@@ -35,14 +34,14 @@ var OpeningHours = {
             $.getScript(config.rootUrl+'/assets/js/moment.js', function() {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
-                setLanguage(lang);
+                setLanguage(language);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
                 getData(showCountdown, showWeek, showMonth);
 
             });
         } else {
-            console.error('OpeningHours - Dependency missing: jQuery');
+            window.console.error('OpeningHours - Dependency missing: jQuery');
         }
 
     },
@@ -107,7 +106,7 @@ var OpeningHours = {
      *  Returns opening hours for this week
      *
      *  @private
-     *  @param {Object} API data from openingHours()
+     *  @param {Object} data API data from openingHours()
      *  @returns {String} Next day and time when the library is set to open.
      */
     showWeek: function(data){
@@ -175,8 +174,7 @@ var OpeningHours = {
      *  Returns opening hours for 3 months
      *
      *  @private
-     *  @param {Object} API data from openingHours()
-     *  @returns {Void} Next day and time when the library is set to open.
+     *  @param {Object} data API data from openingHours()
      */
     showMonth: function(data){
         var hasMonth = OpeningHours.hasMonth,
@@ -228,7 +226,7 @@ var OpeningHours = {
                  *  Return the abbreviations of the days of the week according to language
                  *
                  *  @private
-                 *  @param {String} Language
+                 *  @param {String} language
                  *  @returns {Array} Weekdays
                  *
                  */
@@ -241,13 +239,11 @@ var OpeningHours = {
                 }
 
                 /**
-                 *  ## Days of the Week
-                 *  Return the abbreviations of the days of the week according to language
+                 *  ## Pointer
+                 *  Adds a pointer for the current time of the day.
                  *
                  *  @private
-                 *  @param {String} Language
                  *  @returns {Array} Weekdays
-                 *
                  */
                 function pointer(){
                     if(moment().isAfter(moment().startOf('day').hour(8).minute(0)) && moment().isBefore(moment().startOf('day').hour(20).minute(0)) && $('.oh-pointer').length == 0){
@@ -263,7 +259,7 @@ var OpeningHours = {
                  *  Transform the weekly data from API into event data for the calendar
                  *
                  *  @private
-                 *  @param {Object} Weekly Data
+                 *  @param {Object} weeks Weekly Data
                  *  @returns {Array} Events
                  */
                 function weeksToEvents(weeks){
@@ -297,12 +293,13 @@ var OpeningHours = {
 
                 }
                 /**
-                 *  ## Time to percentage
+                 ## Time to percentage
                  *  Transform the weekly data from API into event data for the calendar
                  *
-                 *  @private
-                 *  @param {Object} Weekly Data
-                 *  @returns {Array} Events
+                 * @param date
+                 * @param opening
+                 * @param closing
+                 * @returns {Object} {{duration: number, starting: number}}
                  */
                 function timeToPercentage(date, opening, closing){
                     moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
@@ -322,8 +319,7 @@ var OpeningHours = {
      *  Next day and time when the library is set to open.
      *
      *  @private
-     *  @param {Object} API data from openingHours()
-     *  @returns {Void}
+     *  @param {Object} data API data from openingHours()
      */
     showCountdown: function(data){
         var language = OpeningHours.language,
@@ -419,7 +415,6 @@ var OpeningHours = {
          *  Print out the output for countDown.
          *
          *  @private
-         *  @param {Void}
          */
         function countdownOutput(content){
             $(".oh-countdown").text(content);
@@ -445,10 +440,9 @@ var OpeningHours = {
 
         // Grab data from the API with JSONP
         $.ajax({
-            //url: 'http://localhost:3000/assets/js/libcal.json',
             url: 'https://api3.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
             jsonpCallback: "response",
-            dataType: "jsonp",
+            dataType: "jsonp"
 
             // When data is grabbed from API, format it into our own JSON-format
         }).then(function(content){
@@ -586,41 +580,41 @@ var OpeningHours = {
             minutes: {
                 singular: {
                     sv: " minut",
-                    en: " minute",
+                    en: " minute"
                 },
                 plural: {
                     sv: " minuter",
-                    en: " minutes",
+                    en: " minutes"
                 }
             },
             hours: {
                 singular: {
                     sv: " timme",
-                    en: " hour",
+                    en: " hour"
                 },
                 plural: {
                     sv: " timmar",
-                    en: " hours",
+                    en: " hours"
                 }
             },
             days: {
                 singular: {
                     sv: " dag",
-                    en: " day",
+                    en: " day"
                 },
                 plural: {
                     sv: " dagar",
-                    en: " days",
+                    en: " days"
                 }
             },
             week: {
                 singular: {
                     sv: "vecka",
-                    en: "week",
+                    en: "week"
                 },
                 plural: {
                     sv: "veckor",
-                    en: "weeks",
+                    en: "weeks"
                 }
             }
         },
@@ -683,18 +677,14 @@ var OpeningHours = {
      *  @private
      */
     hasMonth: function(){
-        if($('#oh-month').length > 0){
-            return true;
-        } else {
-            return false;
-        }
+        return ($('#oh-month').length > 0);
     },
 
     /**
      *  ## Set language
      *  Set language of Moment.js and OpeningHours
      *
-     *  @param {String} Language
+     *  @param {String} language
      *  @private
      */
     setLanguage: function(language){
@@ -713,5 +703,5 @@ var OpeningHours = {
         } else {
 
         }
-    },
+    }
 };
