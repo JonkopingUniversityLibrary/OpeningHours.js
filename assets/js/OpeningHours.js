@@ -1,7 +1,7 @@
 /**
  *  ## OpeningHours
  *  Opening Hours script for Jönköping University Library
- *  
+ *
  *  @author Gustav Lindqvist (gustav.lindqvist@ju.se)
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  *
@@ -42,7 +42,7 @@ var OpeningHours = {
 
             });
         } else {
-          console.error('OpeningHours - Dependency missing: jQuery');
+            console.error('OpeningHours - Dependency missing: jQuery');
         }
 
     },
@@ -107,8 +107,8 @@ var OpeningHours = {
      *  Returns opening hours for this week
      *
      *  @private
-     *  @param {Object} API data from openingHours() 
-     *  @returns {String} Next day and time when the library is set to open. 
+     *  @param {Object} API data from openingHours()
+     *  @returns {String} Next day and time when the library is set to open.
      */
     showWeek: function(data){
         var weeks = data.weeks,
@@ -132,8 +132,8 @@ var OpeningHours = {
 
                 // Create day element & add the weekday to it
                 var label = $("<span>")
-                   .addClass("oh-day-label")
-                   .text(strings.weekdays[weeks[w].days[d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                    .addClass("oh-day-label")
+                    .text(strings.weekdays[weeks[w].days[d].day][language].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
                         return letter.toUpperCase();
                     }));
 
@@ -141,7 +141,7 @@ var OpeningHours = {
                 if(weeks[w].days[d].note){
                     label.html(label.html()+'<span class="oh-note">*</span>');
                 }
-                
+
                 // Show the opening/closed message
                 var hours = $("<span>");
                 hours.addClass("oh-day-hours");
@@ -192,7 +192,7 @@ var OpeningHours = {
                 $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
                 $.getScript(config.rootUrl+'assets/js/clndr.min.js')
 
-            // Run function when dependencies are loaded
+                // Run function when dependencies are loaded
             ).done(function(){
                 var events = weeksToEvents(data.weeks);
 
@@ -204,7 +204,7 @@ var OpeningHours = {
                     constraints: {
                         startDate: events[0].date,
                         endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
-                      },
+                    },
                     targets: {
                         nextButton: 'oh-cal-next',
                         previousButton: 'oh-cal-prev',
@@ -239,7 +239,7 @@ var OpeningHours = {
                         return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                     }
                 }
-                
+
                 /**
                  *  ## Days of the Week
                  *  Return the abbreviations of the days of the week according to language
@@ -322,8 +322,8 @@ var OpeningHours = {
      *  Next day and time when the library is set to open.
      *
      *  @private
-     *  @param {Object} API data from openingHours() 
-     *  @returns {Void} 
+     *  @param {Object} API data from openingHours()
+     *  @returns {Void}
      */
     showCountdown: function(data){
         var language = OpeningHours.language,
@@ -334,78 +334,78 @@ var OpeningHours = {
         function calculateTime() {
             // Loop through the weeks
             week:
-            for (var w = 0; w < weeks.length; w++){
-                var day, now, currentDay;
-                // Loop through the days of the week
-                for (var d = 0; d < weeks[w].days.length; d++){
-                    var openingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].openingTime, "YYYY-MM-DD HH:m"),
-                        closingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].closingTime, "YYYY-MM-DD HH:m");
+                for (var w = 0; w < weeks.length; w++){
+                    var day, now, currentDay;
+                    // Loop through the days of the week
+                    for (var d = 0; d < weeks[w].days.length; d++){
+                        var openingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].openingTime, "YYYY-MM-DD HH:m"),
+                            closingTime = moment(weeks[w].days[d].date+" "+weeks[w].days[d].closingTime, "YYYY-MM-DD HH:m");
 
-                    now = moment();
-                    currentDay = moment().startOf("day");
+                        now = moment();
+                        currentDay = moment().startOf("day");
 
-                    // If the current working day is going to open
-                    if(weeks[w].days[d].status == "open"){
-                        openingNext.day = weeks[w].days[d].day;
-                        openingNext.openingTime = weeks[w].days[d].openingTime;
-                        openingNext.closingTime = weeks[w].days[d].closingTime;
-                        openingNext.date = weeks[w].days[d].date;
+                        // If the current working day is going to open
+                        if(weeks[w].days[d].status == "open"){
+                            openingNext.day = weeks[w].days[d].day;
+                            openingNext.openingTime = weeks[w].days[d].openingTime;
+                            openingNext.closingTime = weeks[w].days[d].closingTime;
+                            openingNext.date = weeks[w].days[d].date;
 
-                        // If we are currently open, print out the time to closing
-                        if((openingTime.diff(now, "seconds") <= 0 && closingTime.diff(now, "seconds") > 0)){
+                            // If we are currently open, print out the time to closing
+                            if((openingTime.diff(now, "seconds") <= 0 && closingTime.diff(now, "seconds") > 0)){
 
-                            // If we are closing in 1 minute or less show relative time with singular suffix
-                            if(closingTime.diff(now, "minutes") <= 1){
-                                countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.singular[language] +  strings.openRelativeSuffix[language]);
-                                break week;
-
-                                // If it's 60 minutes or less show relative time.
-                            } else if(closingTime.diff(now, "minutes") < 60){
-                                countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.plural[language] +  strings.openRelativeSuffix[language]);
-                                break week;
-
-                                // Otherwise show absolute time.
-                            } else {
-                                countdownOutput(strings.openAbsolute[language] + openingNext.closingTime + " " + strings.today[language]+".");
-                                break week;
-                            }     
-
-                            // Is the date in the future?
-                        } else if (openingTime.isAfter(now)){
-
-                            // Is it the same date?
-                            if (moment(weeks[w].days[d].date).diff(currentDay, "days") === 0){
-
-                                // If it's 1 minute or less left, change to singular suffix
-                                if(openingTime.diff(now, "minutes") <= 1){
-                                    countdownOutput(strings.closedRelative[language]+strings.lessThanOne[language]+strings.time.minutes.singular[language]+".");
+                                // If we are closing in 1 minute or less show relative time with singular suffix
+                                if(closingTime.diff(now, "minutes") <= 1){
+                                    countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.singular[language] +  strings.openRelativeSuffix[language]);
                                     break week;
 
                                     // If it's 60 minutes or less show relative time.
-                                } else if(openingTime.diff(now, "minutes") < 60){
-                                    countdownOutput(strings.closedRelative[language]+openingTime.diff(now, "minutes")+strings.time.minutes.plural[language]+".");
+                                } else if(closingTime.diff(now, "minutes") < 60){
+                                    countdownOutput(strings.openRelative[language] + closingTime.diff(now, "minutes") + strings.time.minutes.plural[language] +  strings.openRelativeSuffix[language]);
                                     break week;
 
                                     // Otherwise show absolute time.
                                 } else {
-                                    countdownOutput(strings.closedAbsolute[language]+" "+strings.today[language]+" "+strings.at[language]+openingNext.openingTime+".");
+                                    countdownOutput(strings.openAbsolute[language] + openingNext.closingTime + " " + strings.today[language]+".");
                                     break week;
-                                } 
+                                }
 
-                                // Is it tomorrow?
-                            } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") == 1){
-                                countdownOutput(strings.closedAbsolute[language]+strings.weekdays.tomorrow[language]+strings.at[language]+openingNext.openingTime+".");
-                                break week;
+                                // Is the date in the future?
+                            } else if (openingTime.isAfter(now)){
 
-                                // Is it further in the future?
-                            } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") >= 2){
-                                countdownOutput(strings.closedAbsolute[language]+strings.on[language]+strings.weekdays[openingNext.day][language]+strings.at[language]+openingNext.openingTime+".");
-                                break week;
+                                // Is it the same date?
+                                if (moment(weeks[w].days[d].date).diff(currentDay, "days") === 0){
+
+                                    // If it's 1 minute or less left, change to singular suffix
+                                    if(openingTime.diff(now, "minutes") <= 1){
+                                        countdownOutput(strings.closedRelative[language]+strings.lessThanOne[language]+strings.time.minutes.singular[language]+".");
+                                        break week;
+
+                                        // If it's 60 minutes or less show relative time.
+                                    } else if(openingTime.diff(now, "minutes") < 60){
+                                        countdownOutput(strings.closedRelative[language]+openingTime.diff(now, "minutes")+strings.time.minutes.plural[language]+".");
+                                        break week;
+
+                                        // Otherwise show absolute time.
+                                    } else {
+                                        countdownOutput(strings.closedAbsolute[language]+" "+strings.today[language]+" "+strings.at[language]+openingNext.openingTime+".");
+                                        break week;
+                                    }
+
+                                    // Is it tomorrow?
+                                } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") == 1){
+                                    countdownOutput(strings.closedAbsolute[language]+strings.weekdays.tomorrow[language]+strings.at[language]+openingNext.openingTime+".");
+                                    break week;
+
+                                    // Is it further in the future?
+                                } else if(moment(weeks[w].days[d].date).diff(currentDay, "days") >= 2){
+                                    countdownOutput(strings.closedAbsolute[language]+strings.on[language]+strings.weekdays[openingNext.day][language]+strings.at[language]+openingNext.openingTime+".");
+                                    break week;
+                                }
                             }
                         }
                     }
                 }
-            }
         }
 
         // Run the calculations once.
