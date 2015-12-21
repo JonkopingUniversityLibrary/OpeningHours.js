@@ -40,7 +40,7 @@ Theme used for the web version of the widget
     cursor: default;
 
     user-select: none;
-    .oh-cal-prev, .oh-cal-next{
+    .oh-cal-prev , .oh-cal-next{
         box-sizing: border-box;
         width: $control-height;
         height: $control-height;
@@ -136,7 +136,7 @@ Theme used for the web version of the widget
             color: $secondary;
 
             @include respond-to(small){
-                min-height: 65px;
+                min-height: 66px;
             }
 
             &:nth-of-type(7n+1){
@@ -198,10 +198,10 @@ Theme used for the web version of the widget
                     background: $primary;
                 }
             }
-            &.past, &.inactive{
+            &.past , &.inactive{
                 background: $inactive !important;
                 color: darken($inactive, 40%) !important;
-                .oh-cal-hours, .oh-overlay{
+                .oh-cal-hours , .oh-overlay{
                     display: none;
                 }
             }
@@ -215,7 +215,6 @@ Theme used for the web version of the widget
             background: $secondary;
             color: white;
             .oh-overlay-content{
-                //margin-top: -1px;
                 position: absolute;
                 left: 0;
                 box-sizing: border-box;
@@ -251,16 +250,17 @@ Theme used for the web version of the widget
             font-weight: 700;
             font-size: 15px;
 
-            @include respond-to(small){
-                font-size: 10px;
-                span:first-child:after{
-                    content: none;
-                }
-            }
             span{
                 width: 100%;
                 &:first-child:after{
                     content: " - ";
+                }
+            }
+
+            @include respond-to(small){
+                font-size: 10px;
+                span:first-child:after{
+                    content: none;
                 }
             }
         }

@@ -30,7 +30,7 @@ var OpeningHours = {
         if (typeof jQuery !== 'undefined') {
 
             // Load the dependencies
-            $('head').append('<link rel="stylesheet" href="'+config.rootUrl+'/assets/css/openingHours.css">');
+            $('head').append('<link rel="stylesheet" href="'+config.rootUrl+'/assets/css/OpeningHours.css">');
             $.getScript(config.rootUrl+'/assets/js/moment.js', function() {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
@@ -432,69 +432,88 @@ var OpeningHours = {
             hasMonth = OpeningHours.hasMonth,
             iid = OpeningHours.config.iid;
 
+        // Set weeks depending on what is needed.
         if(hasMonth()){
             weeks = 14;
         } else {
             weeks = 4;
         }
 
-        // Grab data from the API with JSONP
-        $.ajax({
-            url: 'https://api3.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
-            jsonpCallback: "response",
-            dataType: "jsonp"
-
-            // When data is grabbed from API, format it into our own JSON-format
-        }).then(function(content){
-            var data = content.locations[0].weeks,
-                response = {};
-
-            // Loop through all the weeks.
-            response.weeks = [];
-            for(var w = 0; w < data.length; w++){
-                var momentObject,
-                    momentObjectClosing,
-                    momentObjectOpening;
-
-                // Create a moment object of the date of the day.
-                momentObject = moment(data[w].Monday.date, "YYYY-MM-DD");
-                var weekNumber = String(momentObject.format("W")),
-                    weekDay,
-                    currentWeek = {};
-
-                currentWeek.weekNumber = weekNumber;
-                currentWeek.days = [];
-
-                // Loop through the days of the week
-                for(var d = 0; d < 7; d++){
-                    var weekday = getWeekday(d);
-                    currentWeek.days[d] = {};
-                    currentWeek.days[d].status = data[w][weekday].times.status;
-                    currentWeek.days[d].day = weekday;
-                    currentWeek.days[d].date = data[w][weekday].date;
-
-                    // If there is a note add that to object
-                    if(data[w][weekday].times.note){
-                        currentWeek.days[d].note = {};
-                        var note = data[w][weekday].times.note.split('/');
-                        currentWeek.days[d].note.sv = note[0];
-                        currentWeek.days[d].note.en = note[1];
-                    }
-
-                    // If it's open, write out the times it is open.
-                    if(data[w][weekday].times.status == "open"){
-                        momentObjectOpening = moment(data[w][weekday].times.hours[0].from, "ha");
-                        momentObjectClosing = moment(data[w][weekday].times.hours[0].to, "ha");
-                        currentWeek.days[d].openingTime = momentObjectOpening.format("HH:mm");
-                        currentWeek.days[d].closingTime = momentObjectClosing.format("HH:mm");
-                    }
-                }
-                response.weeks.push(currentWeek);
-            }
+        // Check if data is stored in session.
+        if(sessionStorage.hasOwnProperty('openingHoursData')){
+            var response = JSON.parse(sessionStorage.getItem('openingHoursData'));
             countdownCallback(response);
             weekCallback(response);
             monthCallback(response);
-        });
+        } else {
+            getData();
+        }
+
+        function getData(){
+            // Grab data from the API with JSONP.
+            $.ajax({
+                url: 'https://api3.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
+                jsonpCallback: "response",
+                dataType: "jsonp"
+
+            // When data is grabbed from API, format it into our own JSON-format.
+            }).then(function(content){
+                var data = content.locations[0].weeks,
+                    response = {};
+
+                // Loop through all the weeks.
+                response.weeks = [];
+                for(var w = 0; w < data.length; w++){
+                    var momentObject,
+                        momentObjectClosing,
+                        momentObjectOpening;
+
+                    // Create a moment object of the date of the day.
+                    momentObject = moment(data[w].Monday.date, "YYYY-MM-DD");
+                    var weekNumber = String(momentObject.format("W")),
+                        weekDay,
+                        currentWeek = {};
+
+                    currentWeek.weekNumber = weekNumber;
+                    currentWeek.days = [];
+
+                    // Loop through the days of the week
+                    for(var d = 0; d < 7; d++){
+                        var weekday = getWeekday(d);
+                        currentWeek.days[d] = {};
+                        currentWeek.days[d].status = data[w][weekday].times.status;
+                        currentWeek.days[d].day = weekday;
+                        currentWeek.days[d].date = data[w][weekday].date;
+
+                        // If there is a note add that to object
+                        if(data[w][weekday].times.note){
+                            currentWeek.days[d].note = {};
+                            var note = data[w][weekday].times.note.split('/');
+                            currentWeek.days[d].note.sv = note[0];
+                            currentWeek.days[d].note.en = note[1];
+                        }
+
+                        // If it's open, write out the times it is open.
+                        if(data[w][weekday].times.status == "open"){
+                            momentObjectOpening = moment(data[w][weekday].times.hours[0].from, "ha");
+                            momentObjectClosing = moment(data[w][weekday].times.hours[0].to, "ha");
+                            currentWeek.days[d].openingTime = momentObjectOpening.format("HH:mm");
+                            currentWeek.days[d].closingTime = momentObjectClosing.format("HH:mm");
+                        }
+                    }
+                    response.weeks.push(currentWeek);
+                }
+
+                // Store data in sessionStorage.
+                sessionStorage.setItem('openingHoursData',JSON.stringify(response));
+
+                // Call callback functions.
+                countdownCallback(response);
+                weekCallback(response);
+                monthCallback(response);
+            });
+        }
+
 
         /**
          *  ## Get Weekday
