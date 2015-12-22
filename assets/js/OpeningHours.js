@@ -428,20 +428,13 @@ var OpeningHours = {
      *  @private
      */
     getData: function(countdownCallback, weekCallback, monthCallback){
-        var weeks,
-            hasMonth = OpeningHours.hasMonth,
-            iid = OpeningHours.config.iid;
-
-        // Set weeks depending on what is needed.
-        if(hasMonth()){
-            weeks = 14;
-        } else {
-            weeks = 4;
-        }
+        var weeks = 14,
+            iid = OpeningHours.config.iid,
+            Cache = OpeningHours.Cache,
+            response;
 
         // Check if data is stored in session.
-        if(sessionStorage.hasOwnProperty('openingHoursData')){
-            var response = JSON.parse(sessionStorage.getItem('openingHoursData'));
+        if(response = Cache.load()){
             countdownCallback(response);
             weekCallback(response);
             monthCallback(response);
@@ -504,8 +497,7 @@ var OpeningHours = {
                     response.weeks.push(currentWeek);
                 }
 
-                // Store data in sessionStorage.
-                sessionStorage.setItem('openingHoursData',JSON.stringify(response));
+                Cache.save(response);
 
                 // Call callback functions.
                 countdownCallback(response);
@@ -686,6 +678,60 @@ var OpeningHours = {
         goTo: {
             sv: "Gå till",
             en: "Go to"
+        }
+    },
+
+    /**
+     * ## Cache
+     * Object with functions for handling cache in localstorage.
+     */
+    Cache: {
+        // TODO: Add cross domain support.
+
+        /**
+         * # Save
+         * Saves data to cache in localstorage with timestamp.
+         * @param response
+         */
+        save: function(response){
+            var timestamp = moment(),
+                openingHoursData = {
+                    timestamp: timestamp.format(),
+                    response: response
+                };
+            localStorage.setItem('openingHoursData',JSON.stringify(openingHoursData));
+        },
+
+        /**
+         * ## Load
+         * Checks if data is not too old and then loads from cache in localstorage.
+         * @returns {Object} response
+         */
+        load: function(){
+            var data = false;
+
+            // Check if object exists in LocalStorage.
+            if(localStorage.hasOwnProperty('openingHoursData')) {
+                data = JSON.parse(localStorage.getItem('openingHoursData'));
+
+                // If data isn't expired, return it.
+                if(isNotExpired()){
+                    return data.response;
+                }
+                /**
+                 * ## Is not expired?
+                 * Checks if the data is older than 24 hours.
+                 * @returns {boolean}
+                 */
+                function isNotExpired(){
+                    var now = moment(),
+                        then = moment(data.timestamp),
+                        diff = now.diff(then,'hours');
+                    return (diff <= 24);
+                };
+            } else {
+                return data;
+            }
         }
     },
 
