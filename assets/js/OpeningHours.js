@@ -41,14 +41,14 @@ var OpeningHours = {
 
             });
         } else {
-            window.console.error('OpeningHours - Dependency missing: jQuery');
+            window.console.error('OpeningHours: Dependency missing: jQuery');
         }
 
     },
 
     /**
      * ## Config
-     * Contains the Instance ID required for the API.
+     * Contains the configuration variables neccesary to run the script.
      */
     config: {
         iid: '3237',
@@ -106,7 +106,7 @@ var OpeningHours = {
      *  Returns opening hours for this week
      *
      *  @private
-     *  @param {Object} data API data from openingHours()
+     *  @param {Object} data API data from getData()
      *  @returns {String} Next day and time when the library is set to open.
      */
     showWeek: function(data){
@@ -174,144 +174,141 @@ var OpeningHours = {
      *  Returns opening hours for 3 months
      *
      *  @private
-     *  @param {Object} data API data from openingHours()
+     *  @param {Object} data API data from getData()
      */
     showMonth: function(data){
-        var hasMonth = OpeningHours.hasMonth,
-            language = OpeningHours.language,
+        var language = OpeningHours.language,
             config = OpeningHours.config,
             strings = OpeningHours.strings,
             template = OpeningHours.config.calendar.template;
 
-        if(hasMonth()){
 
-            // Load dependencies
-            $.when(
-                $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
-                $.getScript(config.rootUrl+'assets/js/clndr.min.js')
+        // Load dependencies
+        $.when(
+            $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
+            $.getScript(config.rootUrl+'assets/js/clndr.min.js')
 
-                // Run function when dependencies are loaded
-            ).done(function(){
-                var events = weeksToEvents(data.weeks);
+            // Run function when dependencies are loaded
+        ).done(function(){
+            var events = weeksToEvents(data.weeks);
 
-                // Initialize the calendar widget
-                $('#oh-month').clndr({
-                    template: template,
-                    weekOffset: 1,
-                    daysOfTheWeek: daysOfTheWeek(language),
-                    constraints: {
-                        startDate: events[0].date,
-                        endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
-                    },
-                    targets: {
-                        nextButton: 'oh-cal-next',
-                        previousButton: 'oh-cal-prev',
-                        todayButton: 'oh-cal-today',
-                        day: 'day',
-                        empty: 'empty'
-                    },
-                    clickEvents: {
-                        onMonthChange: pointer
-                    },
-                    events: events,
-                    extras: {
-                        today: strings.goTo[language]+' '+strings.today[language]
-                    }
-
-                });
-                pointer();
-                setInterval(pointer, 50000);
-                /**
-                 *  ## Days of the Week
-                 *  Return the abbreviations of the days of the week according to language
-                 *
-                 *  @private
-                 *  @param {String} language
-                 *  @returns {Array} Weekdays
-                 *
-                 */
-                function daysOfTheWeek(language){
-                    if(language == 'sv') {
-                        return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
-                    } else {
-                        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                    }
+            // Initialize the calendar widget
+            $('#oh-month').clndr({
+                template: template,
+                weekOffset: 1,
+                daysOfTheWeek: daysOfTheWeek(language),
+                constraints: {
+                    startDate: events[0].date,
+                    endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
+                },
+                targets: {
+                    nextButton: 'oh-cal-next',
+                    previousButton: 'oh-cal-prev',
+                    todayButton: 'oh-cal-today',
+                    day: 'day',
+                    empty: 'empty'
+                },
+                clickEvents: {
+                    onMonthChange: pointer
+                },
+                events: events,
+                extras: {
+                    today: strings.goTo[language]+' '+strings.today[language]
                 }
 
-                /**
-                 *  ## Pointer
-                 *  Adds a pointer for the current time of the day.
-                 *
-                 *  @private
-                 *  @returns {Array} Weekdays
-                 */
-                function pointer(){
-                    if(moment().isAfter(moment().startOf('day').hour(8).minute(0)) && moment().isBefore(moment().startOf('day').hour(20).minute(0)) && $('.oh-pointer').length == 0){
-                        $('.oh-month .open.today').append('<div class="oh-pointer"></div>')
-                    } else if(moment().isBefore(moment().startOf('day').hour(8).minute(0)) || moment().isAfter(moment().startOf('day').hour(20).minute(0))){
-                        $('.oh-pointer').remove();
-                    }
-                    $('.oh-pointer').css('top', (moment().diff(moment().startOf('day').hour(8).minute(0), 'hours', true)/12)*100+'%');
-                }
-
-                /**
-                 *  ## Weeks to Events
-                 *  Transform the weekly data from API into event data for the calendar
-                 *
-                 *  @private
-                 *  @param {Object} weeks Weekly Data
-                 *  @returns {Array} Events
-                 */
-                function weeksToEvents(weeks){
-                    var events = [];
-                    for(var w in weeks){
-                        for(var d in weeks[w].days){
-                            var status = weeks[w].days[d].status;
-                            if(weeks[w].days[d].status == 'closed' && language == 'sv'){
-                                status = 'stängt';
-                            } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
-                                status = 'öppet';
-                            }
-                            var note = '';
-                            if(typeof weeks[w].days[d].note != 'undefined'){
-                                note = weeks[w].days[d].note[language];
-                            }
-                            events.push({
-                                date: weeks[w].days[d].date,
-                                status: {
-                                    check: weeks[w].days[d].status,
-                                    output: status,
-                                },
-                                opening: weeks[w].days[d].openingTime,
-                                closing: weeks[w].days[d].closingTime,
-                                note: note,
-                                overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
-                            });
-                        }
-                    }
-                    return events;
-
-                }
-                /**
-                 ## Time to percentage
-                 *  Transform the weekly data from API into event data for the calendar
-                 *
-                 * @param date
-                 * @param opening
-                 * @param closing
-                 * @returns {Object} {{duration: number, starting: number}}
-                 */
-                function timeToPercentage(date, opening, closing){
-                    moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
-                    var duration = (moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true)/12)*100,
-                        starting = (moment(date+' '+opening).diff(moment(date+' 08:00'), 'hours', true)/12)*100;
-                    return {
-                        duration: duration,
-                        starting: starting
-                    };
-                };
             });
-        }
+            pointer();
+            setInterval(pointer, 50000);
+            /**
+             *  ## Days of the Week
+             *  Return the abbreviations of the days of the week according to language
+             *
+             *  @private
+             *  @param {String} language
+             *  @returns {Array} Weekdays
+             *
+             */
+            function daysOfTheWeek(language){
+                if(language == 'sv') {
+                    return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
+                } else {
+                    return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                }
+            }
+
+            /**
+             *  ## Pointer
+             *  Adds a pointer for the current time of the day.
+             *
+             *  @private
+             *  @returns {Array} Weekdays
+             */
+            function pointer(){
+                if(moment().isAfter(moment().startOf('day').hour(8).minute(0)) && moment().isBefore(moment().startOf('day').hour(20).minute(0)) && $('.oh-pointer').length == 0){
+                    $('.oh-month .open.today').append('<div class="oh-pointer"></div>')
+                } else if(moment().isBefore(moment().startOf('day').hour(8).minute(0)) || moment().isAfter(moment().startOf('day').hour(20).minute(0))){
+                    $('.oh-pointer').remove();
+                }
+                $('.oh-pointer').css('top', (moment().diff(moment().startOf('day').hour(8).minute(0), 'hours', true)/12)*100+'%');
+            }
+
+            /**
+             *  ## Weeks to Events
+             *  Transform the weekly data from API into event data for the calendar
+             *
+             *  @private
+             *  @param {Object} weeks Weekly Data
+             *  @returns {Array} Events
+             */
+            function weeksToEvents(weeks){
+                var events = [];
+                for(var w in weeks){
+                    for(var d in weeks[w].days){
+                        var status = weeks[w].days[d].status;
+                        if(weeks[w].days[d].status == 'closed' && language == 'sv'){
+                            status = 'stängt';
+                        } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
+                            status = 'öppet';
+                        }
+                        var note = '';
+                        if(typeof weeks[w].days[d].note != 'undefined'){
+                            note = weeks[w].days[d].note[language];
+                        }
+                        events.push({
+                            date: weeks[w].days[d].date,
+                            status: {
+                                check: weeks[w].days[d].status,
+                                output: status,
+                            },
+                            opening: weeks[w].days[d].openingTime,
+                            closing: weeks[w].days[d].closingTime,
+                            note: note,
+                            overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
+                        });
+                    }
+                }
+                return events;
+
+            }
+            /**
+             ## Time to percentage
+             *  Transform the weekly data from API into event data for the calendar
+             *
+             * @param date
+             * @param opening
+             * @param closing
+             * @returns {Object} {{duration: number, starting: number}}
+             */
+            function timeToPercentage(date, opening, closing){
+                moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
+                var duration = (moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true)/12)*100,
+                    starting = (moment(date+' '+opening).diff(moment(date+' 08:00'), 'hours', true)/12)*100;
+                return {
+                    duration: duration,
+                    starting: starting
+                };
+            };
+        });
     },
 
     /**
@@ -319,7 +316,7 @@ var OpeningHours = {
      *  Next day and time when the library is set to open.
      *
      *  @private
-     *  @param {Object} data API data from openingHours()
+     *  @param {Object} data API data from getData()
      */
     showCountdown: function(data){
         var language = OpeningHours.language,
@@ -407,7 +404,7 @@ var OpeningHours = {
         // Run the calculations once.
         calculateTime();
 
-        // Then run the calculation once every minute.
+        // Then run the calculation once every 30 seconds.
         setInterval(calculateTime, 30 * 1000);
 
         /**
@@ -431,14 +428,16 @@ var OpeningHours = {
         var weeks = 14,
             iid = OpeningHours.config.iid,
             Cache = OpeningHours.Cache,
-            response;
+            cachedData = Cache.load();
 
         // Check if data is stored in session.
-        if(response = Cache.load()){
-            countdownCallback(response);
-            weekCallback(response);
-            monthCallback(response);
+        if(cachedData){
+            window.console.log('OpeningHours: Loaded from cache');
+            countdownCallback(cachedData);
+            weekCallback(cachedData);
+            monthCallback(cachedData);
         } else {
+            window.console.log('OpeningHours: Loaded from API');
             getData();
         }
 
@@ -705,7 +704,7 @@ var OpeningHours = {
         /**
          * ## Load
          * Checks if data is not too old and then loads from cache in localstorage.
-         * @returns {Object} response
+         * @returns {Object} data Returns data if it exists in cache and isn't too old.
          */
         load: function(){
             var data = false;
@@ -713,11 +712,6 @@ var OpeningHours = {
             // Check if object exists in LocalStorage.
             if(localStorage.hasOwnProperty('openingHoursData')) {
                 data = JSON.parse(localStorage.getItem('openingHoursData'));
-
-                // If data isn't expired, return it.
-                if(isNotExpired()){
-                    return data.response;
-                }
                 /**
                  * ## Is not expired?
                  * Checks if the data is older than 24 hours.
@@ -729,20 +723,16 @@ var OpeningHours = {
                         diff = now.diff(then,'hours');
                     return (diff <= 24);
                 };
+
+                // If data isn't expired, return it.
+                if(isNotExpired()){
+                    return data.response;
+                }
+
             } else {
                 return data;
             }
         }
-    },
-
-    /**
-     *  ## Has month?
-     *  Check if a monthly calendar is present on the page
-     *
-     *  @private
-     */
-    hasMonth: function(){
-        return ($('#oh-month').length > 0);
     },
 
     /**
