@@ -433,9 +433,13 @@ var OpeningHours = {
         // Check if data is stored in session.
         if(cachedData){
             window.console.log('OpeningHours: Loaded from cache');
-            countdownCallback(cachedData);
-            weekCallback(cachedData);
-            monthCallback(cachedData);
+
+            // Call callback functions after DOM has loaded.
+            $(document).ready(function(){
+                countdownCallback(cachedData);
+                weekCallback(cachedData);
+                monthCallback(cachedData);
+            });
         } else {
             window.console.log('OpeningHours: Loaded from API');
             getData();
@@ -498,10 +502,12 @@ var OpeningHours = {
 
                 Cache.save(response);
 
-                // Call callback functions.
-                countdownCallback(response);
-                weekCallback(response);
-                monthCallback(response);
+                // Call callback functions after DOM has loaded.
+                $(document).ready(function(){
+                    countdownCallback(cachedData);
+                    weekCallback(cachedData);
+                    monthCallback(cachedData);
+                });
             });
         }
 
