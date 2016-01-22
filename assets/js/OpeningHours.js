@@ -36,7 +36,7 @@ var OpeningHours = {
                 // Set the language attribute to the specified in the initialize function and the moment instance.
                 setLanguage(language);
 
-                // Get 4 weeks of data from API and then pass it on to showCountdown() and showOpeningHours().
+                // Get 4 weeks of data from API and then pass it on to showCountdown() and showWeek() and showMonth().
                 getData(showCountdown, showWeek, showMonth);
 
             });
@@ -182,13 +182,12 @@ var OpeningHours = {
             strings = OpeningHours.strings,
             template = OpeningHours.config.calendar.template;
 
-
         // Load dependencies
         $.when(
             $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
             $.getScript(config.rootUrl+'assets/js/clndr.min.js')
 
-            // Run function when dependencies are loaded
+        // Run function when dependencies are loaded
         ).done(function(){
             var events = weeksToEvents(data.weeks);
 
@@ -217,8 +216,7 @@ var OpeningHours = {
                 }
 
             });
-            pointer();
-            setInterval(pointer, 50000);
+
             /**
              *  ## Days of the Week
              *  Return the abbreviations of the days of the week according to language
@@ -237,22 +235,6 @@ var OpeningHours = {
             }
 
             /**
-             *  ## Pointer
-             *  Adds a pointer for the current time of the day.
-             *
-             *  @private
-             *  @returns {Array} Weekdays
-             */
-            function pointer(){
-                if(moment().isAfter(moment().startOf('day').hour(8).minute(0)) && moment().isBefore(moment().startOf('day').hour(20).minute(0)) && $('.oh-pointer').length == 0){
-                    $('.oh-month .open.today').append('<div class="oh-pointer"></div>')
-                } else if(moment().isBefore(moment().startOf('day').hour(8).minute(0)) || moment().isAfter(moment().startOf('day').hour(20).minute(0))){
-                    $('.oh-pointer').remove();
-                }
-                $('.oh-pointer').css('top', (moment().diff(moment().startOf('day').hour(8).minute(0), 'hours', true)/12)*100+'%');
-            }
-
-            /**
              *  ## Weeks to Events
              *  Transform the weekly data from API into event data for the calendar
              *
@@ -263,33 +245,40 @@ var OpeningHours = {
             function weeksToEvents(weeks){
                 var events = [];
                 for(var w in weeks){
-                    for(var d in weeks[w].days){
-                        var status = weeks[w].days[d].status;
-                        if(weeks[w].days[d].status == 'closed' && language == 'sv'){
-                            status = 'stängt';
-                        } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
-                            status = 'öppet';
+                    if(weeks.hasOwnProperty(w)){
+                        for(var d in weeks[w].days){
+                            if(weeks[w].days.hasOwnProperty(d)){
+                                var status = weeks[w].days[d].status;
+                                if(weeks[w].days[d].status == 'closed' && language == 'sv'){
+                                    if(weeks[w].days.hasOwnProperty(d)){
+                                        status = 'stängt';
+                                    }
+                                } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
+                                    status = 'öppet';
+                                }
+                                var note = '';
+                                if(typeof weeks[w].days[d].note != 'undefined'){
+                                    note = weeks[w].days[d].note[language];
+                                }
+                                events.push({
+                                    date: weeks[w].days[d].date,
+                                    status: {
+                                        check: weeks[w].days[d].status,
+                                        output: status
+                                    },
+                                    opening: weeks[w].days[d].openingTime,
+                                    closing: weeks[w].days[d].closingTime,
+                                    note: note,
+                                    overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
+                                });
+                            }
                         }
-                        var note = '';
-                        if(typeof weeks[w].days[d].note != 'undefined'){
-                            note = weeks[w].days[d].note[language];
-                        }
-                        events.push({
-                            date: weeks[w].days[d].date,
-                            status: {
-                                check: weeks[w].days[d].status,
-                                output: status,
-                            },
-                            opening: weeks[w].days[d].openingTime,
-                            closing: weeks[w].days[d].closingTime,
-                            note: note,
-                            overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
-                        });
                     }
                 }
                 return events;
 
             }
+
             /**
              ## Time to percentage
              *  Transform the weekly data from API into event data for the calendar
@@ -307,7 +296,7 @@ var OpeningHours = {
                     duration: duration,
                     starting: starting
                 };
-            };
+            }
         });
     },
 
@@ -466,11 +455,9 @@ var OpeningHours = {
 
                     // Create a moment object of the date of the day.
                     momentObject = moment(data[w].Monday.date, "YYYY-MM-DD");
-                    var weekNumber = String(momentObject.format("W")),
-                        weekDay,
-                        currentWeek = {};
+                    var currentWeek = {};
 
-                    currentWeek.weekNumber = weekNumber;
+                    currentWeek.weekNumber = String(momentObject.format("W"));
                     currentWeek.days = [];
 
                     // Loop through the days of the week
@@ -517,7 +504,7 @@ var OpeningHours = {
          *  Translates the position in the array to the name of the weekday.
          *
          *  @private
-         *  @param {Number} Weekday number
+         *  @param {Number} weekdayNumber
          *  @returns {String} Weekday
          */
         function getWeekday(weekdayNumber){
@@ -728,7 +715,7 @@ var OpeningHours = {
                         then = moment(data.timestamp),
                         diff = now.diff(then,'hours');
                     return (diff <= 24);
-                };
+                }
 
                 // If data isn't expired, return it.
                 if(isNotExpired()){
