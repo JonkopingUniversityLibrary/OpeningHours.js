@@ -207,9 +207,6 @@ var OpeningHours = {
                     day: 'day',
                     empty: 'empty'
                 },
-                clickEvents: {
-                    onMonthChange: pointer
-                },
                 events: events,
                 extras: {
                     today: strings.goTo[language]+' '+strings.today[language]
@@ -417,7 +414,8 @@ var OpeningHours = {
         var weeks = 14,
             iid = OpeningHours.config.iid,
             Cache = OpeningHours.Cache,
-            cachedData = Cache.load();
+            cachedData = Cache.load(),
+            data;
 
         // Check if data is stored in session.
         if(cachedData){
@@ -487,13 +485,13 @@ var OpeningHours = {
                     response.weeks.push(currentWeek);
                 }
 
-                Cache.save(response);
+                Cache.save(response); // Save data to cache
 
                 // Call callback functions after DOM has loaded.
                 $(document).ready(function(){
-                    countdownCallback(cachedData);
-                    weekCallback(cachedData);
-                    monthCallback(cachedData);
+                    countdownCallback(response);
+                    weekCallback(response);
+                    monthCallback(response);
                 });
             });
         }
@@ -725,6 +723,10 @@ var OpeningHours = {
             } else {
                 return data;
             }
+        },
+        clear: function(){
+            localStorage.removeItem('openingHoursData');
+            window.console.log('OpeningHours: Cache cleared.');
         }
     },
 
