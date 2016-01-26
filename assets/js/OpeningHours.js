@@ -400,7 +400,7 @@ var OpeningHours = {
          *  @private
          */
         function countdownOutput(content){
-            $(".oh-countdown").text(content);
+            $(".oh-countdown").html(content);
         }
     },
 
@@ -580,32 +580,32 @@ var OpeningHours = {
         time: {
             minutes: {
                 singular: {
-                    sv: " minut",
-                    en: " minute"
+                    sv: "&nbsp;minut",
+                    en: "&nbsp;minute"
                 },
                 plural: {
-                    sv: " minuter",
-                    en: " minutes"
+                    sv: "&nbsp;minuter",
+                    en: "&nbsp;minutes"
                 }
             },
             hours: {
                 singular: {
-                    sv: " timme",
-                    en: " hour"
+                    sv: "&nbsp;timme",
+                    en: "&nbsp;hour"
                 },
                 plural: {
-                    sv: " timmar",
-                    en: " hours"
+                    sv: "&nbsp;timmar",
+                    en: "&nbsp;hours"
                 }
             },
             days: {
                 singular: {
-                    sv: " dag",
-                    en: " day"
+                    sv: "&nbsp;dag",
+                    en: "&nbsp;day"
                 },
                 plural: {
-                    sv: " dagar",
-                    en: " days"
+                    sv: "&nbsp;dagar",
+                    en: "&nbsp;days"
                 }
             },
             week: {
