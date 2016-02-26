@@ -27,20 +27,20 @@ $inactive-button: $inactive;
 Theme used for the web version of the widget
 --------------- */
 
-.oh-month{
+.oh-month {
     overflow: hidden;
     margin: 1em 0;
     line-height: 100%;
 }
 
-.oh-cal-controls{
+.oh-cal-controls {
     position: relative;
     margin-bottom: 5px;
     line-height: $control-height;
     cursor: default;
-
     user-select: none;
-    .oh-cal-prev , .oh-cal-next{
+
+    .oh-cal-prev , .oh-cal-next {
         box-sizing: border-box;
         width: $control-height;
         height: $control-height;
@@ -52,25 +52,29 @@ Theme used for the web version of the widget
         line-height: $control-height * .733333;
         cursor: pointer;
         transition: all .2s;
-        &:hover{
+
+        &:hover {
             background: $button;
             color: white;
             transition: none;
         }
-        &.inactive{
+
+        &.inactive {
             border-color: $inactive-button;
             background: $inactive-button;
             color: darken($inactive-button, 40%);
             cursor: default;
         }
     }
-    .oh-cal-prev{
+
+    .oh-cal-prev {
         float: left;
     }
-    .oh-cal-next{
+
+    .oh-cal-next {
         float: right;
     }
-    .oh-cal-today{
+    .oh-cal-today {
         position: absolute;
         left: 45px;
         box-sizing: border-box;
@@ -84,14 +88,15 @@ Theme used for the web version of the widget
         line-height: $control-height - 6px;
         cursor: pointer;
         transition: all .2s;
-        &:hover{
+
+        &:hover {
             background: $button;
             color: white;
             transition: none;
         }
     }
 
-    .oh-cal-current-month{
+    .oh-cal-current-month {
         display: block;
         color: $darkblue;
         text-align: center;
@@ -101,112 +106,126 @@ Theme used for the web version of the widget
     }
 }
 
-.oh-cal-grid{
+.oh-cal-grid {
     margin: 0 -1px -1px 0;
     font-size: 13px;
     cursor: default;
-
     user-select: none;
-    @include respond-to(small){
+
+    @include respond-to(small) {
         font-size: 10px;
     }
-    .oh-cal-header{
+    .oh-cal-header {
         display: block;
-        .oh-cal-header-day{
+
+        .oh-cal-header-day {
             float: left;
-            width: 14.2857%;
+            width: 13.7142%;
             text-align: center;
             text-transform: uppercase;
             line-height: $control-height;
         }
     }
-    .oh-cal-content{
+    .oh-week-number {
+        position: relative;
+        top: 30px;
         display: block;
-        .day{
+        float: left;
+        box-sizing: border-box;
+        padding-right: 2%;
+        min-height: 1px;
+        width: 4%;
+        color: $grey;
+        text-align: right;
+
+        @include respond-to(small) {
+            top: 25px;
+        }
+    }
+    .oh-cal-content {
+        display: block;
+        .oh-cal-week {
+            float: left;
+            clear: both;
+            overflow: hidden;
+            min-height: 78px;
+            width: 100%;
+
+            @include respond-to(small) {
+                min-height: 66px;
+            }
+        }
+
+        .day {
             position: relative;
             float: left;
             overflow: hidden;
             box-sizing: border-box;
-            padding: 5px;
+            padding: 4px;
             min-height: 78px;
-            width: 14.2857%;
+            width: 13.7142%;
             border-right: 1px solid white;
             border-bottom: 1px solid white;
             background: $background;
             color: $secondary;
 
-            @include respond-to(small){
+            @include respond-to(small) {
                 min-height: 66px;
             }
-
-            &:nth-of-type(7n+1){
-                clear: left;
-            }
-            &:first-child{
-                border-top-left-radius: 2px;
-            }
-            &:nth-child(7){
-                border-top-right-radius: 2px;
-            }
-            &:nth-last-child(7){
-                border-bottom-left-radius: 2px;
-            }
-            &:last-child{
-                border-bottom-right-radius: 2px;
-            }
-            &.open{
+            &.open {
                 background: rgba($open, .25);
                 color: $open;
             }
 
-            &.closed{
+            &.closed {
                 background: rgba($closed, .25);
                 color: $closed;
             }
 
-            &.adjacent-month{
-                &.open{
+            &.adjacent-month {
+                &.open {
                     background: rgba($open, .15);
                     color: rgba($open, .7);
                 }
 
-                &.closed{
+                &.closed {
                     background: rgba($closed, .15);
                     color: rgba($closed, .7);
                 }
-                .oh-overlay{
+                .oh-overlay {
                     background: rgba($secondary, .8);
                     color: rgba(white, 1);
                 }
             }
-            &.today{
+            &.today {
                 color: white !important;
 
-                &.open{
+                &.open {
                     background: $open;
                 }
 
-                &.closed{
+                &.closed {
                     background: $red;
                 }
 
-                .oh-overlay{
+                .oh-overlay {
                     background: $primary;
                     color: white;
                 }
-                &.closed .overlay{
+                &.closed .overlay {
                     background: $primary;
                 }
             }
-            &.past , &.inactive{
+            &.past , &.inactive {
                 background: $inactive !important;
                 color: darken($inactive, 40%) !important;
-                .oh-cal-hours , .oh-overlay{
+
+                .oh-cal-hours , .oh-overlay {
                     display: none;
                 }
             }
         }
-        .oh-overlay{
+        .oh-overlay {
             position: absolute;
             left: 0;
             display: none;
@@ -214,25 +233,26 @@ Theme used for the web version of the widget
             width: 100%;
             background: $secondary;
             color: white;
-            .oh-overlay-content{
+            .oh-overlay-content {
                 position: absolute;
                 left: 0;
                 box-sizing: border-box;
                 padding: 5px;
                 width: 100%;
-                .oh-cal-hours{
+                .oh-cal-hours {
                     top: -1px;
                 }
             }
         }
-        .oh-pointer{
+        .oh-pointer {
             position: absolute;
             left: 0;
             display: none;
             width: 100%;
             height: 1px;
             background: black;
-            &:after{
+            &:after {
+                content: "";
                 position: absolute;
                 top: -2px;
                 left: -2px;
@@ -240,38 +260,37 @@ Theme used for the web version of the widget
                 height: 5px;
                 border-radius: 50%;
                 background: inherit;
-                content: "";
             }
         }
-        .oh-cal-hours{
+        .oh-cal-hours {
             position: relative;
             margin: .2em 0;
             text-transform: capitalize;
             font-weight: 700;
             font-size: 15px;
 
-            span{
-                width: 100%;
-                &:first-child:after{
-                    content: " - ";
-                }
-            }
-
-            @include respond-to(small){
+            @include respond-to(small) {
                 font-size: 10px;
-                span:first-child:after{
+                span:first-child:after {
                     content: none;
                 }
             }
+
+            span {
+                width: 100%;
+                &:first-child:after {
+                    content: " - ";
+                }
+            }
         }
-        .oh-cal-day-number{
+        .oh-cal-day-number {
             position: relative;
         }
-        .oh-day-note{
+        .oh-day-note {
             font-size: 10px;
             line-height: 100%;
 
-            @include respond-to(small){
+            @include respond-to(small) {
                 display: none;
             }
         }

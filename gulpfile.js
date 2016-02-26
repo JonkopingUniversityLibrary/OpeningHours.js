@@ -20,7 +20,6 @@ gulp.task('styles', function() {
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(minifycss())
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest('assets/css/'))
     .pipe(reload({stream: true}));
 });
@@ -32,8 +31,8 @@ gulp.task('serve', ['styles'], function() {
     });
     
     gulp.watch('sass/**/*.scss', ['styles']);
-    gulp.watch('./**/*.html').on('change', reload);
-    gulp.watch('./**/*.js').on('change', reload);
+    gulp.watch('*.html').on('change', reload);
+    gulp.watch('assets/**/*.js').on('change', reload);
     
 });
 

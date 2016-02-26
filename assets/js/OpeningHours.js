@@ -52,7 +52,7 @@ var OpeningHours = {
      */
     config: {
         iid: '3237',
-        rootUrl: 'https://julius.hj.se/openinghours/',
+        rootUrl: 'http://julius.hj.se/openinghours/',
         calendar: {
             template:  '\
 <div class="oh-cal-controls">\
@@ -68,33 +68,40 @@ var OpeningHours = {
     </div>\
     <div class="oh-cal-content">\
     <% _.each(days, function(day) { %>\
-        <div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>">\
-            <div class="oh-cal-day-number"><%= day.day %></div>\
-                <% for(var event in day.events) { %>\
-                <div class="oh-cal-hours">\
-                    <% if(day.events[event].status.check == "open"){ %>\
-                        <span><%= day.events[event].opening %></span>\
-                        <span><%= day.events[event].closing %></span>\
-                    <% } else {%>\
-                        <%= day.events[event].status.output %>\
-                    <% } %>\
-                </div>\
-                <div class="oh-overlay" style="height: <%= day.events[event].overlay.duration %>%; top: <%= day.events[event].overlay.starting %>%;">\
-                    <div class="oh-overlay-content" style="top: -<%= day.events[event].overlay.starting*(100/day.events[event].overlay.duration) %>%;">\
-                        <div class="oh-cal-day-number"><%= day.day %></div>\
-                        <div class="oh-cal-hours">\
-                            <% if(day.events[event].status.check == "open"){ %>\
-                                <span><%= day.events[event].opening %></span>\
-                                <span><%= day.events[event].closing %></span>\
-                            <% } else {%>\
-                                <%= day.events[event].status.output %>\
-                            <% } %>\
+        <% if(day.classes.indexOf("calendar-dow-1") > -1){ %>\
+        <div class="oh-cal-week">\
+            <div class="oh-week-number"><%= day.date.format("w") %></div>\
+            <% } %>\
+            <div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>">\
+                <div class="oh-cal-day-number"><%= day.day %></div>\
+                    <% for(var event in day.events) { %>\
+                    <div class="oh-cal-hours">\
+                        <% if(day.events[event].status.check == "open"){ %>\
+                            <span><%= day.events[event].opening %></span>\
+                            <span><%= day.events[event].closing %></span>\
+                        <% } else {%>\
+                            <%= day.events[event].status.output %>\
+                        <% } %>\
+                    </div>\
+                    <div class="oh-overlay" style="height: <%= day.events[event].overlay.duration %>%; top: <%= day.events[event].overlay.starting %>%;">\
+                        <div class="oh-overlay-content" style="top: -<%= day.events[event].overlay.starting*(100/day.events[event].overlay.duration) %>%;">\
+                            <div class="oh-cal-day-number"><%= day.day %></div>\
+                            <div class="oh-cal-hours">\
+                                <% if(day.events[event].status.check == "open"){ %>\
+                                    <span><%= day.events[event].opening %></span>\
+                                    <span><%= day.events[event].closing %></span>\
+                                <% } else {%>\
+                                    <%= day.events[event].status.output %>\
+                                <% } %>\
+                            </div>\
                         </div>\
                     </div>\
-                </div>\
-                <% } %>\
-            <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\
+                    <% } %>\
+                <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\
+            </div>\
+        <% if(day.classes.indexOf("calendar-dow-0") > -1){ %>\
         </div>\
+        <% } %>\
     <% }); %>\
     </div>\
 </div>'
@@ -190,7 +197,7 @@ var OpeningHours = {
         // Run function when dependencies are loaded
         ).done(function(){
             var events = weeksToEvents(data.weeks);
-
+            console.log(events);
             // Initialize the calendar widget
             $('#oh-month').clndr({
                 template: template,
