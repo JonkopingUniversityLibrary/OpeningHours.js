@@ -70,7 +70,7 @@ var OpeningHours = {
     <% _.each(days, function(day) { %>\
         <% if(day.classes.indexOf("calendar-dow-1") > -1){ %>\
         <div class="oh-cal-week">\
-            <div class="oh-week-number"><%= day.date.format("w") %></div>\
+            <div class="oh-week-number"><%= day.date.format("W") %></div>\
             <% } %>\
             <div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>">\
                 <div class="oh-cal-day-number"><%= day.day %></div>\
@@ -82,19 +82,6 @@ var OpeningHours = {
                         <% } else {%>\
                             <%= day.events[event].status.output %>\
                         <% } %>\
-                    </div>\
-                    <div class="oh-overlay" style="height: <%= day.events[event].overlay.duration %>%; top: <%= day.events[event].overlay.starting %>%;">\
-                        <div class="oh-overlay-content" style="top: -<%= day.events[event].overlay.starting*(100/day.events[event].overlay.duration) %>%;">\
-                            <div class="oh-cal-day-number"><%= day.day %></div>\
-                            <div class="oh-cal-hours">\
-                                <% if(day.events[event].status.check == "open"){ %>\
-                                    <span><%= day.events[event].opening %></span>\
-                                    <span><%= day.events[event].closing %></span>\
-                                <% } else {%>\
-                                    <%= day.events[event].status.output %>\
-                                <% } %>\
-                            </div>\
-                        </div>\
                     </div>\
                     <% } %>\
                 <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\
@@ -197,7 +184,6 @@ var OpeningHours = {
         // Run function when dependencies are loaded
         ).done(function(){
             var events = weeksToEvents(data.weeks);
-            console.log(events);
             // Initialize the calendar widget
             $('#oh-month').clndr({
                 template: template,
@@ -491,7 +477,7 @@ var OpeningHours = {
                     }
                     response.weeks.push(currentWeek);
                 }
-
+                Cache.clear(); // Clear the cache before saving
                 Cache.save(response); // Save data to cache
 
                 // Call callback functions after DOM has loaded.
