@@ -176,118 +176,123 @@ var OpeningHours = {
             strings = OpeningHours.strings,
             template = OpeningHours.config.calendar.template;
 
-        // Load dependencies
-        $.when(
-            $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
-            $.getScript(config.rootUrl+'assets/js/clndr.min.js')
+        // Only run if a monthly calendar is present.
+        if($('#oh-month').length){
 
-        // Run function when dependencies are loaded
-        ).done(function(){
-            var events = weeksToEvents(data.weeks);
-            // Initialize the calendar widget
-            $('#oh-month').clndr({
-                template: template,
-                weekOffset: 1,
-                daysOfTheWeek: daysOfTheWeek(language),
-                constraints: {
-                    startDate: events[0].date,
-                    endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
-                },
-                targets: {
-                    nextButton: 'oh-cal-next',
-                    previousButton: 'oh-cal-prev',
-                    todayButton: 'oh-cal-today',
-                    day: 'day',
-                    empty: 'empty'
-                },
-                events: events,
-                extras: {
-                    today: strings.goTo[language]+' '+strings.today[language]
+            // Load dependencies
+            $.when(
+                $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
+                $.getScript(config.rootUrl+'assets/js/clndr.min.js')
+
+            // Run function when dependencies are loaded
+            ).done(function(){
+                var events = weeksToEvents(data.weeks);
+
+                // Initialize the calendar widget
+                $('#oh-month').clndr({
+                    template: template,
+                    weekOffset: 1,
+                    daysOfTheWeek: daysOfTheWeek(language),
+                    constraints: {
+                        startDate: events[0].date,
+                        endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
+                    },
+                    targets: {
+                        nextButton: 'oh-cal-next',
+                        previousButton: 'oh-cal-prev',
+                        todayButton: 'oh-cal-today',
+                        day: 'day',
+                        empty: 'empty'
+                    },
+                    events: events,
+                    extras: {
+                        today: strings.goTo[language]+' '+strings.today[language]
+                    }
+
+                });
+
+                /**
+                 *  ## Days of the Week
+                 *  Return the abbreviations of the days of the week according to language
+                 *
+                 *  @private
+                 *  @param {String} language
+                 *  @returns {Array} Weekdays
+                 *
+                 */
+                function daysOfTheWeek(language){
+                    if(language == 'sv') {
+                        return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
+                    } else {
+                        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    }
                 }
 
-            });
-
-            /**
-             *  ## Days of the Week
-             *  Return the abbreviations of the days of the week according to language
-             *
-             *  @private
-             *  @param {String} language
-             *  @returns {Array} Weekdays
-             *
-             */
-            function daysOfTheWeek(language){
-                if(language == 'sv') {
-                    return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
-                } else {
-                    return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                }
-            }
-
-            /**
-             *  ## Weeks to Events
-             *  Transform the weekly data from API into event data for the calendar
-             *
-             *  @private
-             *  @param {Object} weeks Weekly Data
-             *  @returns {Array} Events
-             */
-            function weeksToEvents(weeks){
-                var events = [];
-                for(var w in weeks){
-                    if(weeks.hasOwnProperty(w)){
-                        for(var d in weeks[w].days){
-                            if(weeks[w].days.hasOwnProperty(d)){
-                                var status = weeks[w].days[d].status;
-                                if(weeks[w].days[d].status == 'closed' && language == 'sv'){
-                                    if(weeks[w].days.hasOwnProperty(d)){
-                                        status = 'stängt';
+                /**
+                 *  ## Weeks to Events
+                 *  Transform the weekly data from API into event data for the calendar
+                 *
+                 *  @private
+                 *  @param {Object} weeks Weekly Data
+                 *  @returns {Array} Events
+                 */
+                function weeksToEvents(weeks){
+                    var events = [];
+                    for(var w in weeks){
+                        if(weeks.hasOwnProperty(w)){
+                            for(var d in weeks[w].days){
+                                if(weeks[w].days.hasOwnProperty(d)){
+                                    var status = weeks[w].days[d].status;
+                                    if(weeks[w].days[d].status == 'closed' && language == 'sv'){
+                                        if(weeks[w].days.hasOwnProperty(d)){
+                                            status = 'stängt';
+                                        }
+                                    } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
+                                        status = 'öppet';
                                     }
-                                } else if(weeks[w].days[d].status == 'open' && language == 'sv'){
-                                    status = 'öppet';
+                                    var note = '';
+                                    if(typeof weeks[w].days[d].note != 'undefined'){
+                                        note = weeks[w].days[d].note[language];
+                                    }
+                                    events.push({
+                                        date: weeks[w].days[d].date,
+                                        status: {
+                                            check: weeks[w].days[d].status,
+                                            output: status
+                                        },
+                                        opening: weeks[w].days[d].openingTime,
+                                        closing: weeks[w].days[d].closingTime,
+                                        note: note,
+                                        overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
+                                    });
                                 }
-                                var note = '';
-                                if(typeof weeks[w].days[d].note != 'undefined'){
-                                    note = weeks[w].days[d].note[language];
-                                }
-                                events.push({
-                                    date: weeks[w].days[d].date,
-                                    status: {
-                                        check: weeks[w].days[d].status,
-                                        output: status
-                                    },
-                                    opening: weeks[w].days[d].openingTime,
-                                    closing: weeks[w].days[d].closingTime,
-                                    note: note,
-                                    overlay: timeToPercentage(weeks[w].days[d].date, weeks[w].days[d].openingTime, weeks[w].days[d].closingTime)
-                                });
                             }
                         }
                     }
+                    return events;
+
                 }
-                return events;
 
-            }
-
-            /**
-             ## Time to percentage
-             *  Transform the weekly data from API into event data for the calendar
-             *
-             * @param date
-             * @param opening
-             * @param closing
-             * @returns {Object} {{duration: number, starting: number}}
-             */
-            function timeToPercentage(date, opening, closing){
-                moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
-                var duration = (moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true)/12)*100,
-                    starting = (moment(date+' '+opening).diff(moment(date+' 08:00'), 'hours', true)/12)*100;
-                return {
-                    duration: duration,
-                    starting: starting
-                };
-            }
-        });
+                /**
+                 ## Time to percentage
+                 *  Transform the weekly data from API into event data for the calendar
+                 *
+                 * @param date
+                 * @param opening
+                 * @param closing
+                 * @returns {Object} {{duration: number, starting: number}}
+                 */
+                function timeToPercentage(date, opening, closing){
+                    moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true);
+                    var duration = (moment(date+' '+closing).diff(moment(date+' '+opening), 'hours', true)/12)*100,
+                        starting = (moment(date+' '+opening).diff(moment(date+' 08:00'), 'hours', true)/12)*100;
+                    return {
+                        duration: duration,
+                        starting: starting
+                    };
+                }
+            });
+        }
     },
 
     /**
