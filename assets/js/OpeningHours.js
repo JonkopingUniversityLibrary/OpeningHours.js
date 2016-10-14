@@ -710,7 +710,7 @@ var OpeningHours = {
                     var now = moment(),
                         then = moment(data.timestamp),
                         diff = now.diff(then,'hours');
-                    return (diff <= 24);
+                    return (diff <= 2);
                 }
 
                 // If data isn't expired, return it.
