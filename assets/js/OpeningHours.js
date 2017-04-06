@@ -17,9 +17,9 @@ var OpeningHours = (function() {
      * Initializes the Opening Hours script.
      *
      * @public
-     * @param {String} language, written out as either sv (swedish) or en (english).
+     * @param {String} lang, written out as either sv (swedish) or en (english).
      */
-    var initialize = function(language) {
+    var initialize = function(lang) {
         "use strict";
         if (typeof jQuery !== 'undefined') {
 
@@ -28,7 +28,7 @@ var OpeningHours = (function() {
             $.getScript(config.rootUrl+'/assets/js/moment.js', function() {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
-                setLanguage(language);
+                setLanguage(lang);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showWeek() and showMonth().
                 getData(showCountdown, showWeek, showMonth);
@@ -101,7 +101,7 @@ var OpeningHours = (function() {
         "use strict";
         var weeks = data.weeks,
             week;
-
+        console.log(language);
         for (var w = 0; w < 1; w++){
 
             var currentDay = moment().startOf("day");
@@ -115,7 +115,6 @@ var OpeningHours = (function() {
                 if(moment(weeks[w].days[d].date).diff(currentDay, "days") === 0){
                     day.attr("current-day", "");
                 }
-
                 // Create day element & add the weekday to it
                 var label = $("<span>")
                     .addClass("oh-day-label")
@@ -175,7 +174,7 @@ var OpeningHours = (function() {
                 $.getScript(config.rootUrl+'assets/js/underscore-min.js'),
                 $.getScript(config.rootUrl+'assets/js/clndr.min.js')
 
-            // Run function when dependencies are loaded
+                // Run function when dependencies are loaded
             ).done(function(){
                 var events = weeksToEvents(data.weeks);
 
@@ -401,9 +400,8 @@ var OpeningHours = (function() {
     var getData = function(countdownCallback, weekCallback, monthCallback){
         "use strict";
         var weeks = 14,
-            iid = OpeningHours.config.iid,
-            cachedData = Cache.load(),
-            data;
+            iid = config.iid,
+            cachedData = Cache.load();
 
         // Check if data is stored in session.
         if(cachedData){
@@ -427,7 +425,7 @@ var OpeningHours = (function() {
                 jsonpCallback: "response",
                 dataType: "jsonp"
 
-            // When data is grabbed from API, format it into our own JSON-format.
+                // When data is grabbed from API, format it into our own JSON-format.
             }).then(function(content){
                 var data = content.locations[0].weeks,
                     response = {};
@@ -661,7 +659,7 @@ var OpeningHours = (function() {
 
     /**
      * ## Cache
-     * Object with functions for handling cache in localstorage.
+     * Object with functions for handling cache in localStorage.
      */
     var Cache = {
         // TODO: Add cross domain support.
@@ -722,10 +720,11 @@ var OpeningHours = (function() {
      *  ## Set language
      *  Set language of Moment.js and OpeningHours
      *
-     *  @param {String} language
+     *  @param {String} lang
      *  @private
      */
-    var setLanguage = function(language){
+    var setLanguage = function(lang){
+        language = lang;
         "use strict";
         if(language == 'sv'){
             moment.locale('sv', {
