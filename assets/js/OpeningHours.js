@@ -9,8 +9,8 @@
  *  global $, jQuery, moment
  */
 
-var OpeningHours = {
-    language: "",
+var OpeningHours = (function() {
+    var language = "";
 
     /**
      * ## Initialize
@@ -19,14 +19,8 @@ var OpeningHours = {
      * @public
      * @param {String} language, written out as either sv (swedish) or en (english).
      */
-    initialize: function(language) {
-        var setLanguage = OpeningHours.setLanguage,
-            getData = OpeningHours.getData,
-            showCountdown = OpeningHours.showCountdown,
-            showWeek = OpeningHours.showWeek,
-            showMonth = OpeningHours.showMonth,
-            config = OpeningHours.config;
-
+    var initialize = function(language) {
+        "use strict";
         if (typeof jQuery !== 'undefined') {
 
             // Load the dependencies
@@ -44,13 +38,13 @@ var OpeningHours = {
             window.console.error('OpeningHours: Dependency missing: jQuery');
         }
 
-    },
+    };
 
     /**
      * ## Config
      * Contains the configuration variables neccesary to run the script.
      */
-    config: {
+    var config = {
         iid: '3237',
         rootUrl: 'http://julius.hj.se/openinghours/',
         calendar: {
@@ -93,7 +87,7 @@ var OpeningHours = {
     </div>\
 </div>'
         }
-    },
+    };
 
     /**
      *  ## Show Opening Hours
@@ -103,10 +97,9 @@ var OpeningHours = {
      *  @param {Object} data API data from getData()
      *  @returns {String} Next day and time when the library is set to open.
      */
-    showWeek: function(data){
+    var showWeek = function(data){
+        "use strict";
         var weeks = data.weeks,
-            language = OpeningHours.language,
-            strings = OpeningHours.strings,
             week;
 
         for (var w = 0; w < 1; w++){
@@ -161,7 +154,7 @@ var OpeningHours = {
             }
         }
         $('.oh-week').replaceWith(week);
-    },
+    };
 
     /**
      *  ## Show Monthly Hours
@@ -170,11 +163,9 @@ var OpeningHours = {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    showMonth: function(data){
-        var language = OpeningHours.language,
-            config = OpeningHours.config,
-            strings = OpeningHours.strings,
-            template = OpeningHours.config.calendar.template;
+    var showMonth = function(data){
+        "use strict";
+        var template = config.calendar.template;
 
         // Only run if a monthly calendar is present.
         if($('#oh-month').length){
@@ -293,7 +284,7 @@ var OpeningHours = {
                 }
             });
         }
-    },
+    };
 
     /**
      *  ## Countdown
@@ -302,10 +293,9 @@ var OpeningHours = {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    showCountdown: function(data){
-        var language = OpeningHours.language,
-            strings = OpeningHours.strings,
-            openingNext = {},
+    var showCountdown = function(data){
+        "use strict";
+        var openingNext = {},
             weeks = data.weeks;
 
         function calculateTime() {
@@ -400,7 +390,7 @@ var OpeningHours = {
         function countdownOutput(content){
             $(".oh-countdown").html(content);
         }
-    },
+    };
 
     /**
      *  ## Get Data
@@ -408,10 +398,10 @@ var OpeningHours = {
      *
      *  @private
      */
-    getData: function(countdownCallback, weekCallback, monthCallback){
+    var getData = function(countdownCallback, weekCallback, monthCallback){
+        "use strict";
         var weeks = 14,
             iid = OpeningHours.config.iid,
-            Cache = OpeningHours.Cache,
             cachedData = Cache.load(),
             data;
 
@@ -530,7 +520,7 @@ var OpeningHours = {
             }
             return day;
         }
-    },
+    };
 
     /**
      *  ## Strings
@@ -538,7 +528,7 @@ var OpeningHours = {
      *
      *  @private
      */
-    strings: {
+    var strings = {
         openRelative: {
             sv: "Vi har öppet i ",
             en: "We are open another "
@@ -667,13 +657,13 @@ var OpeningHours = {
             sv: "Gå till",
             en: "Go to"
         }
-    },
+    };
 
     /**
      * ## Cache
      * Object with functions for handling cache in localstorage.
      */
-    Cache: {
+    var Cache = {
         // TODO: Add cross domain support.
 
         /**
@@ -726,7 +716,7 @@ var OpeningHours = {
             localStorage.removeItem('openingHoursData');
             window.console.log('OpeningHours: Cache cleared.');
         }
-    },
+    };
 
     /**
      *  ## Set language
@@ -735,8 +725,8 @@ var OpeningHours = {
      *  @param {String} language
      *  @private
      */
-    setLanguage: function(language){
-        OpeningHours.language = language;
+    var setLanguage = function(language){
+        "use strict";
         if(language == 'sv'){
             moment.locale('sv', {
                 months : [
@@ -751,5 +741,10 @@ var OpeningHours = {
         } else {
 
         }
+    };
+
+    return {
+        initialize: initialize,
+        init: initialize
     }
-};
+})();
