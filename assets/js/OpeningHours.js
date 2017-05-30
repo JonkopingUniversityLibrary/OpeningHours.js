@@ -185,7 +185,7 @@ var OpeningHours = (function() {
                     daysOfTheWeek: daysOfTheWeek(language),
                     constraints: {
                         startDate: events[0].date,
-                        endDate: moment().add(2, 'M').endOf('month').format('YYYY-MM-DD')
+                        endDate: moment().add(3, 'M').endOf('month').format('YYYY-MM-DD')
                     },
                     targets: {
                         nextButton: 'oh-cal-next',
@@ -399,7 +399,7 @@ var OpeningHours = (function() {
      */
     var getData = function(countdownCallback, weekCallback, monthCallback){
         "use strict";
-        var weeks = 14,
+        var weeks = 20,
             iid = config.iid,
             cachedData = Cache.load();
 
@@ -421,11 +421,11 @@ var OpeningHours = (function() {
         function getData(){
             // Grab data from the API with JSONP.
             $.ajax({
-                url: 'https://api3.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
+                url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid='+iid+'&format=json&weeks='+weeks+'&callback=response',
                 jsonpCallback: "response",
                 dataType: "jsonp"
 
-                // When data is grabbed from API, format it into our own JSON-format.
+            // When data is grabbed from API, format it into our own JSON-format.
             }).then(function(content){
                 var data = content.locations[0].weeks,
                     response = {};
@@ -744,6 +744,7 @@ var OpeningHours = (function() {
 
     return {
         initialize: initialize,
-        init: initialize
+        init: initialize,
+        Cache: Cache
     }
 })();
