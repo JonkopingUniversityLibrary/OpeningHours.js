@@ -1,0 +1,23 @@
+{
+    "name": "LinkCreator",
+    "description": "Buildtools for Jönköping University Library development",
+    "main": "gulpfile.js",
+    "repository": "https://git.hj.se/bibl/LinkCreator",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Gustav Lindqvist",
+    "license": "MIT",
+    "dependencies": {
+        "gulp": "3.9.0",
+        "gulp-sass": "2.0.4",
+        "gulp-sourcemaps": "1.5.2",
+        "gulp-csscomb": "3.0.6",
+        "gulp-clean-css": "*",
+        "gulp-rename": "1.2.2",
+        "gulp-autoprefixer": "2.3.1",
+        "gulp-plumber": "1.0.1",
+        "browser-sync": "2.8.2",
+        "gulp-gzip": "^1.2.0"
+    }
+}

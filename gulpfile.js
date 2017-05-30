@@ -1,13 +1,13 @@
 /* jshint node: true */
 var gulp = require('gulp'),
     browsersync = require('browser-sync'),
-    reload = browsersync.reload;
+    reload = browsersync.reload,
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     csscomb = require('gulp-csscomb'),
-    minifycss = require('gulp-minify-css');
-    rename = require('gulp-rename');
+    minifycss = require('gulp-clean-css'),
+    rename = require('gulp-rename'),
     plumber = require('gulp-plumber');
 
 gulp.task('styles', function() {
