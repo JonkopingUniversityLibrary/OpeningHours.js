@@ -9,19 +9,11 @@
  *  @author Gustav Lindqvist (gustav.lindqvist@ju.se)
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  */
-
 let OpeningHours = (() => {
-    let LANGUAGE = '',
-        publicFunctions = {},
-        IS_INITIALIZED = false;
-
-    /**
-     *  ## Strings
-     *  List of translations for all strings used in the script.
-     *
-     *  @private
-     */
-    const strings = {
+    let LANGUAGE = '';
+    let publicFunctions = {};
+    let isInitialized = false;
+    const STRINGS = {
         openRelative: {
             sv: 'Vi har öppet i ',
             en: 'We are open another '
@@ -230,7 +222,7 @@ let OpeningHours = (() => {
                 // Create day element & add the weekday to it
                 let label = $('<span>')
                     .addClass('oh-day-label')
-                    .text(strings.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
+                    .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
                         return letter.toUpperCase();
                     }));
 
@@ -247,7 +239,7 @@ let OpeningHours = (() => {
                     hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span> - <span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
                 } else {
                     hours.attr('data-state', 'closed');
-                    hours.html(strings.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
+                    hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
                         return letter.toUpperCase();
                     }));
                 }
@@ -369,7 +361,7 @@ let OpeningHours = (() => {
                     },
                     events: events,
                     extras: {
-                        today: strings.goTo[LANGUAGE] + ' ' + strings.today[LANGUAGE]
+                        today: STRINGS.goTo[LANGUAGE] + ' ' + STRINGS.today[LANGUAGE]
                     }
 
                 });
@@ -387,8 +379,8 @@ let OpeningHours = (() => {
      */
     let showCountdown = (data) => {
         'use strict';
-        let openingNext = {},
-            weeks = data.weeks;
+        let openingNext = {};
+        let weeks = data.weeks;
 
         let calculateTime = () => {
             /**
@@ -404,11 +396,13 @@ let OpeningHours = (() => {
             // Loop through the weeks
             week:
             for (let w = 0; w < weeks.length; w += 1) {
-                let now, currentDay;
+                let now;
+                let currentDay;
+
                 // Loop through the days of the week
                 for (let d = 0; d < weeks[w].days.length; d += 1) {
-                    let openingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime, 'YYYY-MM-DD HH:m'),
-                        closingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime, 'YYYY-MM-DD HH:m');
+                    let openingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime, 'YYYY-MM-DD HH:m');
+                    let closingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime, 'YYYY-MM-DD HH:m');
 
                     now = moment();
                     currentDay = moment().startOf('day');
@@ -425,17 +419,17 @@ let OpeningHours = (() => {
 
                             // If we are closing in 1 minute or less show relative time with singular suffix
                             if (closingTime.diff(now, 'minutes') <= 1) {
-                                countdownOutput(strings.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + strings.time.minutes.singular[LANGUAGE] +  strings.openRelativeSuffix[LANGUAGE]);
+                                countdownOutput(STRINGS.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + STRINGS.time.minutes.singular[LANGUAGE] +  STRINGS.openRelativeSuffix[LANGUAGE]);
                                 break week;
 
                                 // If it's 60 minutes or less show relative time.
                             } else if (closingTime.diff(now, 'minutes') < 60) {
-                                countdownOutput(strings.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + strings.time.minutes.plural[LANGUAGE] +  strings.openRelativeSuffix[LANGUAGE]);
+                                countdownOutput(STRINGS.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + STRINGS.time.minutes.plural[LANGUAGE] +  STRINGS.openRelativeSuffix[LANGUAGE]);
                                 break week;
 
                                 // Otherwise show absolute time.
                             } else {
-                                countdownOutput(strings.openAbsolute[LANGUAGE] + openingNext.closingTime + ' ' + strings.today[LANGUAGE] + '.');
+                                countdownOutput(STRINGS.openAbsolute[LANGUAGE] + openingNext.closingTime + ' ' + STRINGS.today[LANGUAGE] + '.');
                                 break week;
                             }
 
@@ -447,28 +441,28 @@ let OpeningHours = (() => {
 
                                 // If it's 1 minute or less left, change to singular suffix
                                 if (openingTime.diff(now, 'minutes') <= 1) {
-                                    countdownOutput(strings.closedRelative[LANGUAGE] + strings.lessThanOne[LANGUAGE] + strings.time.minutes.singular[LANGUAGE] + '.');
+                                    countdownOutput(STRINGS.closedRelative[LANGUAGE] + STRINGS.lessThanOne[LANGUAGE] + STRINGS.time.minutes.singular[LANGUAGE] + '.');
                                     break week;
 
                                     // If it's 60 minutes or less show relative time.
                                 } else if (openingTime.diff(now, 'minutes') < 60) {
-                                    countdownOutput(strings.closedRelative[LANGUAGE] + openingTime.diff(now, 'minutes') + strings.time.minutes.plural[LANGUAGE] + '.');
+                                    countdownOutput(STRINGS.closedRelative[LANGUAGE] + openingTime.diff(now, 'minutes') + STRINGS.time.minutes.plural[LANGUAGE] + '.');
                                     break week;
 
                                     // Otherwise show absolute time.
                                 } else {
-                                    countdownOutput(strings.closedAbsolute[LANGUAGE] + ' ' + strings.today[LANGUAGE] + ' ' + strings.at[LANGUAGE] + openingNext.openingTime + '.');
+                                    countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + ' ' + STRINGS.today[LANGUAGE] + ' ' + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                     break week;
                                 }
 
                                 // Is it tomorrow?
                             } else if (moment(weeks[w].days[d].date).diff(currentDay, 'days') === 1) {
-                                countdownOutput(strings.closedAbsolute[LANGUAGE] + strings.weekdays.tomorrow[LANGUAGE] + strings.at[LANGUAGE] + openingNext.openingTime + '.');
+                                countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.weekdays.tomorrow[LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                 break week;
 
                                 // Is it further in the future?
                             } else if (moment(weeks[w].days[d].date).diff(currentDay, 'days') >= 2) {
-                                countdownOutput(strings.closedAbsolute[LANGUAGE] + strings.on[LANGUAGE] + strings.weekdays[openingNext.day][LANGUAGE] + strings.at[LANGUAGE] + openingNext.openingTime + '.');
+                                countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.on[LANGUAGE] + STRINGS.weekdays[openingNext.day][LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                 break week;
                             }
                         }
@@ -492,9 +486,9 @@ let OpeningHours = (() => {
      */
     let getData = (countdownCallback, weekCallback, monthCallback) => {
         'use strict';
-        let weeks = 20,
-            iid = publicFunctions.config.iid,
-            cachedData = publicFunctions.Cache.load();
+        let weeks = 20;
+        let iid = publicFunctions.config.iid;
+        let cachedData = publicFunctions.Cache.load();
 
         /**
          *  ## Get Weekday
@@ -541,15 +535,15 @@ let OpeningHours = (() => {
 
                 // When data is grabbed from API, format it into our own JSON-format.
             }).then((content) => {
-                let data = content.locations[0].weeks,
-                    response = {};
+                let data = content.locations[0].weeks;
+                let response = {};
 
                 // Loop through all the weeks.
                 response.weeks = [];
                 for (let w = 0; w < data.length; w += 1) {
-                    let momentObject,
-                        momentObjectClosing,
-                        momentObjectOpening;
+                    let momentObject;
+                    let momentObjectClosing;
+                    let momentObjectOpening;
 
                     // Create a moment object of the date of the day.
                     momentObject = moment(data[w].Monday.date, 'YYYY-MM-DD');
@@ -649,10 +643,10 @@ let OpeningHours = (() => {
      * @param {String} lang, written out as either sv (swedish) or en (english).
      */
     publicFunctions.initialize = (lang) => {
-        if (IS_INITIALIZED) {
+        if (isInitialized) {
             return 'Script is already initialized';
         } else {
-            IS_INITIALIZED = true;
+            isInitialized = true;
         }
         'use strict';
         if (typeof jQuery !== 'undefined') {
@@ -686,11 +680,11 @@ let OpeningHours = (() => {
          * @param response
          */
         save: (response) => {
-            let timestamp = moment(),
-                openingHoursData = {
-                    timestamp: timestamp.format(),
-                    response: response
-                };
+            let timestamp = moment();
+            let openingHoursData = {
+                timestamp: timestamp.format(),
+                response: response
+            };
             localStorage.setItem('openingHoursData', JSON.stringify(openingHoursData));
         },
 
@@ -711,9 +705,9 @@ let OpeningHours = (() => {
                  * @returns {boolean}
                  */
                 let isNotExpired = () => {
-                    let now = moment(),
-                        then = moment(data.timestamp),
-                        diff = now.diff(then, 'hours');
+                    let now = moment();
+                    let then = moment(data.timestamp);
+                    let diff = now.diff(then, 'hours');
                     return (diff <= 2);
                 };
 
