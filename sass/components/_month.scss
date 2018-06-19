@@ -269,17 +269,17 @@ Theme used for the web version of the widget
             font-weight: 700;
             font-size: 15px;
 
-            @include respond-to(small) {
-                font-size: 10px;
-                span:first-child:after {
-                    content: none;
-                }
-            }
-
             span {
                 width: 100%;
                 &:first-child:after {
                     content: " - ";
+                }
+            }
+
+            @include respond-to(small) {
+                font-size: 10px;
+                span:first-child:after {
+                    content: none;
                 }
             }
         }
