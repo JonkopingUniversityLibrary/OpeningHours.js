@@ -154,49 +154,50 @@ let OpeningHours = (() => {
 
     /**
      * ## Config
-     * Contains the configuration variables neccesary to run the script.
+     * Contains the configuration variables necessary to run the script.
      */
     publicFunctions.config = {
         iid: '3237',
         rootUrl: 'https://julia.library.ju.se/openinghours/',
         calendar: {
-            template: '<div class="oh-cal-controls">\n' +
-                      '    <div class="oh-cal-prev">&lsaquo;</div>\n' +
-                      '    <div class="oh-cal-next">&rsaquo;</div>\n' +
-                      '    <div class="oh-cal-current-month"><%= month %></div>\n' +
-                      '</div>\n' +
-                      '<div class="oh-cal-grid">\n' +
-                      '    <div class="oh-cal-header"><div class="oh-week-number"></div>\n' +
-                      '    <% _.each(daysOfTheWeek, function(day) { %>\n' +
-                      '        <div class="oh-cal-header-day"><%= day %></div>\n' +
-                      '    <% }); %>\n' +
-                      '    </div>\n' +
-                      '    <div class="oh-cal-content">\n' +
-                      '    <% _.each(days, function(day) { %>\n' +
-                      '        <% if (day.classes.indexOf("calendar-dow-1") > -1) { %>\n' +
-                      '        <div class="oh-cal-week">\n' +
-                      '            <div class="oh-week-number"><%= day.date.format("W") %></div>\n' +
-                      '            <% } %>\n' +
-                      '            <div class="<%= day.classes %> <% for (let event in day.events) { %><%= day.events[event].status.check %><% } %>">\n' +
-                      '                <div class="oh-cal-day-number"><%= day.day %></div>\n' +
-                      '                    <% for (let event in day.events) { %>\n' +
-                      '                    <div class="oh-cal-hours">\n' +
-                      '                        <% if (day.events[event].status.check === "open") { %>\n' +
-                      '                            <span><%= day.events[event].opening %></span>\n' +
-                      '                            <span><%= day.events[event].closing %></span>\n' +
-                      '                        <% } else {%>\n' +
-                      '                            <%= day.events[event].status.output %>\n' +
-                      '                        <% } %>\n' +
-                      '                    </div>\n' +
-                      '                    <% } %>\n' +
-                      '                <% for (let event in day.events) { if(day.events[event].note !== "") { %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\n' +
-                      '            </div>\n' +
-                      '        <% if (day.classes.indexOf("calendar-dow-0") > -1) { %>\n' +
-                      '        </div>\n' +
-                      '        <% } %>\n' +
-                      '    <% }); %>\n' +
-                      '    </div>\n' +
-                      '</div>'
+            template: '\
+<div class="oh-cal-controls">\
+    <div class="oh-cal-prev">&lsaquo;</div>\
+    <div class="oh-cal-next">&rsaquo;</div>\
+    <div class="oh-cal-current-month"><%= month %></div>\
+</div>\
+<div class="oh-cal-grid">\
+    <div class="oh-cal-header"><div class="oh-week-number"></div>\
+    <% _.each(daysOfTheWeek, function(day) { %>\
+        <div class="oh-cal-header-day"><%= day %></div>\
+    <% }); %>\
+    </div>\
+    <div class="oh-cal-content">\
+    <% _.each(days, function(day) { %>\
+        <% if(day.classes.indexOf("calendar-dow-1") > -1){ %>\
+        <div class="oh-cal-week">\
+            <div class="oh-week-number"><%= day.date.format("W") %></div>\
+            <% } %>\
+            <div class="<%= day.classes %> <% for(var event in day.events) { %><%= day.events[event].status.check %><% } %>">\
+                <div class="oh-cal-day-number"><%= day.day %></div>\
+                    <% for(var event in day.events) { %>\
+                    <div class="oh-cal-hours">\
+                        <% if(day.events[event].status.check === "open"){ %>\
+                            <span><%= day.events[event].opening %></span>\
+                            <span><%= day.events[event].closing %></span>\
+                        <% } else {%>\
+                            <%= day.events[event].status.output %>\
+                        <% } %>\
+                    </div>\
+                    <% } %>\
+                <% for(var event in day.events) { if(day.events[event].note != ""){ %><div class="oh-day-note"><%= day.events[event].note %></div><% } } %>\
+            </div>\
+        <% if(day.classes.indexOf("calendar-dow-0") > -1){ %>\
+        </div>\
+        <% } %>\
+    <% }); %>\
+    </div>\
+</div>'
         }
     };
 
@@ -282,8 +283,8 @@ let OpeningHours = (() => {
 
             // Load dependencies
             $.when(
-                $.getScript(publicFunctions.config.rootUrl + 'assets/js/underscore-min.js'),
-                $.getScript(publicFunctions.config.rootUrl + 'assets/js/clndr.min.js')
+                $.getScript(publicFunctions.config.rootUrl + 'assets/js/underscore-min.js?v1.8.3'),
+                $.getScript(publicFunctions.config.rootUrl + 'assets/js/clndr.min.js?v1.4.7')
 
                 // Run function when dependencies are loaded
             ).done(() => {
@@ -302,27 +303,6 @@ let OpeningHours = (() => {
                     } else {
                         return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                     }
-                };
-
-
-                /**
-                 ## Time to percentage
-                 *  Transform the weekly data from API into event data for the calendar
-                 *
-                 * @param date
-                 * @param opening
-                 * @param closing
-                 * @returns {Object} {{duration: number, starting: number}}
-                 */
-
-                let timeToPercentage = (date, opening, closing) => {
-                    moment(date + ' ' + closing).diff(moment(date + ' ' + opening), 'hours', true);
-                    let duration = (moment(date + ' ' + closing).diff(moment(date + ' ' + opening), 'hours', true) / 12) * 100,
-                        starting = (moment(date + ' ' + opening).diff(moment(date + ' 08:00'), 'hours', true) / 12) * 100;
-                    return {
-                        duration: duration,
-                        starting: starting
-                    };
                 };
 
                 /**
@@ -360,10 +340,7 @@ let OpeningHours = (() => {
                                         },
                                         opening: weeks[w].days[d].openingTime,
                                         closing: weeks[w].days[d].closingTime,
-                                        note: note,
-                                        overlay: timeToPercentage(weeks[w].days[d].date,
-                                            weeks[w].days[d].openingTime,
-                                            weeks[w].days[d].closingTime)
+                                        note: note
                                     });
                                 }
                             }
@@ -380,7 +357,7 @@ let OpeningHours = (() => {
                     weekOffset: 1,
                     daysOfTheWeek: daysOfTheWeek(LANGUAGE),
                     constraints: {
-                        startDate: events[0].date,
+                        startDate: moment(events[0].date, 'YYYY-MM-DD').startOf('month').format('YYYY-MM-DD'),
                         endDate: moment().add(3, 'M').endOf('month').format('YYYY-MM-DD')
                     },
                     targets: {
@@ -427,7 +404,7 @@ let OpeningHours = (() => {
             // Loop through the weeks
             week:
             for (let w = 0; w < weeks.length; w += 1) {
-                let day, now, currentDay;
+                let now, currentDay;
                 // Loop through the days of the week
                 for (let d = 0; d < weeks[w].days.length; d += 1) {
                     let openingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime, 'YYYY-MM-DD HH:m'),
@@ -682,7 +659,7 @@ let OpeningHours = (() => {
 
             // Load the dependencies
             $('head').append('<link rel="stylesheet" href="' + publicFunctions.config.rootUrl + 'assets/css/OpeningHours.css">');
-            $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.js', () => {
+            $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', () => {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
                 setLanguage(lang);
