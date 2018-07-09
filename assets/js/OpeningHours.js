@@ -9,7 +9,7 @@
  *  @author Gustav Lindqvist (gustav.lindqvist@ju.se)
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  */
-let OpeningHours = (() => {
+let OpeningHours = (function () {
     let LANGUAGE = '';
     let publicFunctions = {};
     let isInitialized = false;
@@ -160,12 +160,12 @@ let OpeningHours = (() => {
 </div>\
 <div class="oh-cal-grid">\
     <div class="oh-cal-header"><div class="oh-week-number"></div>\
-    <% _.each(daysOfTheWeek, function(day) { %>\
+    <% _.each(daysOfTheWeek, function (day) { %>\
         <div class="oh-cal-header-day"><%= day %></div>\
     <% }); %>\
     </div>\
     <div class="oh-cal-content">\
-    <% _.each(days, function(day) { %>\
+    <% _.each(days, function (day) { %>\
         <% if(day.classes.indexOf("calendar-dow-1") > -1){ %>\
         <div class="oh-cal-week">\
             <div class="oh-week-number"><%= day.date.format("W") %></div>\
@@ -201,7 +201,7 @@ let OpeningHours = (() => {
      *  @param {Object} data API data from getData()
      *  @returns {String} Next day and time when the library is set to open.
      */
-    let showWeek = (data) => {
+    let showWeek = function (data) {
         'use strict';
         let weeks = data.weeks;
         let week;
@@ -222,7 +222,7 @@ let OpeningHours = (() => {
                 // Create day element & add the weekday to it
                 let label = $('<span>')
                     .addClass('oh-day-label')
-                    .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
+                    .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
                         return letter.toUpperCase();
                     }));
 
@@ -239,7 +239,7 @@ let OpeningHours = (() => {
                     hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span> - <span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
                 } else {
                     hours.attr('data-state', 'closed');
-                    hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, (letter) => {
+                    hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
                         return letter.toUpperCase();
                     }));
                 }
@@ -266,7 +266,7 @@ let OpeningHours = (() => {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    let showMonth = (data) => {
+    let showMonth = function (data) {
         'use strict';
         let template = publicFunctions.config.calendar.template;
 
@@ -279,7 +279,7 @@ let OpeningHours = (() => {
                 $.getScript(publicFunctions.config.rootUrl + 'assets/js/clndr.min.js?v1.4.7')
 
                 // Run function when dependencies are loaded
-            ).done(() => {
+            ).done(function () {
                 /**
                  *  ## Days of the Week
                  *  Return the abbreviations of the days of the week according to language
@@ -289,7 +289,7 @@ let OpeningHours = (() => {
                  *  @returns {Array} Weekdays
                  *
                  */
-                let daysOfTheWeek = (language) => {
+                let daysOfTheWeek = function (language) {
                     if (language === 'sv') {
                         return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
                     } else {
@@ -306,7 +306,7 @@ let OpeningHours = (() => {
                  *  @returns {Array} Events
                  */
 
-                let weeksToEvents = (weeks) => {
+                let weeksToEvents = function (weeks) {
                     let events = [];
                     for (let w in weeks) {
                         if (weeks.hasOwnProperty(w)) {
@@ -377,19 +377,19 @@ let OpeningHours = (() => {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    let showCountdown = (data) => {
+    let showCountdown = function (data) {
         'use strict';
         let openingNext = {};
         let weeks = data.weeks;
 
-        let calculateTime = () => {
+        let calculateTime = function () {
             /**
              *  ## countdownOutput
              *  Print out the output for countDown.
              *
              *  @private
              */
-            let countdownOutput = (content) => {
+            let countdownOutput = function (content) {
                 $('.oh-countdown').html(content);
             };
 
@@ -422,18 +422,18 @@ let OpeningHours = (() => {
                                 countdownOutput(STRINGS.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + STRINGS.time.minutes.singular[LANGUAGE] +  STRINGS.openRelativeSuffix[LANGUAGE]);
                                 break week;
 
-                                // If it's 60 minutes or less show relative time.
+                            // If it's 60 minutes or less show relative time.
                             } else if (closingTime.diff(now, 'minutes') < 60) {
                                 countdownOutput(STRINGS.openRelative[LANGUAGE] + closingTime.diff(now, 'minutes') + STRINGS.time.minutes.plural[LANGUAGE] +  STRINGS.openRelativeSuffix[LANGUAGE]);
                                 break week;
 
-                                // Otherwise show absolute time.
+                            // Otherwise show absolute time.
                             } else {
                                 countdownOutput(STRINGS.openAbsolute[LANGUAGE] + openingNext.closingTime + ' ' + STRINGS.today[LANGUAGE] + '.');
                                 break week;
                             }
 
-                            // Is the date in the future?
+                        // Is the date in the future?
                         } else if (openingTime.isAfter(now)) {
 
                             // Is it the same date?
@@ -444,23 +444,23 @@ let OpeningHours = (() => {
                                     countdownOutput(STRINGS.closedRelative[LANGUAGE] + STRINGS.lessThanOne[LANGUAGE] + STRINGS.time.minutes.singular[LANGUAGE] + '.');
                                     break week;
 
-                                    // If it's 60 minutes or less show relative time.
+                                // If it's 60 minutes or less show relative time.
                                 } else if (openingTime.diff(now, 'minutes') < 60) {
                                     countdownOutput(STRINGS.closedRelative[LANGUAGE] + openingTime.diff(now, 'minutes') + STRINGS.time.minutes.plural[LANGUAGE] + '.');
                                     break week;
 
-                                    // Otherwise show absolute time.
+                                // Otherwise show absolute time.
                                 } else {
                                     countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + ' ' + STRINGS.today[LANGUAGE] + ' ' + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                     break week;
                                 }
 
-                                // Is it tomorrow?
+                            // Is it tomorrow?
                             } else if (moment(weeks[w].days[d].date).diff(currentDay, 'days') === 1) {
                                 countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.weekdays.tomorrow[LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                 break week;
 
-                                // Is it further in the future?
+                            // Is it further in the future?
                             } else if (moment(weeks[w].days[d].date).diff(currentDay, 'days') >= 2) {
                                 countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.on[LANGUAGE] + STRINGS.weekdays[openingNext.day][LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
                                 break week;
@@ -484,7 +484,7 @@ let OpeningHours = (() => {
      *
      *  @private
      */
-    let getData = (countdownCallback, weekCallback, monthCallback) => {
+    let getData = function (countdownCallback, weekCallback, monthCallback) {
         'use strict';
         let weeks = 20;
         let iid = publicFunctions.config.iid;
@@ -498,7 +498,7 @@ let OpeningHours = (() => {
          *  @param {Number} weekdayNumber
          *  @returns {String} Weekday
          */
-        let getWeekday = (weekdayNumber) => {
+        let getWeekday = function (weekdayNumber) {
             let day;
             switch (weekdayNumber) {
             case 0:
@@ -526,7 +526,7 @@ let OpeningHours = (() => {
             return day;
         };
 
-        let getData = () => {
+        let getData = function () {
             // Grab data from the API with JSONP.
             $.ajax({
                 url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iid + '&format=json&weeks=' + weeks + '&callback=response',
@@ -534,7 +534,7 @@ let OpeningHours = (() => {
                 dataType: 'jsonp'
 
                 // When data is grabbed from API, format it into our own JSON-format.
-            }).then((content) => {
+            }).then(function (content) {
                 let data = content.locations[0].weeks;
                 let response = {};
 
@@ -582,7 +582,7 @@ let OpeningHours = (() => {
                 publicFunctions.Cache.save(response); // Save data to cache
 
                 // Call callback functions after DOM has loaded.
-                $(document).ready(() => {
+                $(document).ready(function () {
                     countdownCallback(response);
                     weekCallback(response);
                     monthCallback(response);
@@ -595,7 +595,7 @@ let OpeningHours = (() => {
             window.console.log('OpeningHours: Loaded from cache');
 
             // Call callback functions after DOM has loaded.
-            $(document).ready(() => {
+            $(document).ready(function () {
                 countdownCallback(cachedData);
                 weekCallback(cachedData);
                 monthCallback(cachedData);
@@ -615,7 +615,7 @@ let OpeningHours = (() => {
      *  @param {String} lang
      *  @private
      */
-    let setLanguage = (lang) => {
+    let setLanguage = function (lang) {
         LANGUAGE = lang;
         'use strict';
         if (LANGUAGE === 'sv') {
@@ -642,7 +642,7 @@ let OpeningHours = (() => {
      * @public
      * @param {String} lang, written out as either sv (swedish) or en (english).
      */
-    publicFunctions.initialize = (lang) => {
+    publicFunctions.initialize = function (lang) {
         if (isInitialized) {
             return 'Script is already initialized';
         } else {
@@ -653,7 +653,7 @@ let OpeningHours = (() => {
 
             // Load the dependencies
             $('head').append('<link rel="stylesheet" href="' + publicFunctions.config.rootUrl + 'assets/css/OpeningHours.css">');
-            $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', () => {
+            $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', function () {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
                 setLanguage(lang);
@@ -679,7 +679,7 @@ let OpeningHours = (() => {
          * Saves data to cache in localstorage with timestamp.
          * @param response
          */
-        save: (response) => {
+        save: function (response) {
             let timestamp = moment();
             let openingHoursData = {
                 timestamp: timestamp.format(),
@@ -693,7 +693,7 @@ let OpeningHours = (() => {
          * Checks if data is not too old and then loads from cache in localstorage.
          * @returns {Object} data Returns data if it exists in cache and isn't too old.
          */
-        load: () => {
+        load: function () {
             let data = false;
 
             // Check if object exists in LocalStorage.
@@ -704,7 +704,7 @@ let OpeningHours = (() => {
                  * Checks if the data is older than 24 hours.
                  * @returns {boolean}
                  */
-                let isNotExpired = () => {
+                let isNotExpired = function () {
                     let now = moment();
                     let then = moment(data.timestamp);
                     let diff = now.diff(then, 'hours');
@@ -720,7 +720,7 @@ let OpeningHours = (() => {
                 return data;
             }
         },
-        clear: () => {
+        clear: function () {
             localStorage.removeItem('openingHoursData');
             window.console.log('OpeningHours: Cache cleared.');
         }
