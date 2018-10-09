@@ -9,11 +9,11 @@
  *  @author Gustav Lindqvist (gustav.lindqvist@ju.se)
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  */
-let OpeningHours = (function () {
-    let LANGUAGE = '';
-    let publicFunctions = {};
-    let isInitialized = false;
-    const STRINGS = {
+var OpeningHours = (function () {
+    var LANGUAGE = '';
+    var publicFunctions = {};
+    var isInitialized = false;
+    var STRINGS = {
         openRelative: {
             sv: 'Vi har öppet i ',
             en: 'We are open another '
@@ -201,26 +201,26 @@ let OpeningHours = (function () {
      *  @param {Object} data API data from getData()
      *  @returns {String} Next day and time when the library is set to open.
      */
-    let showWeek = function (data) {
+    var showWeek = function (data) {
         'use strict';
-        let weeks = data.weeks;
-        let week;
+        var weeks = data.weeks;
+        var week;
 
-        for (let w = 0; w < 1; w += 1) {
+        for (var w = 0; w < 1; w += 1) {
 
-            let currentDay = moment().startOf('day');
+            var currentDay = moment().startOf('day');
             week = $('<ul>').addClass('oh-week');
 
             // Loop through the days of the week
-            for (let d = 0; d < weeks[w].days.length; d += 1) {
-                let day = $('<li>').addClass('oh-day');
+            for (var d = 0; d < weeks[w].days.length; d += 1) {
+                var day = $('<li>').addClass('oh-day');
 
                 // If it is the current day, add current-day attribute.
                 if (moment(weeks[w].days[d].date).diff(currentDay, 'days') === 0) {
                     day.attr('current-day', '');
                 }
                 // Create day element & add the weekday to it
-                let label = $('<span>')
+                var label = $('<span>')
                     .addClass('oh-day-label')
                     .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
                         return letter.toUpperCase();
@@ -232,7 +232,7 @@ let OpeningHours = (function () {
                 }
 
                 // Show the opening/closed message
-                let hours = $('<span>');
+                var hours = $('<span>');
                 hours.addClass('oh-day-hours');
                 if (weeks[w].days[d].status === 'open') {
                     hours.attr('data-state', 'open');
@@ -248,7 +248,7 @@ let OpeningHours = (function () {
 
                 // Add note if there is one
                 if (weeks[w].days[d].note) {
-                    let note = $('<span>');
+                    var note = $('<span>');
                     note.attr('class', 'oh-day-note');
                     note.text(weeks[w].days[d].note[LANGUAGE]);
                     day.append(note);
@@ -266,9 +266,9 @@ let OpeningHours = (function () {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    let showMonth = function (data) {
+    var showMonth = function (data) {
         'use strict';
-        let template = publicFunctions.config.calendar.template;
+        var template = publicFunctions.config.calendar.template;
 
         // Only run if a monthly calendar is present.
         if ($('#oh-month').length) {
@@ -289,7 +289,7 @@ let OpeningHours = (function () {
                  *  @returns {Array} Weekdays
                  *
                  */
-                let daysOfTheWeek = function (language) {
+                var daysOfTheWeek = function (language) {
                     if (language === 'sv') {
                         return ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'];
                     } else {
@@ -306,13 +306,13 @@ let OpeningHours = (function () {
                  *  @returns {Array} Events
                  */
 
-                let weeksToEvents = function (weeks) {
-                    let events = [];
-                    for (let w in weeks) {
+                var weeksToEvents = function (weeks) {
+                    var events = [];
+                    for (var w in weeks) {
                         if (weeks.hasOwnProperty(w)) {
-                            for (let d in weeks[w].days) {
+                            for (var d in weeks[w].days) {
                                 if (weeks[w].days.hasOwnProperty(d)) {
-                                    let status = weeks[w].days[d].status;
+                                    var status = weeks[w].days[d].status;
                                     if (weeks[w].days[d].status === 'closed' && LANGUAGE === 'sv') {
                                         if (weeks[w].days.hasOwnProperty(d)) {
                                             status = 'stängt';
@@ -320,7 +320,7 @@ let OpeningHours = (function () {
                                     } else if (weeks[w].days[d].status === 'open' && LANGUAGE === 'sv') {
                                         status = 'öppet';
                                     }
-                                    let note = '';
+                                    var note = '';
                                     if (typeof weeks[w].days[d].note !== 'undefined') {
                                         note = weeks[w].days[d].note[LANGUAGE];
                                     }
@@ -341,7 +341,7 @@ let OpeningHours = (function () {
                     return events;
                 };
 
-                let events = weeksToEvents(data.weeks);
+                var events = weeksToEvents(data.weeks);
 
                 // Initialize the calendar widget
                 $('#oh-month').clndr({
@@ -377,32 +377,32 @@ let OpeningHours = (function () {
      *  @private
      *  @param {Object} data API data from getData()
      */
-    let showCountdown = function (data) {
+    var showCountdown = function (data) {
         'use strict';
-        let openingNext = {};
-        let weeks = data.weeks;
+        var openingNext = {};
+        var weeks = data.weeks;
 
-        let calculateTime = function () {
+        var calculateTime = function () {
             /**
              *  ## countdownOutput
              *  Print out the output for countDown.
              *
              *  @private
              */
-            let countdownOutput = function (content) {
+            var countdownOutput = function (content) {
                 $('.oh-countdown').html(content);
             };
 
             // Loop through the weeks
             week:
-            for (let w = 0; w < weeks.length; w += 1) {
-                let now;
-                let currentDay;
+            for (var w = 0; w < weeks.length; w += 1) {
+                var now;
+                var currentDay;
 
                 // Loop through the days of the week
-                for (let d = 0; d < weeks[w].days.length; d += 1) {
-                    let openingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime, 'YYYY-MM-DD HH:m');
-                    let closingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime, 'YYYY-MM-DD HH:m');
+                for (var d = 0; d < weeks[w].days.length; d += 1) {
+                    var openingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime, 'YYYY-MM-DD HH:m');
+                    var closingTime = moment(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime, 'YYYY-MM-DD HH:m');
 
                     now = moment();
                     currentDay = moment().startOf('day');
@@ -484,11 +484,11 @@ let OpeningHours = (function () {
      *
      *  @private
      */
-    let getData = function (countdownCallback, weekCallback, monthCallback) {
+    var getData = function (countdownCallback, weekCallback, monthCallback) {
         'use strict';
-        let weeks = 20;
-        let iid = publicFunctions.config.iid;
-        let cachedData = publicFunctions.Cache.load();
+        var weeks = 20;
+        var iid = publicFunctions.config.iid;
+        var cachedData = publicFunctions.Cache.load();
 
         /**
          *  ## Get Weekday
@@ -498,8 +498,8 @@ let OpeningHours = (function () {
          *  @param {Number} weekdayNumber
          *  @returns {String} Weekday
          */
-        let getWeekday = function (weekdayNumber) {
-            let day;
+        var getWeekday = function (weekdayNumber) {
+            var day;
             switch (weekdayNumber) {
             case 0:
                 day = 'Monday';
@@ -526,7 +526,7 @@ let OpeningHours = (function () {
             return day;
         };
 
-        let getData = function () {
+        var getData = function () {
             // Grab data from the API with JSONP.
             $.ajax({
                 url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iid + '&format=json&weeks=' + weeks + '&callback=response',
@@ -535,26 +535,26 @@ let OpeningHours = (function () {
 
                 // When data is grabbed from API, format it into our own JSON-format.
             }).then(function (content) {
-                let data = content.locations[0].weeks;
-                let response = {};
+                var data = content.locations[0].weeks;
+                var response = {};
 
                 // Loop through all the weeks.
                 response.weeks = [];
-                for (let w = 0; w < data.length; w += 1) {
-                    let momentObject;
-                    let momentObjectClosing;
-                    let momentObjectOpening;
+                for (var w = 0; w < data.length; w += 1) {
+                    var momentObject;
+                    var momentObjectClosing;
+                    var momentObjectOpening;
 
                     // Create a moment object of the date of the day.
                     momentObject = moment(data[w].Monday.date, 'YYYY-MM-DD');
-                    let currentWeek = {};
+                    var currentWeek = {};
 
                     currentWeek.weekNumber = String(momentObject.format('W'));
                     currentWeek.days = [];
 
                     // Loop through the days of the week
-                    for (let d = 0; d < 7; d += 1) {
-                        let weekday = getWeekday(d);
+                    for (var d = 0; d < 7; d += 1) {
+                        var weekday = getWeekday(d);
                         currentWeek.days[d] = {};
                         currentWeek.days[d].status = data[w][weekday].times.status;
                         currentWeek.days[d].day = weekday;
@@ -563,7 +563,7 @@ let OpeningHours = (function () {
                         // If there is a note add that to object
                         if (data[w][weekday].times.note) {
                             currentWeek.days[d].note = {};
-                            let note = data[w][weekday].times.note.split('/');
+                            var note = data[w][weekday].times.note.split('/');
                             currentWeek.days[d].note.sv = note[0];
                             currentWeek.days[d].note.en = note[1];
                         }
@@ -615,7 +615,7 @@ let OpeningHours = (function () {
      *  @param {String} lang
      *  @private
      */
-    let setLanguage = function (lang) {
+    var setLanguage = function (lang) {
         LANGUAGE = lang;
         'use strict';
         if (LANGUAGE === 'sv') {
@@ -680,8 +680,8 @@ let OpeningHours = (function () {
          * @param response
          */
         save: function (response) {
-            let timestamp = moment();
-            let openingHoursData = {
+            var timestamp = moment();
+            var openingHoursData = {
                 timestamp: timestamp.format(),
                 response: response
             };
@@ -694,7 +694,7 @@ let OpeningHours = (function () {
          * @returns {Object} data Returns data if it exists in cache and isn't too old.
          */
         load: function () {
-            let data = false;
+            var data = false;
 
             // Check if object exists in LocalStorage.
             if (localStorage.hasOwnProperty('openingHoursData')) {
@@ -704,10 +704,10 @@ let OpeningHours = (function () {
                  * Checks if the data is older than 24 hours.
                  * @returns {boolean}
                  */
-                let isNotExpired = function () {
-                    let now = moment();
-                    let then = moment(data.timestamp);
-                    let diff = now.diff(then, 'hours');
+                var isNotExpired = function () {
+                    var now = moment();
+                    var then = moment(data.timestamp);
+                    var diff = now.diff(then, 'hours');
                     return (diff <= 2);
                 };
 
@@ -727,4 +727,4 @@ let OpeningHours = (function () {
     };
 
     return publicFunctions;
-})();
+}());
