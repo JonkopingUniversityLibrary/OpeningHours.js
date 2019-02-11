@@ -564,6 +564,7 @@ var OpeningHours = (function () {
                         if (data[w][weekday].times.note) {
                             currentWeek.days[d].note = {};
                             var note = data[w][weekday].times.note.split('/');
+                            note = (note.length === 1) ? [note[0], note[0]] : note;
                             currentWeek.days[d].note.sv = note[0];
                             currentWeek.days[d].note.en = note[1];
                         }
