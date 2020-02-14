@@ -1,6 +1,6 @@
 /* exported OpeningHours */
 /* eslint-env jquery */
-/* global jQuery, jQuery, moment */
+/* global $, jQuery, moment */
 
 /**
  *  ## OpeningHours
@@ -14,10 +14,6 @@ var OpeningHours = (function () {
     var publicFunctions = {};
     var isInitialized = false;
     var STRINGS = {
-        groupRoomsOpen: {
-            sv: 'Grupprum och salar öppna dygnet runt.',
-            en: 'Computer labs and group rooms are open 24/7.'
-        },
         openRelative: {
             sv: 'Vi har öppet i ',
             en: 'We are open another '
@@ -213,19 +209,18 @@ var OpeningHours = (function () {
         for (var w = 0; w < 1; w += 1) {
 
             var currentDay = moment().startOf('day');
-            week = jQuery('<ul>').addClass('oh-week');
+            week = $('<ul>').addClass('oh-week');
 
             // Loop through the days of the week
             for (var d = 0; d < weeks[w].days.length; d += 1) {
-                var day = jQuery('<li>').addClass('oh-day');
-                day.attr('title', weeks[w].days[d].date);
+                var day = $('<li>').addClass('oh-day');
 
                 // If it is the current day, add current-day attribute.
                 if (moment(weeks[w].days[d].date).diff(currentDay, 'days') === 0) {
                     day.attr('current-day', '');
                 }
                 // Create day element & add the weekday to it
-                var label = jQuery('<span>')
+                var label = $('<span>')
                     .addClass('oh-day-label')
                     .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
                         return letter.toUpperCase();
@@ -237,7 +232,7 @@ var OpeningHours = (function () {
                 }
 
                 // Show the opening/closed message
-                var hours = jQuery('<span>');
+                var hours = $('<span>');
                 hours.addClass('oh-day-hours');
                 if (weeks[w].days[d].status === 'open') {
                     hours.attr('data-state', 'open');
@@ -253,7 +248,7 @@ var OpeningHours = (function () {
 
                 // Add note if there is one
                 if (weeks[w].days[d].note) {
-                    var note = jQuery('<span>');
+                    var note = $('<span>');
                     note.attr('class', 'oh-day-note');
                     note.text(weeks[w].days[d].note[LANGUAGE]);
                     day.append(note);
@@ -261,81 +256,8 @@ var OpeningHours = (function () {
                 week.append(day);
             }
         }
-        jQuery('.oh-week').replaceWith(week);
+        $('.oh-week').replaceWith(week);
     };
-
-    /**
-     *  ## Show Opening Hours
-     *  Returns opening hours for this week with dates
-     *
-     *  @private
-     *  @param {Object} data API data from getData()
-     *  @returns {String} Next day and time when the library is set to open.
-     */
-    var showWeekDate = function (data) {
-        'use strict';
-        var weeks = data.weeks;
-        var week;
-
-        for (var w = 0; w < 1; w += 1) {
-
-            var currentDay = moment().startOf('day');
-            week = jQuery('<ul>').addClass('oh-week');
-
-            // Loop through the days of the week
-            for (var d = 0; d < weeks[w].days.length; d += 1) {
-                var day = jQuery('<li>').addClass('oh-day');
-                day.attr('title', weeks[w].days[d].date);
-
-                // If it is the current day, add current-day attribute.
-                if (moment(weeks[w].days[d].date).diff(currentDay, 'days') === 0) {
-                    day.attr('current-day', '');
-                }
-                // Create day element & add the weekday to it
-                var label = jQuery('<span>')
-                    .addClass('oh-day-label')
-                    .text(STRINGS.weekdays[weeks[w].days[d].day][LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
-                        return letter.toUpperCase();
-                    }));
-
-                var date = jQuery('<span>')
-                    .addClass('oh-day-date')
-                    .text(moment(weeks[w].days[d].date).format('D/M'));
-
-                // Add sign showing theres an exception with a note
-                if (weeks[w].days[d].note) {
-                    label.html(label.html() + '<span class="oh-note">*</span>');
-                }
-
-                // Show the opening/closed message
-                var hours = jQuery('<span>');
-                hours.addClass('oh-day-hours');
-                if (weeks[w].days[d].status === 'open') {
-                    hours.attr('data-state', 'open');
-                    hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span> - <span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
-                } else {
-                    hours.attr('data-state', 'closed');
-                    hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
-                        return letter.toUpperCase();
-                    }));
-                }
-                day.append(label);
-                day.append(date);
-                day.append(hours);
-
-                // Add note if there is one
-                if (weeks[w].days[d].note) {
-                    var note = jQuery('<span>');
-                    note.attr('class', 'oh-day-note');
-                    note.text(weeks[w].days[d].note[LANGUAGE]);
-                    day.append(note);
-                }
-                week.append(day);
-            }
-        }
-        jQuery('.oh-week-date').replaceWith(week);
-    };
-
 
     /**
      *  ## Show Monthly Hours
@@ -349,14 +271,14 @@ var OpeningHours = (function () {
         var template = publicFunctions.config.calendar.template;
 
         // Only run if a monthly calendar is present.
-        if (jQuery('#oh-month').length) {
+        if ($('#oh-month').length) {
             console.log('#oh-month');
             // Load dependencies
-            jQuery.when(
-                jQuery.getScript(publicFunctions.config.rootUrl + 'assets/js/underscore-min.js?v1.8.3'),
-                jQuery.getScript(publicFunctions.config.rootUrl + 'assets/js/clndr.js?v1.4.7'),
-                jQuery.Deferred(function( deferred ){
-                    jQuery( deferred.resolve );
+            $.when(
+                $.getScript(publicFunctions.config.rootUrl + 'assets/js/underscore-min.js?v1.8.3'),
+                $.getScript(publicFunctions.config.rootUrl + 'assets/js/clndr.min.js?v1.4.7'),
+                $.Deferred(function( deferred ){
+                    $( deferred.resolve );
                 })
 
                 // Run function when dependencies are loaded
@@ -426,7 +348,7 @@ var OpeningHours = (function () {
                 var events = weeksToEvents(data.weeks);
 
                 // Initialize the calendar widget
-                jQuery('#oh-month').clndr({
+                $('#oh-month').clndr({
                     template: template,
                     weekOffset: 1,
                     daysOfTheWeek: daysOfTheWeek(LANGUAGE),
@@ -472,7 +394,7 @@ var OpeningHours = (function () {
              *  @private
              */
             var countdownOutput = function (content) {
-                jQuery('.oh-countdown').html(content);
+                $('.oh-countdown').html(content);
             };
 
             // Loop through the weeks
@@ -566,7 +488,7 @@ var OpeningHours = (function () {
      *
      *  @private
      */
-    var getData = function (callbacks) {
+    var getData = function (countdownCallback, weekCallback, monthCallback) {
         'use strict';
         var weeks = 20;
         var iid = publicFunctions.config.iid;
@@ -610,7 +532,7 @@ var OpeningHours = (function () {
 
         var getData = function () {
             // Grab data from the API with JSONP.
-            jQuery.ajax({
+            $.ajax({
                 url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iid + '&format=json&weeks=' + weeks + '&callback=response',
                 jsonpCallback: 'response',
                 dataType: 'jsonp'
@@ -665,10 +587,10 @@ var OpeningHours = (function () {
                 publicFunctions.Cache.save(response); // Save data to cache
 
                 // Call callback functions after DOM has loaded.
-                jQuery(document).ready(function () {
-                    for (var i = 0; i < callbacks.length; i = i + 1) {
-                        callbacks[i](cachedData);
-                    }
+                $(document).ready(function () {
+                    countdownCallback(response);
+                    weekCallback(response);
+                    monthCallback(response);
                 });
             });
         };
@@ -678,10 +600,10 @@ var OpeningHours = (function () {
             window.console.log('OpeningHours: Loaded from cache');
 
             // Call callback functions after DOM has loaded.
-            jQuery(document).ready(function () {
-                for (var i = 0; i < callbacks.length; i = i + 1) {
-                    callbacks[i](cachedData);
-                }
+            $(document).ready(function () {
+                countdownCallback(cachedData);
+                weekCallback(cachedData);
+                monthCallback(cachedData);
             });
         } else {
             window.console.log('OpeningHours: Loaded from API');
@@ -735,14 +657,14 @@ var OpeningHours = (function () {
         if (typeof jQuery !== 'undefined') {
 
             // Load the dependencies
-            jQuery('head').append('<link rel="stylesheet" href="' + publicFunctions.config.rootUrl + 'assets/css/OpeningHours.css">');
-            jQuery.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', function () {
+            $('head').append('<link rel="stylesheet" href="' + publicFunctions.config.rootUrl + 'assets/css/OpeningHours.css">');
+            $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', function () {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
                 setLanguage(lang);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showWeek() and showMonth().
-                getData([showCountdown, showWeek, showWeekDate, showMonth]);
+                getData(showCountdown, showWeek, showMonth);
 
             });
         } else {
