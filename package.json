@@ -1,6 +1,9 @@
-"language": {
-    "javascript": {
-        "linting.prefer": "JSHint",
-        "linting.usePreferredOnly": true
-    }
+{
+  "name": "OpeningHours",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "stylelint": "^13.2.0",
+    "stylelint-config-standard": "^20.0.0"
+  }
 }

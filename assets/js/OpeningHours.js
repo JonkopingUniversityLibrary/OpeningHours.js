@@ -491,7 +491,8 @@ var OpeningHours = (function () {
     var getData = function (countdownCallback, weekCallback, monthCallback) {
         'use strict';
         var weeks = 20;
-        var iid = publicFunctions.config.iid;
+        var iId = publicFunctions.config.iid;
+        var locationId = 'loc_1884';
         var cachedData = publicFunctions.Cache.load();
 
         /**
@@ -533,21 +534,20 @@ var OpeningHours = (function () {
         var getData = function () {
             // Grab data from the API with JSONP.
             $.ajax({
-                url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iid + '&format=json&weeks=' + weeks + '&callback=response',
+                url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iId + '&format=json&weeks=' + weeks + '&callback=response' + '&systemTime=1',
                 jsonpCallback: 'response',
                 dataType: 'jsonp'
 
                 // When data is grabbed from API, format it into our own JSON-format.
             }).then(function (content) {
-                var data = content.locations[0].weeks;
+                var json = JSON.parse(content);
+                var data = json[locationId].weeks;
                 var response = {};
 
                 // Loop through all the weeks.
                 response.weeks = [];
                 for (var w = 0; w < data.length; w += 1) {
                     var momentObject;
-                    var momentObjectClosing;
-                    var momentObjectOpening;
 
                     // Create a moment object of the date of the day.
                     momentObject = moment(data[w].Monday.date, 'YYYY-MM-DD');
@@ -575,10 +575,8 @@ var OpeningHours = (function () {
 
                         // If it's open, write out the times it is open.
                         if (data[w][weekday].times.status === 'open') {
-                            momentObjectOpening = moment(data[w][weekday].times.hours[0].from, 'ha');
-                            momentObjectClosing = moment(data[w][weekday].times.hours[0].to, 'ha');
-                            currentWeek.days[d].openingTime = momentObjectOpening.format('HH:mm');
-                            currentWeek.days[d].closingTime = momentObjectClosing.format('HH:mm');
+                            currentWeek.days[d].openingTime = data[w][weekday].times.hours[0].from;
+                            currentWeek.days[d].closingTime = data[w][weekday].times.hours[0].to;
                         }
                     }
                     response.weeks.push(currentWeek);
