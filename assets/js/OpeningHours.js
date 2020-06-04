@@ -236,7 +236,7 @@ var OpeningHours = (function () {
                 hours.addClass('oh-day-hours');
                 if (weeks[w].days[d].status === 'open') {
                     hours.attr('data-state', 'open');
-                    hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span> - <span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
+                    hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span>–<span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
                 } else {
                     hours.attr('data-state', 'closed');
                     hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
