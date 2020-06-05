@@ -10,7 +10,7 @@
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  */
 var OpeningHours = (function () {
-    var LANGUAGE = '';
+    var LANGUAGE = 'en';
     var publicFunctions = {};
     var isInitialized = false;
     var STRINGS = {
@@ -484,9 +484,10 @@ var OpeningHours = (function () {
      *
      *  @private
      */
-    var getData = function (countdownCallback, weekCallback, monthCallback) {
+    var getData = function (config, countdownCallback, weekCallback, monthCallback) {
         'use strict';
         var weeks = 20;
+        var lastWeek = (typeof config.lastWeek === 'number') ? config.lastWeek : false;
         var iid = publicFunctions.config.iid;
         var cachedData = publicFunctions.Cache.load();
 
@@ -579,6 +580,11 @@ var OpeningHours = (function () {
                     }
                     response.weeks.push(currentWeek);
                 }
+                if (lastWeek) {
+                    response.weeks = response.weeks.filter(function(week) {
+                        return Number(week.weekNumber) <= lastWeek
+                    })
+                }
                 publicFunctions.Cache.clear(); // Clear the cache before saving
                 publicFunctions.Cache.save(response); // Save data to cache
 
@@ -594,7 +600,11 @@ var OpeningHours = (function () {
         // Check if data is stored in session.
         if (cachedData) {
             window.console.log('OpeningHours: Loaded from cache');
-
+            if (lastWeek) {
+                cachedData.weeks = cachedData.weeks.filter(function(week) {
+                    return Number(week.weekNumber) <= lastWeek
+                })
+            }
             // Call callback functions after DOM has loaded.
             $(document).ready(function () {
                 countdownCallback(cachedData);
@@ -641,9 +651,9 @@ var OpeningHours = (function () {
      * Initializes the Opening Hours script.
      *
      * @public
-     * @param {String} lang, written out as either sv (swedish) or en (english).
+     * @param {Object} config, With the attributes: lang (sv or en), cutOffWeek (Weeknumber after which not to show any more dates)
      */
-    publicFunctions.initialize = function (lang) {
+    publicFunctions.initialize = function (config) {
         if (isInitialized) {
             return 'Script is already initialized';
         } else {
@@ -657,10 +667,10 @@ var OpeningHours = (function () {
             $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', function () {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
-                setLanguage(lang);
+                setLanguage(config.lang);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showWeek() and showMonth().
-                getData(showCountdown, showWeek, showMonth);
+                getData(config, showCountdown, showWeek, showMonth);
 
             });
         } else {

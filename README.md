@@ -5,6 +5,6 @@
 3. Run the script with:
 ```
 $.getScript('YOURPATH/assets/js/OpeningHours.js', function(){
-   OpeningHours.initialize("sv");
+   OpeningHours.initialize({"lang": "sv"});
 });
 ```

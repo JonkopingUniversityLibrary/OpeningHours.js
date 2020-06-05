@@ -166,8 +166,8 @@ Theme used for the web version of the widget
             width: 13.7142%;
             border-right: 1px solid white;
             border-bottom: 1px solid white;
-            background: $background;
-            color: $secondary;
+            background: $inactive;
+            color: darken($inactive, 40%);
 
             @include respond-to(small) {
                 min-height: 66px;
