@@ -62,6 +62,7 @@
     background-color: black;
     color: white;
     font-size: 13px;
+    line-height: 28px;
     -webkit-transform: translateX(-100%);
     transform: translateX(-100%);
     pointer-events: none;
@@ -275,8 +276,8 @@
     width: 13.7142%;
     border-right: 1px solid white;
     border-bottom: 1px solid white;
-    background: #e6e8ec;
-    color: #003865;
+    background: #ebebdf;
+    color: #9c9c62;
 }
 
 @media (max-width: 500px) {
@@ -352,7 +353,7 @@
 }
 
 .oh-cal-grid .oh-cal-content .oh-cal-hours span:first-child:after {
-    content: " - ";
+    content: " – ";
 }
 
 .oh-cal-grid .oh-cal-content .day.inactive .oh-cal-hours,

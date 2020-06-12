@@ -10,7 +10,7 @@
  *  Use by including this file and then initializing with 'OpeningHours.initialize(language)' where language is a string containing 'sv' for swedish or 'en' for english.
  */
 var OpeningHours = (function () {
-    var LANGUAGE = '';
+    var LANGUAGE = 'en';
     var publicFunctions = {};
     var isInitialized = false;
     var STRINGS = {
@@ -236,7 +236,7 @@ var OpeningHours = (function () {
                 hours.addClass('oh-day-hours');
                 if (weeks[w].days[d].status === 'open') {
                     hours.attr('data-state', 'open');
-                    hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span> - <span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
+                    hours.html('<span class="oh-opening">' + weeks[w].days[d].openingTime + '</span>–<span class="oh-closing">' + weeks[w].days[d].closingTime + '</span>');
                 } else {
                     hours.attr('data-state', 'closed');
                     hours.html(STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
@@ -256,7 +256,9 @@ var OpeningHours = (function () {
                 week.append(day);
             }
         }
-        $('.oh-week').replaceWith(week);
+        var weekElement = $('.oh-week');
+        weekElement.replaceWith(week);
+        weekElement.removeAttribute('aria-live');
     };
 
     /**
@@ -488,11 +490,11 @@ var OpeningHours = (function () {
      *
      *  @private
      */
-    var getData = function (countdownCallback, weekCallback, monthCallback) {
+    var getData = function (config, countdownCallback, weekCallback, monthCallback) {
         'use strict';
         var weeks = 20;
-        var iId = publicFunctions.config.iid;
-        var locationId = 'loc_1884';
+        var lastWeek = (typeof config.lastWeek === 'number') ? config.lastWeek : false;
+        var iid = publicFunctions.config.iid;
         var cachedData = publicFunctions.Cache.load();
 
         /**
@@ -534,14 +536,13 @@ var OpeningHours = (function () {
         var getData = function () {
             // Grab data from the API with JSONP.
             $.ajax({
-                url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iId + '&format=json&weeks=' + weeks + '&callback=response' + '&systemTime=1',
+                url: 'https://api3-eu.libcal.com/api_hours_grid.php?iid=' + iid + '&format=json&weeks=' + weeks + '&callback=response' + '&systemTime=1',
                 jsonpCallback: 'response',
                 dataType: 'jsonp'
 
                 // When data is grabbed from API, format it into our own JSON-format.
             }).then(function (content) {
-                var json = JSON.parse(content);
-                var data = json[locationId].weeks;
+                var data = content.locations[0].weeks;
                 var response = {};
 
                 // Loop through all the weeks.
@@ -596,7 +597,11 @@ var OpeningHours = (function () {
         // Check if data is stored in session.
         if (cachedData) {
             window.console.log('OpeningHours: Loaded from cache');
-
+            if (lastWeek) {
+                cachedData.weeks = cachedData.weeks.filter(function(week) {
+                    return Number(week.weekNumber) <= lastWeek
+                })
+            }
             // Call callback functions after DOM has loaded.
             $(document).ready(function () {
                 countdownCallback(cachedData);
@@ -643,9 +648,9 @@ var OpeningHours = (function () {
      * Initializes the Opening Hours script.
      *
      * @public
-     * @param {String} lang, written out as either sv (swedish) or en (english).
+     * @param {Object} config, With the attributes: lang (sv or en), cutOffWeek (Weeknumber after which not to show any more dates)
      */
-    publicFunctions.initialize = function (lang) {
+    publicFunctions.initialize = function (config) {
         if (isInitialized) {
             return 'Script is already initialized';
         } else {
@@ -659,10 +664,10 @@ var OpeningHours = (function () {
             $.getScript(publicFunctions.config.rootUrl + '/assets/js/moment.min.js?v2.22.2', function () {
 
                 // Set the language attribute to the specified in the initialize function and the moment instance.
-                setLanguage(lang);
+                setLanguage(config.lang);
 
                 // Get 4 weeks of data from API and then pass it on to showCountdown() and showWeek() and showMonth().
-                getData(showCountdown, showWeek, showMonth);
+                getData(config, showCountdown, showWeek, showMonth);
 
             });
         } else {
