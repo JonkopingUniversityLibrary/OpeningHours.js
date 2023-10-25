@@ -3,16 +3,10 @@
 Import all relevant files
 --------------- */
 
-@import "utils/_variables";
-@import "utils/_mixins";
-
-@import "vendors/_google-fonts";
-
-@import "base/_typography";
-@import "base/_reset";
-
-@import "components/_week";
-@import "components/_month";
-
-@import "themes/_web";
-@import "themes/_infotv";
+@import "01.settings/*";
+@import "02.tools/*";
+@import "03.generic/*";
+@import "04.elements/*";
+@import "05.objects/*";
+@import "06.components/*";
+@import "07.overrides/*";

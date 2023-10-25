@@ -1,0 +1,66 @@
+/* WEB INTERFACE
+---------------
+Theme used for the web version of the widget
+--------------- */
+
+.oh-opening-hours {
+    margin-bottom: 15px;
+    .oh-todays-hours {
+        margin: 0 0 20px 0;
+    }
+    .oh-week {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 215px;
+        color: inherit;
+        list-style: none;
+        -webkit-margin-before: 0;
+        -webkit-margin-after: 0;
+        -webkit-padding-start: 0;
+        margin: 0;
+        padding: 0;
+        .oh-day {
+            display: flex;
+            font-weight: 300;
+            .oh-day-label {
+                cursor: default;
+
+                &.-note {
+                    &:after {
+                        content: "*";
+                    }
+                    @media (pointer: coarse), (hover: none) {
+                        &[title] {
+                            position: relative;
+                        }
+                        &[title]:focus::before {
+                            content: attr(title);
+                            position: absolute;
+                            top: 0;
+                            left: calc(100% + .5em);
+                            color: white;
+                            background-color: black;
+                            z-index: 9999;
+                            padding: 0 .5em;
+                        }
+                    }
+                }
+            }
+            .oh-day-hours {
+                flex: 1;
+                text-align: right;
+                cursor: default;
+            }
+
+
+            &[current-day]{
+                .oh-day-label, .oh-day-hours {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}

@@ -3,21 +3,23 @@
 Colors used in the design
 --------------- */
 
-$purple: rgb(172, 32, 167);
-$darkblue: rgb(0, 56, 101);
-$lightblue: rgb(36, 170, 225);
-$orange: rgb(252, 184, 20);
-$green: rgb(0, 122, 51);
-$red: rgb(195, 52, 46);
-$grey: rgb(120, 120, 120);
-$beige: rgb(235, 235, 223);
+:root {
+  --color-blue: #003865;
+  --color-purple: rgb(172, 32, 167);
+  --color-yellow: rgb(252, 184, 20);
+  --color-red: #9f1914;
+  --color-red-light: #f0cccb;
+  --color-red-light-alt: #ffebeb;
+  --color-green: #005a26;
+  --color-green-light: #bfdecc;
+  --color-beige: #56563d;
+  --color-beige-light: #ebebdf;
+}
 
-/* FONTS
+/* BREAKPOINTS
 ---------------
-Fonts used in the design
+Breakpoints used in the design
 --------------- */
-
-$sans-serif: "Open Sans", Helvetica, Arial, sans-serif;
 
 $breakpoints: (
     'small': 500px,

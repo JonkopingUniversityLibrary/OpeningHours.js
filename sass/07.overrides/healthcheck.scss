@@ -1,0 +1,38 @@
+.s-healthcheck {
+    // Outline all classes.
+    [class] {
+        outline: 2px solid lightgrey;
+    }
+
+    // Outline all BEM Elements.
+    [class*="__"] {
+        outline: 2px solid grey;
+    }
+
+    // Outline all BEM Modifiers.
+    [class*=" -"] {
+        outline: 2px solid #575757;
+    }
+
+    // Outline all Object classes.
+    [class^="O-"],
+    [class*=" O-"] {
+        outline: 2px solid orange;
+    }
+
+    // Outline all Component classes.
+    [class^="c-"],
+    [class*=" c-"] {
+        outline: 2px solid cyan;
+    }
+
+    // Outline all Responsive classes.
+    [class*="@"] {
+        outline: 2px solid rosybrown;
+    }
+
+    // Outline all Hack classes.
+    [class^="_"] {
+        outline: 2px solid red;
+    }
+}
