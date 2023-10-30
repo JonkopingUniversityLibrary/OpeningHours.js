@@ -531,7 +531,7 @@ var OpeningHours = (function () {
                 calendarHelpDialog.close();
             });
 
-            const weekDayHeaders = document.createElement('header');
+            const weekDayHeaders = document.createElement('div');
             weekDayHeaders.classList.add('oh-calendar__weekdays');
             weekDayHeaders.setAttribute('aria-hidden', 'true');
 
@@ -540,7 +540,7 @@ var OpeningHours = (function () {
                 const listItem = document.createElement('span');
                 const abbreviatedWeekday = document.createElement('abbr');
 
-                abbreviatedWeekday.setAttribute('title', longWeekdayFormat.format(day.date));
+                abbreviatedWeekday.setAttribute('title', longWeekdayFormat.format(day.date).capitalizeFirstLetter());
                 abbreviatedWeekday.innerText = shortWeekdayFormat.format(day.date);
 
                 listItem.appendChild(abbreviatedWeekday);
