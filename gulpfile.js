@@ -27,4 +27,4 @@ function compileCSS() {
         .pipe(dest('./assets/css'));
 }
 
-exports.default = compileCSS;
+exports.compileCSS = compileCSS;
