@@ -16,7 +16,7 @@
     height: var(--toolbar-height);
     width: 100%;
     margin-bottom: 1em;
-    &:focus-within {
+    &:has(:focus-visible) {
         outline: 5px auto Highlight;
         outline: 5px auto -webkit-focus-ring-color;
     }
@@ -30,7 +30,7 @@
         color: var(--color-purple);
         cursor: pointer;
 
-        &:hover, &:focus {
+        &:hover, &:focus-visible {
             background: var(--color-purple);
             color: white;
         }
@@ -40,7 +40,7 @@
             border-color: var(--color-beige-light);
             color: var(--color-beige);
             cursor: default;
-            &:hover, &:focus {
+            &:hover, &:focus-visible {
                 background: var(--color-beige-light);
                 color: var(--color-beige);
             }
@@ -91,7 +91,7 @@
             background: white;
             color: var(--color-purple);
             cursor: pointer;
-            &:hover, &:focus {
+            &:hover, &:focus-visible {
                 background: var(--color-purple);
                 color: white;
             }
@@ -102,7 +102,7 @@
 .oh-calendar__calendar {
     grid-area: weeks;
 
-    &:focus-within {
+    &:has(:focus-visible) {
         outline: 5px auto Highlight;
         outline: 5px auto -webkit-focus-ring-color;
     }
