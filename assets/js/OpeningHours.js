@@ -104,6 +104,14 @@ var OpeningHours = (function () {
             sv: '<kbd lang="en">Page Up</kbd> och <kbd lang="en">Page Down</kbd> för att gå från månad till månad.',
             en: '<kbd>Page Up</kbd> and <kbd>Page Up</kbd> to move month to month.'
         },
+        nextMonth: {
+            sv: 'Visa nästa månad',
+            en: 'Show next month'
+        },
+        previousMonth: {
+            sv: 'Visa föregående månad',
+            en: 'Show previous month'
+        },
         open: {
             sv: 'öppet',
             en: 'open'
@@ -455,7 +463,7 @@ var OpeningHours = (function () {
             const calendarButtonPreviousMonth = document.createElement('button');
             calendarButtonPreviousMonth.classList.add('oh-calendar__toolbar-button');
             calendarButtonPreviousMonth.setAttribute('id', 'oh-calendar__toolbar-button__previous');
-            calendarButtonPreviousMonth.setAttribute('aria-label', 'Visa förra månaden');
+            calendarButtonPreviousMonth.setAttribute('aria-label', STRINGS.previousMonth[LANGUAGE]);
             calendarButtonPreviousMonth.setAttribute('tabindex', '-1');
             calendarButtonPreviousMonth.innerText = '❮';
             calendarButtonPreviousMonth.value = 'PreviousMonth';
@@ -464,7 +472,7 @@ var OpeningHours = (function () {
             const calendarButtonNextMonth = document.createElement('button');
             calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
             calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
-            calendarButtonNextMonth.setAttribute('aria-label', 'Visa nästa månad');
+            calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
             calendarButtonNextMonth.setAttribute('tabindex', '0');
             calendarButtonNextMonth.innerText = '❯';
             calendarButtonNextMonth.value = 'NextMonth';
