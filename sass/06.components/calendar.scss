@@ -251,12 +251,13 @@
 
     &.-closed {
         --day-background: var(--color-red-light);
+        --day-background-alt: var(--color-red-light);
         --day-foreground: var(--color-red);
 
         background: repeating-linear-gradient(
                         45deg,
-                        var(--color-red-light-alt),
-                        var(--color-red-light-alt) 2px,
+                        var(--day-background-alt),
+                        var(--day-background-alt) 2px,
                         var(--_day-background) 2px,
                         var(--_day-background) 4px
         );
@@ -271,6 +272,7 @@
 
         &.-closed {
             --day-background: var(--color-red);
+            --day-background-alt: var(--color-red-dark);
         }
     }
 }
