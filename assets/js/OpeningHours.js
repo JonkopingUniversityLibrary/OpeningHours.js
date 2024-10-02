@@ -35,8 +35,10 @@ Date.prototype.getWeek = function () {
 };
 Date.prototype.getWeeksOfMonth = function () {
     var firstDay = new Date(this.setDate(1)).getDay();
-    var totalDays = new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
-    return Math.ceil((firstDay + totalDays) / 7);
+    var lastDay = new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
+
+    var used = firstDay + (firstDay===0?6:-1) + lastDay;
+    return Math.ceil( used / 7);
 };
 
 String.prototype.capitalizeFirstLetter = function () {
@@ -322,19 +324,6 @@ var OpeningHours = (function () {
      */
     var showCalendar = function (data) {
 
-        /**
-         * ## Counts the weeks between two dates, rounding up. Only works when monday is the first day of the week
-         * @param firstDay First day
-         * @param lastDay Last day
-         * @returns {number} Amount of weeks
-         */
-        var countWeeksBetweenDays = function (firstDay, lastDay) {
-
-            var used = firstDay.getDay() + (firstDay.getDay()===0?6:-1) + lastDay.getDate();
-
-            return Math.ceil( used / 7);
-        };
-
         // https://stackoverflow.com/questions/4156434/javascript-get-the-first-day-of-the-week-from-current-date
         function getMonday (d) {
             d = new Date(d);
@@ -384,13 +373,7 @@ var OpeningHours = (function () {
                     const firstDayOfCurrentMonth = new Date(currentYear, monthNumber, 1);
                     const firstMonday = getMonday(firstDayOfCurrentMonth);
 
-                    const lastDayOfCurrentMonth = new Date(currentYear, monthNumber + 1, 0);
-                    const currentWeekNumber = now.getWeek();
-
-                    const weeksInMonth = countWeeksBetweenDays(
-                        firstDayOfCurrentMonth,
-                        lastDayOfCurrentMonth
-                    );
+                    const weeksInMonth = firstDayOfCurrentMonth.getWeeksOfMonth();
 
                     month.month = firstDayOfCurrentMonth.getMonth();
                     month.name = monthFormat.format(firstDayOfCurrentMonth);
