@@ -376,7 +376,7 @@ var OpeningHours = (function () {
                     });
 
                 // Loop through 3 months
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 3; i++) {
                     const month = {};
 
                     const monthNumber = (now.getMonth() + i) > 11 ? now.getMonth() + i - 12 : now.getMonth() + i;
