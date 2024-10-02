@@ -321,28 +321,18 @@ var OpeningHours = (function () {
      *  @param {Object} data API data from getData()
      */
     var showCalendar = function (data) {
+
         /**
-         * Returns count of weeks for year and month
-         *
-         * @param {Number} year - full year (2016)
-         * @param {Number} month_number - month_number is in the range 1..12
-         * @returns {number}
+         * ## Counts the weeks between two dates, rounding up. Only works when monday is the first day of the week
+         * @param firstDay First day
+         * @param lastDay Last day
+         * @returns {number} Amount of weeks
          */
-        var weeksCount = function (year, month_number) {
-            var firstOfMonth = new Date(year, month_number - 1, 1);
-            var day = firstOfMonth.getDay() || 6;
-            day = day === 1 ? 0 : day;
-            if (day) {
-                day--;
-            }
-            var diff = 7 - day;
-            var lastOfMonth = new Date(year, month_number, 0);
-            var lastDate = lastOfMonth.getDate();
-            if (lastOfMonth.getDay() === 1) {
-                diff--;
-            }
-            var result = Math.ceil((lastDate - diff) / 7);
-            return result + 1;
+        var countWeeksBetweenDays = function (firstDay, lastDay) {
+
+            var used = firstDay.getDay() + (firstDay.getDay()===0?6:-1) + lastDay.getDate();
+
+            return Math.ceil( used / 7);
         };
 
         // https://stackoverflow.com/questions/4156434/javascript-get-the-first-day-of-the-week-from-current-date
@@ -386,7 +376,7 @@ var OpeningHours = (function () {
                     });
 
                 // Loop through 3 months
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 4; i++) {
                     const month = {};
 
                     const monthNumber = (now.getMonth() + i) > 11 ? now.getMonth() + i - 12 : now.getMonth() + i;
@@ -397,18 +387,16 @@ var OpeningHours = (function () {
                     const lastDayOfCurrentMonth = new Date(currentYear, monthNumber + 1, 0);
                     const currentWeekNumber = now.getWeek();
 
-
-                    const firstWeekNumberOfMonth = firstDayOfCurrentMonth.getWeek();
-                    const lastWeekNumberOfMonth = lastDayOfCurrentMonth.getWeek();
-                    const weekCount = lastWeekNumberOfMonth - firstWeekNumberOfMonth + 1;
-
-                    let weeks = Array(weekCount).fill({});
+                    const weeksInMonth = countWeeksBetweenDays(
+                        firstDayOfCurrentMonth,
+                        lastDayOfCurrentMonth
+                    );
 
                     month.month = firstDayOfCurrentMonth.getMonth();
                     month.name = monthFormat.format(firstDayOfCurrentMonth);
                     month.weeks = [];
 
-                    for (let w = 0; w < weekCount; w++) {
+                    for (let w = 0; w < weeksInMonth; w++) {
                         const firstDayOfWeek = new Date(firstMonday.getFullYear(), firstMonday.getMonth(), firstMonday.getDate() + (7 * w));
                         const week = {};
                         week.week_number = firstDayOfWeek.getWeek();
