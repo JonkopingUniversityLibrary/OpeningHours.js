@@ -307,7 +307,6 @@ var OpeningHours = (function () {
                 day.append(label);
                 day.append(hours);
 
-
                 week.append(day);
             }
         }
@@ -428,6 +427,7 @@ var OpeningHours = (function () {
 
             calendarToolbar.setAttribute('role', 'toolbar');
             calendarToolbar.classList.add('oh-calendar__toolbar');
+            calendarToolbar.setAttribute('tabindex', '0');
             calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
             calendarToolbar.setAttribute('aria-controls', 'oh-calendar__calendar');
 
@@ -444,7 +444,7 @@ var OpeningHours = (function () {
             calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
             calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
             calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
-            calendarButtonNextMonth.setAttribute('tabindex', '0');
+            calendarButtonNextMonth.setAttribute('tabindex', '-1');
             calendarButtonNextMonth.innerText = '❯';
             calendarButtonNextMonth.value = 'NextMonth';
             calendarButtonNextMonth.setAttribute('aria-disabled', 'false');
@@ -462,7 +462,6 @@ var OpeningHours = (function () {
             const calendarHelpButton = document.createElement('button');
             calendarHelpButton.classList.add('oh-calendar__help-button');
             calendarHelpButton.innerText = STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter();
-
 
             const calendarHelpDialog = document.createElement('dialog');
             calendarHelpDialog.classList.add('oh-calendar__help-dialog');
@@ -497,7 +496,6 @@ var OpeningHours = (function () {
             calendarHelpDialog.appendChild(calendarHelpDialogLead);
             calendarHelpDialog.appendChild(calendarHelpDialogShortcutList);
             calendarHelpDialog.appendChild(calendarHelpDialogCloseButton);
-
 
             calendarElement.appendChild(calendarHelpButton);
             calendarElement.appendChild(calendarHelpDialog);
@@ -626,11 +624,9 @@ var OpeningHours = (function () {
                     monthElement.appendChild(weekElement);
                 });
 
-
                 const monthName = document.createElement('p');
                 monthName.innerText = month.name;
                 monthList.appendChild(monthElement);
-
 
             });
             calendarElement.appendChild(monthList);
@@ -710,7 +706,6 @@ var OpeningHours = (function () {
                     next.setAttribute('aria-selected', 'true');
                     current.setAttribute('aria-selected', 'false');
 
-
                     // Set active/disabled status for month navigation
                     if (nextMonth === nextMonth.parentElement.firstElementChild) {
                         previousMonthButton.setAttribute('aria-disabled', 'true');
@@ -734,36 +729,22 @@ var OpeningHours = (function () {
                     announce(STRINGS.cantSelectDate[LANGUAGE]);
                 }
 
-
             };
 
             const toolbarOnKeydown = (event) => {
-                const previousMonthButton = document.getElementById('oh-calendar__toolbar-button__previous');
-                const nextMonthButton = document.getElementById('oh-calendar__toolbar-button__next');
                 const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
-                const target = event.target;
                 const key = event.key.replace('Arrow', '');
 
-
-                if (key.match(/Left|Right|Enter/)) {
+                if (key.match(/Left|Right/)) {
                     switch (key) {
                     case 'Right':
-                        previousMonthButton.setAttribute('tabindex', '-1');
-                        nextMonthButton.setAttribute('tabindex', '0');
-                        nextMonthButton.focus();
+                        changeMonth('NextMonthFirstDay', selectedDate);
+                        event.target.focus();
                         break;
                     case 'Left':
-                        nextMonthButton.setAttribute('tabindex', '-1');
-                        previousMonthButton.setAttribute('tabindex', '0');
-                        previousMonthButton.focus();
+                        changeMonth('PreviousMonthFirstDay', selectedDate);
+                        event.target.focus();
                         break;
-                    case 'Enter':
-                        if (target.value === 'NextMonth') {
-                            changeMonth('NextMonthFirstDay', selectedDate);
-                        } else if (target.value === 'PreviousMonth') {
-                            changeMonth('PreviousMonthFirstDay', selectedDate);
-                        }
-
                     }
                     event.preventDefault();
                 }
@@ -888,8 +869,11 @@ var OpeningHours = (function () {
                 element.addEventListener('keydown', calendarOnKeydown);
             });
 
-            document.querySelectorAll('.oh-calendar__toolbar-button').forEach((element) => {
+            document.querySelectorAll('.oh-calendar__toolbar').forEach((element) => {
                 element.addEventListener('keydown', toolbarOnKeydown);
+            });
+
+            document.querySelectorAll('.oh-calendar__toolbar-button').forEach((element) => {
                 element.addEventListener('click', toolbarOnClick);
             });
         }
@@ -941,7 +925,6 @@ var OpeningHours = (function () {
 
                             // If we are currently open, print out the time to closing
                             if ((openingTime - now <= 0 && closingTime - now > 0)) {
-
 
                                 // If we are closing in 1 minute or less show relative time with singular suffix
                                 if ((closingTime - now) / 1000 / 60 <= 1) {
@@ -1134,7 +1117,6 @@ var OpeningHours = (function () {
                 return normalizeData(data.locations[0].weeks);
             }
 
-
         };
 
         return new Promise(async function (resolve) {
@@ -1150,7 +1132,6 @@ var OpeningHours = (function () {
             }
         });
     };
-
 
     /**
      *  ## Set language
@@ -1197,8 +1178,6 @@ var OpeningHours = (function () {
                 showWeek(data);
                 showCalendar(data);
             }
-
-
         }
     };
 
