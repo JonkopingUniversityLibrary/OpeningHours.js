@@ -423,42 +423,6 @@ var OpeningHours = (function () {
 
             const calendarElement = document.getElementById('oh-calendar');
 
-            const calendarToolbar = document.createElement('div');
-
-            calendarToolbar.setAttribute('role', 'toolbar');
-            calendarToolbar.classList.add('oh-calendar__toolbar');
-            calendarToolbar.setAttribute('tabindex', '0');
-            calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
-            calendarToolbar.setAttribute('aria-controls', 'oh-calendar__calendar');
-
-            const calendarButtonPreviousMonth = document.createElement('button');
-            calendarButtonPreviousMonth.classList.add('oh-calendar__toolbar-button');
-            calendarButtonPreviousMonth.setAttribute('id', 'oh-calendar__toolbar-button__previous');
-            calendarButtonPreviousMonth.setAttribute('aria-label', STRINGS.previousMonth[LANGUAGE]);
-            calendarButtonPreviousMonth.setAttribute('tabindex', '-1');
-            calendarButtonPreviousMonth.innerText = '❮';
-            calendarButtonPreviousMonth.value = 'PreviousMonth';
-            calendarButtonPreviousMonth.setAttribute('aria-disabled', 'true');
-
-            const calendarButtonNextMonth = document.createElement('button');
-            calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
-            calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
-            calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
-            calendarButtonNextMonth.setAttribute('tabindex', '-1');
-            calendarButtonNextMonth.innerText = '❯';
-            calendarButtonNextMonth.value = 'NextMonth';
-            calendarButtonNextMonth.setAttribute('aria-disabled', 'false');
-
-            const calendarCurrentMonth = document.createElement('div');
-            calendarCurrentMonth.classList.add('oh-calendar__toolbar-heading');
-            calendarCurrentMonth.innerText = monthFormat.format(now).capitalizeFirstLetter();
-
-            calendarToolbar.appendChild(calendarButtonPreviousMonth);
-            calendarToolbar.appendChild(calendarCurrentMonth);
-            calendarToolbar.appendChild(calendarButtonNextMonth);
-
-            calendarElement.appendChild(calendarToolbar);
-
             const calendarHelpButton = document.createElement('button');
             calendarHelpButton.classList.add('oh-calendar__help-button');
             calendarHelpButton.innerText = STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter();
@@ -500,12 +464,49 @@ var OpeningHours = (function () {
             calendarElement.appendChild(calendarHelpButton);
             calendarElement.appendChild(calendarHelpDialog);
 
-            calendarHelpButton.addEventListener('click', (event) => {
+            calendarHelpButton.addEventListener('click', () => {
                 calendarHelpDialog.showModal();
             });
 
-            calendarHelpDialogCloseButton.addEventListener('click', (event) => {
+            const calendarToolbar = document.createElement('div');
+
+            calendarToolbar.setAttribute('role', 'toolbar');
+            calendarToolbar.classList.add('oh-calendar__toolbar');
+            calendarToolbar.setAttribute('tabindex', '0');
+            calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
+            calendarToolbar.setAttribute('aria-controls', 'oh-calendar__calendar');
+
+            const calendarButtonPreviousMonth = document.createElement('button');
+            calendarButtonPreviousMonth.classList.add('oh-calendar__toolbar-button');
+            calendarButtonPreviousMonth.setAttribute('id', 'oh-calendar__toolbar-button__previous');
+            calendarButtonPreviousMonth.setAttribute('aria-label', STRINGS.previousMonth[LANGUAGE]);
+            calendarButtonPreviousMonth.setAttribute('tabindex', '-1');
+            calendarButtonPreviousMonth.innerText = '❮';
+            calendarButtonPreviousMonth.value = 'PreviousMonth';
+            calendarButtonPreviousMonth.setAttribute('aria-disabled', 'true');
+
+            const calendarButtonNextMonth = document.createElement('button');
+            calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
+            calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
+            calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
+            calendarButtonNextMonth.setAttribute('tabindex', '-1');
+            calendarButtonNextMonth.innerText = '❯';
+            calendarButtonNextMonth.value = 'NextMonth';
+            calendarButtonNextMonth.setAttribute('aria-disabled', 'false');
+
+            const calendarCurrentMonth = document.createElement('div');
+            calendarCurrentMonth.classList.add('oh-calendar__toolbar-heading');
+            calendarCurrentMonth.innerText = monthFormat.format(now).capitalizeFirstLetter();
+
+            calendarToolbar.appendChild(calendarButtonPreviousMonth);
+            calendarToolbar.appendChild(calendarCurrentMonth);
+            calendarToolbar.appendChild(calendarButtonNextMonth);
+
+            calendarElement.appendChild(calendarToolbar);
+
+            calendarHelpDialogCloseButton.addEventListener('click', () => {
                 calendarHelpDialog.close();
+                calendarToolbar.focus();
             });
 
             const weekDayHeaders = document.createElement('div');
@@ -993,7 +994,7 @@ var OpeningHours = (function () {
      *
      *  @private
      */
-    var getData = async function (config) {
+    var getData = async function () {
 
         'use strict';
 
@@ -1155,7 +1156,8 @@ var OpeningHours = (function () {
      * Initializes the Opening Hours script.
      *.
      * @public
-     * @param {Object} config, With the attributes: lang (sv or en), cutOffWeek (Weeknumber after which not to show any more dates)
+     * @param iid Instance id of the LibCal object
+     * @param language Language set in two letter code, compatible with sv and en
      */
     publicFunctions.initialize = async function (iid, ...language) {
         if (!isInitialized) {
@@ -1167,7 +1169,7 @@ var OpeningHours = (function () {
                 if (language.length) {
                     setLanguage(language[0]);
                 } else {
-                    console.log('language not set');
+                    console.error('language not set');
                 }
 
                 libCalInstanceId = iid;
