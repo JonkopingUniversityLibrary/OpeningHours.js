@@ -508,7 +508,7 @@ var OpeningHours = (function () {
 
             calendarHelpDialogCloseButton.addEventListener('click', () => {
                 calendarHelpDialog.close();
-                caledarToolbar.focus();
+                calendarToolbar.focus();
             });
 
             const weekDayHeaders = document.createElement('div');
