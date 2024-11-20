@@ -431,6 +431,7 @@ var OpeningHours = (function () {
             calendarHelpDialog.classList.add('oh-calendar__help-dialog');
             calendarHelpDialog.setAttribute('aria-label', STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter());
             calendarHelpDialog.setAttribute('closed', 'true');
+            calendarHelpDialog.setAttribute('tabindex', '-1');
 
             const calendarHelpDialogLead = document.createElement('p');
             calendarHelpDialogLead.innerText = STRINGS.keyboardShortcutsAre[LANGUAGE];
@@ -466,11 +467,12 @@ var OpeningHours = (function () {
 
             calendarHelpButton.addEventListener('click', () => {
                 calendarHelpDialog.showModal();
+                calendarHelpDialog.focus();
             });
 
             const calendarToolbar = document.createElement('div');
 
-            calendarToolbar.setAttribute('role', 'toolbar');
+            calendarToolbar.setAttribute('role', 'application');
             calendarToolbar.classList.add('oh-calendar__toolbar');
             calendarToolbar.setAttribute('tabindex', '0');
             calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
@@ -506,7 +508,7 @@ var OpeningHours = (function () {
 
             calendarHelpDialogCloseButton.addEventListener('click', () => {
                 calendarHelpDialog.close();
-                calendarToolbar.focus();
+                caledarToolbar.focus();
             });
 
             const weekDayHeaders = document.createElement('div');
@@ -720,7 +722,7 @@ var OpeningHours = (function () {
                     }
 
                     // If user is interacting with the toolbar or with the calendar grid
-                    if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar-button') {
+                    if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar') {
                         announce(nextMonth.getAttribute('data-name').capitalizeFirstLetter());
                     } else {
                         next.focus();
