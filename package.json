@@ -8,21 +8,21 @@
     },
     "author": "Gustav Lindqvist",
     "license": "MIT",
-    "devDependencies": {
-        "gulp": "^4.0.2",
-        "gulp-autoprefixer": "^8.0.0",
-        "gulp-clean-css": "*",
+    "dependencies": {
+        "eslint-config-prettier": "^9.1.0",
+        "gulp": "^5.0.0",
+        "gulp-autoprefixer": "^9.0.0",
+        "gulp-clean-css": "^4.3.0",
         "gulp-csscomb": "^3.1.0",
         "gulp-gzip": "^1.4.2",
-        "gulp-plumber": "1.2.1",
-        "gulp-rename": "2.0.0",
-        "gulp-sass": "^5.1.0",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "^2.0.0",
+        "gulp-sass": "^6.0.0",
         "gulp-sass-glob": "^1.1.0",
-        "gulp-sourcemaps": "2.6.5",
-        "sass": "^1.58.1",
-        "stylelint": "^15.11.0",
-        "stylelint-config-idiomatic-order": "^9.0.0",
-        "stylelint-config-standard": "^20.0.0",
-        "stylelint-scss": "^5.2.1"
+        "gulp-sourcemaps": "^3.0.0",
+        "prettier": "^3.4.2",
+        "prettier-eslint": "^16.3.0",
+        "prettier-plugin-css-order": "^2.1.2",
+        "sass": "^1.83.0"
     }
 }

@@ -4,18 +4,21 @@
  * Returns the week number for this date.  dowOffset is the day of week the week
  * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
  * the week returned is the ISO 8601 week number.
- * @param int dowOffset
  * @return int
+ * @param dowOffset
  */
-Date.prototype.getWeek = function () {
+Date.prototype.getWeek = function (dowOffset) {
 	/*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
 
-	dowOffset = typeof (dowOffset) == 'number' ? dowOffset : 1; //default dowOffset to zero
+	dowOffset = typeof dowOffset === 'number' ? dowOffset : 1; //default dowOffset to zero
 	let newYear = new Date(this.getFullYear(), 0, 1);
 	let day = newYear.getDay() - dowOffset; //the day of week the year begins on
-	day = (day >= 0 ? day : day + 7);
-	let daynum = Math.floor((this.getTime() - newYear.getTime() -
-							 (this.getTimezoneOffset() - newYear.getTimezoneOffset()) * 60000) / 86400000) + 1;
+	day = day >= 0 ? day : day + 7;
+	let daynum =
+		Math.floor(
+			(this.getTime() - newYear.getTime() - (this.getTimezoneOffset() - newYear.getTimezoneOffset()) * 60000) /
+				86400000,
+		) + 1;
 	let weeknum;
 	//if the year starts before the middle of a week
 	if (day < 4) {
@@ -33,6 +36,7 @@ Date.prototype.getWeek = function () {
 	}
 	return weeknum;
 };
+
 Date.prototype.getWeeksOfMonth = function () {
 	let firstDay = new Date(this.setDate(1)).getDay();
 	let lastDay = new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
@@ -60,192 +64,192 @@ let OpeningHours = (function () {
 	let STRINGS = {
 		openRelative: {
 			sv: 'Vi har öppet i ',
-			en: 'We are open another '
+			en: 'We are open another ',
 		},
 		openRelativeSuffix: {
 			sv: ' till.',
-			en: '.'
+			en: '.',
 		},
 		closedRelative: {
 			sv: 'Vi har stängt och öppnar om ',
-			en: 'We are currently closed and are opening in '
+			en: 'We are currently closed and are opening in ',
 		},
 		openAbsolute: {
 			sv: 'Vi har öppet till klockan ',
-			en: 'We are open until '
+			en: 'We are open until ',
 		},
 		closedAbsolute: {
 			sv: 'Vi har stängt och öppnar ',
-			en: 'We are currently closed and are opening '
+			en: 'We are currently closed and are opening ',
 		},
 		keyboardShortcuts: {
 			sv: 'tangentbordsgenvägar',
-			en: 'Keyboard shortcuts'
+			en: 'Keyboard shortcuts',
 		},
 		keyboardShortcutsAre: {
 			sv: 'Tangentbordsgenvägarna är följande:',
-			en: 'The Keyboard shortcuts are the following:'
+			en: 'The Keyboard shortcuts are the following:',
 		},
 		closeDialog: {
 			sv: 'Stäng dialogrutan',
-			en: 'Close dialog'
+			en: 'Close dialog',
 		},
 		moveToToday: {
 			sv: '<kbd>Hem</kbd> för att gå till idag.',
-			en: '<kbd>Home</kbd> to move to today.'
+			en: '<kbd>Home</kbd> to move to today.',
 		},
 		moveDayToDay: {
 			sv: '<kbd>Vänsterpil</kbd> och <kbd>högerpil</kbd> för att gå från dag till dag.',
-			en: '<kbd>Left Arrow</kbd> and <kbd>Right Arrow</kbd> to move day to day.'
+			en: '<kbd>Left Arrow</kbd> and <kbd>Right Arrow</kbd> to move day to day.',
 		},
 		moveWeekToWeek: {
 			sv: '<kbd>Uppåtpil</kbd> och <kbd>högerpil</kbd> för att gå från vecka till vecka.',
-			en: '<kbd>Up Arrow</kbd> and <kbd>Down Arrow</kbd> to move week to week.'
+			en: '<kbd>Up Arrow</kbd> and <kbd>Down Arrow</kbd> to move week to week.',
 		},
 		moveMonthToMonth: {
 			sv: '<kbd lang="en">Page Up</kbd> och <kbd lang="en">Page Down</kbd> för att gå från månad till månad.',
-			en: '<kbd>Page Up</kbd> and <kbd>Page Up</kbd> to move month to month.'
+			en: '<kbd>Page Up</kbd> and <kbd>Page Up</kbd> to move month to month.',
 		},
 		nextMonth: {
 			sv: 'Visa nästa månad',
-			en: 'Show next month'
+			en: 'Show next month',
 		},
 		previousMonth: {
 			sv: 'Visa föregående månad',
-			en: 'Show previous month'
+			en: 'Show previous month',
 		},
 		open: {
 			sv: 'öppet',
-			en: 'open'
+			en: 'open',
 		},
 		closed: {
 			sv: 'stängt',
-			en: 'closed'
+			en: 'closed',
 		},
 		today: {
 			sv: 'i dag',
-			en: 'today'
+			en: 'today',
 		},
 		calendar: {
 			sv: 'Kalender för öppettider',
-			en: 'Calendar for opening hours'
+			en: 'Calendar for opening hours',
 		},
 		noDefinedOpeningHours: {
 			sv: 'Inga öppettider angivna',
-			en: 'No defined opening hours'
+			en: 'No defined opening hours',
 		},
 		calendarNavigation: {
 			sv: 'Kalendernavigeringsmeny',
-			en: 'Calendar navigation'
+			en: 'Calendar navigation',
 		},
 		cantSelectDate: {
 			sv: 'Kan inte välja det datumet',
-			en: `Can't select that date`
+			en: "Can't select that date",
 		},
 		lessThanOne: {
 			sv: ' mindre än en',
-			en: ' less than one'
+			en: ' less than one',
 		},
 		months: {
 			sv: 'månader',
-			en: 'months'
+			en: 'months',
 		},
 		time: {
 			minutes: {
 				singular: {
 					sv: '&nbsp;minut',
-					en: '&nbsp;minute'
+					en: '&nbsp;minute',
 				},
 				plural: {
 					sv: '&nbsp;minuter',
-					en: '&nbsp;minutes'
-				}
+					en: '&nbsp;minutes',
+				},
 			},
 			hours: {
 				singular: {
 					sv: '&nbsp;timme',
-					en: '&nbsp;hour'
+					en: '&nbsp;hour',
 				},
 				plural: {
 					sv: '&nbsp;timmar',
-					en: '&nbsp;hours'
-				}
+					en: '&nbsp;hours',
+				},
 			},
 			days: {
 				singular: {
 					sv: '&nbsp;dag',
-					en: '&nbsp;day'
+					en: '&nbsp;day',
 				},
 				plural: {
 					sv: '&nbsp;dagar',
-					en: '&nbsp;days'
-				}
+					en: '&nbsp;days',
+				},
 			},
 			week: {
 				singular: {
 					sv: 'vecka',
-					en: 'week'
+					en: 'week',
 				},
 				plural: {
 					sv: 'veckor',
-					en: 'weeks'
-				}
-			}
+					en: 'weeks',
+				},
+			},
 		},
 		weekdays: {
 			Monday: {
 				sv: 'måndag',
-				en: 'Monday'
+				en: 'Monday',
 			},
 			Tuesday: {
 				sv: 'tisdag',
-				en: 'Tuesday'
+				en: 'Tuesday',
 			},
 			Wednesday: {
 				sv: 'onsdag',
-				en: 'Wednesday'
+				en: 'Wednesday',
 			},
 			Thursday: {
 				sv: 'torsdag',
-				en: 'Thursday'
+				en: 'Thursday',
 			},
 			Friday: {
 				sv: 'fredag',
-				en: 'Friday'
+				en: 'Friday',
 			},
 			Saturday: {
 				sv: 'lördag',
-				en: 'Saturday'
+				en: 'Saturday',
 			},
 			Sunday: {
 				sv: 'söndag',
-				en: 'Sunday'
+				en: 'Sunday',
 			},
 			tomorrow: {
 				sv: 'i morgon',
-				en: 'tomorrow'
-			}
+				en: 'tomorrow',
+			},
 		},
 		at: {
 			sv: ' klockan ',
-			en: ' at '
+			en: ' at ',
 		},
 		on: {
 			sv: ' på ',
-			en: 'on '
+			en: 'on ',
 		},
 		and: {
 			sv: ' och ',
-			en: ' and '
+			en: ' and ',
 		},
 		goTo: {
 			sv: 'Gå till',
-			en: 'Go to'
+			en: 'Go to',
 		},
 		to: {
 			sv: 'till',
-			en: 'to'
-		}
+			en: 'to',
+		},
 	};
 
 	/**
@@ -257,8 +261,8 @@ let OpeningHours = (function () {
 	 *  @returns {String} Next day and time when the library is set to open.
 	 */
 	let showWeek = function (data) {
-		const longWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, {weekday: 'long'});
-		const numberMonthFormat = new Intl.DateTimeFormat(LANGUAGE, {month: 'numeric'});
+		const longWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'long' });
+		const numberMonthFormat = new Intl.DateTimeFormat(LANGUAGE, { month: 'numeric' });
 		const dateFormat = new Intl.DateTimeFormat('sv');
 
 		let weeks = data.weeks;
@@ -304,12 +308,20 @@ let OpeningHours = (function () {
 				hours.classList.add('oh-day-hours');
 				if (weeks[w].days[d].status === 'open') {
 					hours.setAttribute('data-state', 'open');
-					hours.innerHTML = '<span class="oh-opening">' + weeks[w].days[d].openingTime.replace(/^0+/, '').replace(':00', '') + '</span>–<span class="oh-closing">' + weeks[w].days[d].closingTime.replace(/^0+/, '').replace(':00', '') + '</span>';
+					hours.innerHTML =
+						'<span class="oh-opening">' +
+						weeks[w].days[d].openingTime.replace(/^0+/, '').replace(':00', '') +
+						'</span>–<span class="oh-closing">' +
+						weeks[w].days[d].closingTime.replace(/^0+/, '').replace(':00', '') +
+						'</span>';
 				} else {
 					hours.setAttribute('data-state', 'closed');
-					hours.innerHTML = STRINGS.closed[LANGUAGE].toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
-						return letter.toUpperCase();
-					});
+					hours.innerHTML = STRINGS.closed[LANGUAGE].toLowerCase().replace(
+						/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g,
+						function (letter) {
+							return letter.toUpperCase();
+						},
+					);
 				}
 				day.append(label);
 				day.append(hours);
@@ -323,7 +335,7 @@ let OpeningHours = (function () {
 			}
 		}
 		let weekElements = document.querySelectorAll('.oh-week');
-		weekElements.forEach((element) => element.innerHTML = weekElement.innerHTML);
+		weekElements.forEach((element) => (element.innerHTML = weekElement.innerHTML));
 	};
 
 	/**
@@ -334,22 +346,20 @@ let OpeningHours = (function () {
 	 *  @param {Object} data API data from getData()
 	 */
 	let showCalendar = function (data) {
-
 		// https://stackoverflow.com/questions/4156434/javascript-get-the-first-day-of-the-week-from-current-date
-		function getMonday (d) {
+		function getMonday(d) {
 			d = new Date(d);
-			let day = d.getDay(),
-				diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+			let day = d.getDay();
+			let diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
 			return new Date(d.setDate(diff));
 		}
 
 		if (document.getElementById('oh-calendar')) {
-
 			const now = new Date();
 			const weeksToMonthData = function (data) {
-				const monthFormat = new Intl.DateTimeFormat(LANGUAGE, {month: 'long'});
+				const monthFormat = new Intl.DateTimeFormat(LANGUAGE, { month: 'long' });
 				const dateFormat = new Intl.DateTimeFormat('sv');
-				const dayFormat = new Intl.DateTimeFormat(LANGUAGE, {weekday: 'long'});
+				const dayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'long' });
 				const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 				let months = [];
 
@@ -363,9 +373,9 @@ let OpeningHours = (function () {
 					.forEach((day) => {
 						openingHoursData[day.date] = {
 							open: undefined,
-							openingTime: (typeof day.openingTime !== 'undefined') ? day.openingTime : undefined,
-							closingTime: (typeof day.closingTime !== 'undefined') ? day.closingTime : undefined,
-							note: (typeof day.note !== 'undefined') ? day.note : undefined
+							openingTime: typeof day.openingTime !== 'undefined' ? day.openingTime : undefined,
+							closingTime: typeof day.closingTime !== 'undefined' ? day.closingTime : undefined,
+							note: typeof day.note !== 'undefined' ? day.note : undefined,
 						};
 
 						if (day.status === 'open') {
@@ -379,8 +389,8 @@ let OpeningHours = (function () {
 				for (let i = 0; i < 3; i++) {
 					const month = {};
 
-					const monthNumber = (now.getMonth() + i) > 11 ? now.getMonth() + i - 12 : now.getMonth() + i;
-					const currentYear = (now.getMonth() + i) > 11 ? now.getFullYear() + 1 : now.getFullYear();
+					const monthNumber = now.getMonth() + i > 11 ? now.getMonth() + i - 12 : now.getMonth() + i;
+					const currentYear = now.getMonth() + i > 11 ? now.getFullYear() + 1 : now.getFullYear();
 					const firstDayOfCurrentMonth = new Date(currentYear, monthNumber, 1);
 					const firstMonday = getMonday(firstDayOfCurrentMonth);
 
@@ -391,18 +401,26 @@ let OpeningHours = (function () {
 					month.weeks = [];
 
 					for (let w = 0; w < weeksInMonth; w++) {
-						const firstDayOfWeek = new Date(firstMonday.getFullYear(), firstMonday.getMonth(), firstMonday.getDate() + (7 * w));
+						const firstDayOfWeek = new Date(
+							firstMonday.getFullYear(),
+							firstMonday.getMonth(),
+							firstMonday.getDate() + 7 * w,
+						);
 						const week = {};
 						week.week_number = firstDayOfWeek.getWeek();
 						week.days = [];
 
 						for (let d = 0; d < 7; d++) {
 							const day = {};
-							day.date = new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate() + d);
+							day.date = new Date(
+								firstDayOfWeek.getFullYear(),
+								firstDayOfWeek.getMonth(),
+								firstDayOfWeek.getDate() + d,
+							);
 
-							day.is_today = (day.date.getTime() === today.getTime());
-							day.is_past = (day.date < today);
-							day.is_in_month = (day.date.getMonth() === firstDayOfCurrentMonth.getMonth());
+							day.is_today = day.date.getTime() === today.getTime();
+							day.is_past = day.date < today;
+							day.is_in_month = day.date.getMonth() === firstDayOfCurrentMonth.getMonth();
 							day.date_string = dateFormat.format(day.date);
 							day.open = undefined;
 							day.opening_time = undefined;
@@ -413,7 +431,10 @@ let OpeningHours = (function () {
 								day.open = openingHoursData[day.date_string].open;
 								day.opening_time = openingHoursData[day.date_string].openingTime;
 								day.closing_time = openingHoursData[day.date_string].closingTime;
-								day.note = (typeof openingHoursData[day.date_string].note !== 'undefined') ? openingHoursData[day.date_string].note[LANGUAGE] : undefined;
+								day.note =
+									typeof openingHoursData[day.date_string].note !== 'undefined'
+										? openingHoursData[day.date_string].note[LANGUAGE]
+										: undefined;
 							}
 
 							week.days.push(day);
@@ -428,10 +449,10 @@ let OpeningHours = (function () {
 			};
 
 			const calendarData = weeksToMonthData(data);
-			const monthFormat = new Intl.DateTimeFormat(LANGUAGE, {month: 'long'});
-			const longWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, {weekday: 'long'});
-			const longWeekdayFormatEnglish = new Intl.DateTimeFormat('en', {weekday: 'long'});
-			const shortWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, {weekday: 'short'});
+			const monthFormat = new Intl.DateTimeFormat(LANGUAGE, { month: 'long' });
+			const longWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'long' });
+			const longWeekdayFormatEnglish = new Intl.DateTimeFormat('en', { weekday: 'long' });
+			const shortWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'short' });
 
 			const calendarElement = document.getElementById('oh-calendar');
 
@@ -573,10 +594,18 @@ let OpeningHours = (function () {
 						if (day.date.getMonth() === month.month) {
 							let openingTime = STRINGS.noDefinedOpeningHours[LANGUAGE];
 							if (day.open !== undefined && !day.is_past) {
-								openingTime = (day.open) ? STRINGS.open[LANGUAGE] + ' ' + day.opening_time.replace(/^0+/, '').replace(':00', '') + ' ' + STRINGS.to[LANGUAGE] + ' ' + day.closing_time.replace(/^0+/, '').replace(':00', '') : STRINGS.closed[LANGUAGE];
+								openingTime = day.open
+									? STRINGS.open[LANGUAGE] +
+										' ' +
+										day.opening_time.replace(/^0+/, '').replace(':00', '') +
+										' ' +
+										STRINGS.to[LANGUAGE] +
+										' ' +
+										day.closing_time.replace(/^0+/, '').replace(':00', '')
+									: STRINGS.closed[LANGUAGE];
 							}
-							const note = (day.note !== undefined) ? ', ' + day.note : '';
-							const isToday = (day.is_today) ? ', ' + STRINGS.today[LANGUAGE] : '';
+							const note = day.note !== undefined ? ', ' + day.note : '';
+							const isToday = day.is_today ? ', ' + STRINGS.today[LANGUAGE] : '';
 
 							const dayElement = document.createElement('div');
 							dayElement.classList.add('oh-calendar__day');
@@ -585,7 +614,19 @@ let OpeningHours = (function () {
 							dayElement.setAttribute('data-date', day.date.getDate());
 							dayElement.setAttribute('role', 'presentation');
 							dayElement.setAttribute('tabindex', '-1');
-							dayElement.setAttribute('aria-label', day.date.getDate() + ' ' + monthFormat.format(day.date) + ', ' + longWeekdayFormat.format(day.date) + isToday + ', ' + openingTime + note + '.');
+							dayElement.setAttribute(
+								'aria-label',
+								day.date.getDate() +
+									' ' +
+									monthFormat.format(day.date) +
+									', ' +
+									longWeekdayFormat.format(day.date) +
+									isToday +
+									', ' +
+									openingTime +
+									note +
+									'.',
+							);
 
 							const dayDateElement = document.createElement('span');
 							dayDateElement.classList.add('oh-calendar__date');
@@ -598,8 +639,12 @@ let OpeningHours = (function () {
 							dayHoursElement.setAttribute('aria-hidden', 'true');
 
 							if (day.open !== undefined && !day.is_past) {
-								dayHoursElement.innerText = (day.open) ? day.opening_time.replace(/^0+/, '').replace(':00', '') + '–' + day.closing_time.replace(/^0+/, '').replace(':00', '') : STRINGS.closed[LANGUAGE];
-								dayElement.classList.add((day.open) ? '-open' : '-closed');
+								dayHoursElement.innerText = day.open
+									? day.opening_time.replace(/^0+/, '').replace(':00', '') +
+										'–' +
+										day.closing_time.replace(/^0+/, '').replace(':00', '')
+									: STRINGS.closed[LANGUAGE];
+								dayElement.classList.add(day.open ? '-open' : '-closed');
 							}
 
 							dayElement.appendChild(dayDateElement);
@@ -624,7 +669,6 @@ let OpeningHours = (function () {
 								dayElement.setAttribute('tabindex', '0');
 								dayElement.setAttribute('aria-selected', 'true');
 							} else {
-
 								dayElement.setAttribute('aria-selected', 'false');
 							}
 
@@ -642,7 +686,6 @@ let OpeningHours = (function () {
 				const monthName = document.createElement('p');
 				monthName.innerText = month.name;
 				monthList.appendChild(monthElement);
-
 			});
 			calendarElement.appendChild(monthList);
 
@@ -671,43 +714,59 @@ let OpeningHours = (function () {
 
 				try {
 					switch (command) {
-					case 'NextMonthFirstWeekday':
-						next = currentMonth.nextSibling.querySelector(`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`);
-						break;
-					case 'PreviousMonthLastWeekday':
-						const allWeekDays = currentMonth.previousSibling.querySelectorAll(`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`);
-						next = allWeekDays[allWeekDays.length - 1];
-						break;
-					case 'NextMonthFirstDay':
-						next = currentMonth.nextSibling.querySelector(`.oh-calendar__day`);
-						break;
-					case 'PreviousMonthFirstDay':
-						next = currentMonth.previousSibling.querySelector(`.oh-calendar__day`);
-						break;
-					case 'PreviousMonthLastDay':
-						const allDays = currentMonth.previousSibling.querySelectorAll(`.oh-calendar__day`);
-						next = allDays[allDays.length - 1];
-						break;
-					case 'PreviousMonthSameDay':
-						if (currentMonth.previousSibling.querySelector(`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`) !== null) {
-							next = currentMonth.previousSibling.querySelector(`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`);
-						} else {
-							const allDays = currentMonth.previousSibling.querySelectorAll(`.oh-calendar__day`);
+						case 'NextMonthFirstWeekday':
+							next = currentMonth.nextSibling.querySelector(
+								`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`,
+							);
+							break;
+						case 'PreviousMonthLastWeekday':
+							const allWeekDays = currentMonth.previousSibling.querySelectorAll(
+								`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`,
+							);
+							next = allWeekDays[allWeekDays.length - 1];
+							break;
+						case 'NextMonthFirstDay':
+							next = currentMonth.nextSibling.querySelector('.oh-calendar__day');
+							break;
+						case 'PreviousMonthFirstDay':
+							next = currentMonth.previousSibling.querySelector('.oh-calendar__day');
+							break;
+						case 'PreviousMonthLastDay':
+							const allDays = currentMonth.previousSibling.querySelectorAll('.oh-calendar__day');
 							next = allDays[allDays.length - 1];
-						}
+							break;
+						case 'PreviousMonthSameDay':
+							if (
+								currentMonth.previousSibling.querySelector(
+									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
+								) !== null
+							) {
+								next = currentMonth.previousSibling.querySelector(
+									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
+								);
+							} else {
+								const allDays = currentMonth.previousSibling.querySelectorAll('.oh-calendar__day');
+								next = allDays[allDays.length - 1];
+							}
 
-						break;
-					case 'NextMonthSameDay':
-						if (currentMonth.nextSibling.querySelector(`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`) !== null) {
-							next = currentMonth.nextSibling.querySelector(`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`);
-						} else {
-							const allDays = currentMonth.nextSibling.querySelectorAll(`.oh-calendar__day`);
-							next = allDays[allDays.length - 1];
-						}
-						break;
-					case 'Today':
-						next = document.querySelector('.oh-calendar .-today');
-						break;
+							break;
+						case 'NextMonthSameDay':
+							if (
+								currentMonth.nextSibling.querySelector(
+									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
+								) !== null
+							) {
+								next = currentMonth.nextSibling.querySelector(
+									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
+								);
+							} else {
+								const allDays = currentMonth.nextSibling.querySelectorAll('.oh-calendar__day');
+								next = allDays[allDays.length - 1];
+							}
+							break;
+						case 'Today':
+							next = document.querySelector('.oh-calendar .-today');
+							break;
 					}
 
 					const nextMonth = next.parentElement.parentElement;
@@ -739,11 +798,9 @@ let OpeningHours = (function () {
 					} else {
 						next.focus();
 					}
-
 				} catch (e) {
 					announce(STRINGS.cantSelectDate[LANGUAGE]);
 				}
-
 			};
 
 			const toolbarOnKeydown = (event) => {
@@ -752,14 +809,14 @@ let OpeningHours = (function () {
 
 				if (key.match(/Left|Right/)) {
 					switch (key) {
-					case 'Right':
-						changeMonth('NextMonthFirstDay', selectedDate);
-						event.target.focus();
-						break;
-					case 'Left':
-						changeMonth('PreviousMonthFirstDay', selectedDate);
-						event.target.focus();
-						break;
+						case 'Right':
+							changeMonth('NextMonthFirstDay', selectedDate);
+							event.target.focus();
+							break;
+						case 'Left':
+							changeMonth('PreviousMonthFirstDay', selectedDate);
+							event.target.focus();
+							break;
 					}
 					event.preventDefault();
 				}
@@ -778,7 +835,6 @@ let OpeningHours = (function () {
 			};
 
 			const calendarOnKeydown = (event) => {
-
 				const changeSelectedDate = function (current, command) {
 					const selectNewDateElement = function (current, next) {
 						current.setAttribute('aria-selected', 'false');
@@ -789,92 +845,97 @@ let OpeningHours = (function () {
 					};
 					let next = current;
 					switch (command) {
-					case 'PreviousWeek':
-						if (current.parentElement.previousSibling && current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'))) {
-							next = current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'));
-							selectNewDateElement(current, next);
-						} else {
-							changeMonth('PreviousMonthLastWeekday', current);
-						}
-						break;
-					case 'NextWeek':
-						if (current.parentElement.nextSibling && current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'))) {
-							next = current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'));
-							selectNewDateElement(current, next);
-						} else {
-							changeMonth('NextMonthFirstWeekday', current);
-						}
-						break;
-					case 'PreviousDay':
-						if (current.previousSibling) {
-							next = current.previousSibling;
-							selectNewDateElement(current, next);
-						} else {
-							if (current.parentElement.previousSibling) {
-								next = current.parentElement.previousSibling.querySelector('.oh-calendar__day.-sunday');
+						case 'PreviousWeek':
+							if (
+								current.parentElement.previousSibling &&
+								current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'))
+							) {
+								next = current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'));
 								selectNewDateElement(current, next);
 							} else {
-								changeMonth('PreviousMonthLastDay', current);
+								changeMonth('PreviousMonthLastWeekday', current);
 							}
-						}
-						break;
-					case 'NextDay':
-						if (current.nextSibling) {
-							next = current.nextSibling;
-							selectNewDateElement(current, next);
-						} else {
-							if (current.parentElement.nextSibling) {
-								next = current.parentElement.nextSibling.querySelector('.oh-calendar__day.-monday');
+							break;
+						case 'NextWeek':
+							if (
+								current.parentElement.nextSibling &&
+								current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'))
+							) {
+								next = current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'));
 								selectNewDateElement(current, next);
 							} else {
-								changeMonth('NextMonthFirstDay', current);
+								changeMonth('NextMonthFirstWeekday', current);
 							}
-						}
-						break;
-					case 'PreviousMonth':
-						changeMonth('PreviousMonthSameDay', current);
-						break;
-					case 'NextMonth':
-						changeMonth('NextMonthSameDay', current);
-						break;
-					case 'Today':
-						const today = document.querySelector('.oh-calendar .-today');
-						if (current.parentElement.parentElement === today.parentElement.parentElement) {
-							next = today;
-							selectNewDateElement(current, next);
-						} else {
-							changeMonth('Today', current);
-						}
-						break;
+							break;
+						case 'PreviousDay':
+							if (current.previousSibling) {
+								next = current.previousSibling;
+								selectNewDateElement(current, next);
+							} else {
+								if (current.parentElement.previousSibling) {
+									next = current.parentElement.previousSibling.querySelector('.oh-calendar__day.-sunday');
+									selectNewDateElement(current, next);
+								} else {
+									changeMonth('PreviousMonthLastDay', current);
+								}
+							}
+							break;
+						case 'NextDay':
+							if (current.nextSibling) {
+								next = current.nextSibling;
+								selectNewDateElement(current, next);
+							} else {
+								if (current.parentElement.nextSibling) {
+									next = current.parentElement.nextSibling.querySelector('.oh-calendar__day.-monday');
+									selectNewDateElement(current, next);
+								} else {
+									changeMonth('NextMonthFirstDay', current);
+								}
+							}
+							break;
+						case 'PreviousMonth':
+							changeMonth('PreviousMonthSameDay', current);
+							break;
+						case 'NextMonth':
+							changeMonth('NextMonthSameDay', current);
+							break;
+						case 'Today':
+							const today = document.querySelector('.oh-calendar .-today');
+							if (current.parentElement.parentElement === today.parentElement.parentElement) {
+								next = today;
+								selectNewDateElement(current, next);
+							} else {
+								changeMonth('Today', current);
+							}
+							break;
 					}
-
 				};
 				const target = event.target;
 				const key = event.key.replace('Arrow', '');
 
 				if (target.classList.contains('oh-calendar__day') && key.match(/Up|Down|Left|Right|Home|PageUp|PageDown/)) {
 					switch (key) {
-					case 'Right':
-						changeSelectedDate(target, 'NextDay');
-						break;
-					case 'Left':
-						changeSelectedDate(target, 'PreviousDay');
-						break;
-					case 'Up':
-						changeSelectedDate(target, 'PreviousWeek');
-						break;
-					case 'Down':
-						changeSelectedDate(target, 'NextWeek');
-						break;
-					case 'Home':
-						changeSelectedDate(target, 'Today');
-						break;
-					case 'PageUp':
-						changeSelectedDate(target, 'PreviousMonth');
-						break;
-					case 'PageDown':
-						changeSelectedDate(target, 'NextMonth');
-						break;
+						case 'Right':
+							changeSelectedDate(target, 'NextDay');
+							break;
+						case 'Left':
+							changeSelectedDate(target, 'PreviousDay');
+							break;
+						case 'Up':
+							changeSelectedDate(target, 'PreviousWeek');
+							break;
+						case 'Down':
+							changeSelectedDate(target, 'NextWeek');
+							break;
+						case 'Home':
+							changeSelectedDate(target, 'Today');
+							break;
+						case 'PageUp':
+							changeSelectedDate(target, 'PreviousMonth');
+							break;
+						case 'PageDown':
+							changeSelectedDate(target, 'NextMonth');
+							break;
 					}
 					event.preventDefault();
 				}
@@ -914,85 +975,124 @@ let OpeningHours = (function () {
 			 *  @private
 			 */
 			let countdownOutput = function (content) {
-				document.querySelectorAll('.oh-countdown').forEach((element) => element.innerHTML = content);
+				document.querySelectorAll('.oh-countdown').forEach((element) => (element.innerHTML = content));
 			};
 
 			// Loop through the weeks
-			week:
-				for (let w = 0; w < weeks.length; w += 1) {
-					let now;
-					let currentDay;
+			week: for (let w = 0; w < weeks.length; w += 1) {
+				let now;
+				let currentDay;
 
-					// Loop through the days of the week
-					for (let d = 0; d < weeks[w].days.length; d += 1) {
-						let openingTime = new Date(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime);
-						let closingTime = new Date(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime);
+				// Loop through the days of the week
+				for (let d = 0; d < weeks[w].days.length; d += 1) {
+					let openingTime = new Date(weeks[w].days[d].date + ' ' + weeks[w].days[d].openingTime);
+					let closingTime = new Date(weeks[w].days[d].date + ' ' + weeks[w].days[d].closingTime);
 
-						now = new Date();
-						currentDay = new Date().setUTCHours(0, 0, 0, 0);
+					now = new Date();
+					currentDay = new Date().setUTCHours(0, 0, 0, 0);
 
-						// If the current working day is going to open
-						if (weeks[w].days[d].status === 'open') {
-							openingNext.day = weeks[w].days[d].day;
-							openingNext.openingTime = weeks[w].days[d].openingTime;
-							openingNext.closingTime = weeks[w].days[d].closingTime;
-							openingNext.date = weeks[w].days[d].date;
+					// If the current working day is going to open
+					if (weeks[w].days[d].status === 'open') {
+						openingNext.day = weeks[w].days[d].day;
+						openingNext.openingTime = weeks[w].days[d].openingTime;
+						openingNext.closingTime = weeks[w].days[d].closingTime;
+						openingNext.date = weeks[w].days[d].date;
 
-							// If we are currently open, print out the time to closing
-							if ((openingTime - now <= 0 && closingTime - now > 0)) {
+						// If we are currently open, print out the time to closing
+						if (openingTime - now <= 0 && closingTime - now > 0) {
+							// If we are closing in 1 minute or less show relative time with singular suffix
+							if ((closingTime - now) / 1000 / 60 <= 1) {
+								countdownOutput(
+									STRINGS.openRelative[LANGUAGE] +
+										Math.round((closingTime - now) / 1000 / 60) +
+										STRINGS.time.minutes.singular[LANGUAGE] +
+										STRINGS.openRelativeSuffix[LANGUAGE],
+								);
+								break week;
 
-								// If we are closing in 1 minute or less show relative time with singular suffix
-								if ((closingTime - now) / 1000 / 60 <= 1) {
-									countdownOutput(STRINGS.openRelative[LANGUAGE] + Math.round((closingTime - now) / 1000 / 60) + STRINGS.time.minutes.singular[LANGUAGE] + STRINGS.openRelativeSuffix[LANGUAGE]);
+								// If it's 60 minutes or less show relative time.
+							} else if ((closingTime - now) / 1000 / 60 < 60) {
+								countdownOutput(
+									STRINGS.openRelative[LANGUAGE] +
+										Math.round((closingTime - now) / 1000 / 60) +
+										STRINGS.time.minutes.plural[LANGUAGE] +
+										STRINGS.openRelativeSuffix[LANGUAGE],
+								);
+								break week;
+
+								// Otherwise show absolute time.
+							} else {
+								countdownOutput(
+									STRINGS.openAbsolute[LANGUAGE] + openingNext.closingTime + ' ' + STRINGS.today[LANGUAGE] + '.',
+								);
+								break week;
+							}
+
+							// Is the date in the future?
+						} else if (openingTime - now > 0) {
+							// Is it the same date?
+							if (new Date(weeks[w].days[d].date) - currentDay === 0) {
+								// If it's 1 minute or less left, change to singular suffix
+								if ((openingTime - now) / 1000 / 60 <= 1) {
+									countdownOutput(
+										STRINGS.closedRelative[LANGUAGE] +
+											STRINGS.lessThanOne[LANGUAGE] +
+											STRINGS.time.minutes.singular[LANGUAGE] +
+											'.',
+									);
 									break week;
 
 									// If it's 60 minutes or less show relative time.
-								} else if ((closingTime - now) / 1000 / 60 < 60) {
-									countdownOutput(STRINGS.openRelative[LANGUAGE] + Math.round((closingTime - now) / 1000 / 60) + STRINGS.time.minutes.plural[LANGUAGE] + STRINGS.openRelativeSuffix[LANGUAGE]);
+								} else if ((openingTime - now) / 1000 / 60 < 60) {
+									countdownOutput(
+										STRINGS.closedRelative[LANGUAGE] +
+											Math.round((openingTime - now) / 1000 / 60) +
+											STRINGS.time.minutes.plural[LANGUAGE] +
+											'.',
+									);
 									break week;
 
 									// Otherwise show absolute time.
 								} else {
-									countdownOutput(STRINGS.openAbsolute[LANGUAGE] + openingNext.closingTime + ' ' + STRINGS.today[LANGUAGE] + '.');
+									countdownOutput(
+										STRINGS.closedAbsolute[LANGUAGE] +
+											' ' +
+											STRINGS.today[LANGUAGE] +
+											' ' +
+											STRINGS.at[LANGUAGE] +
+											openingNext.openingTime +
+											'.',
+									);
 									break week;
 								}
 
-								// Is the date in the future?
-							} else if (openingTime - now > 0) {
+								// Is it tomorrow?
+							} else if ((new Date(weeks[w].days[d].date) - currentDay) / 1000 / 60 / 60 / 24 === 1) {
+								countdownOutput(
+									STRINGS.closedAbsolute[LANGUAGE] +
+										STRINGS.weekdays.tomorrow[LANGUAGE] +
+										STRINGS.at[LANGUAGE] +
+										openingNext.openingTime +
+										'.',
+								);
+								break week;
 
-								// Is it the same date?
-								if (new Date(weeks[w].days[d].date) - currentDay === 0) {
-
-									// If it's 1 minute or less left, change to singular suffix
-									if ((openingTime - now) / 1000 / 60 <= 1) {
-										countdownOutput(STRINGS.closedRelative[LANGUAGE] + STRINGS.lessThanOne[LANGUAGE] + STRINGS.time.minutes.singular[LANGUAGE] + '.');
-										break week;
-
-										// If it's 60 minutes or less show relative time.
-									} else if ((openingTime - now) / 1000 / 60 < 60) {
-										countdownOutput(STRINGS.closedRelative[LANGUAGE] + Math.round((openingTime - now) / 1000 / 60) + STRINGS.time.minutes.plural[LANGUAGE] + '.');
-										break week;
-
-										// Otherwise show absolute time.
-									} else {
-										countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + ' ' + STRINGS.today[LANGUAGE] + ' ' + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
-										break week;
-									}
-
-									// Is it tomorrow?
-								} else if ((new Date(weeks[w].days[d].date) - currentDay) / 1000 / 60 / 60 / 24 === 1) {
-									countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.weekdays.tomorrow[LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
-									break week;
-
-									// Is it further in the future?
-								} else if ((new Date(weeks[w].days[d].date) - currentDay) / 1000 / 60 / 60 / 24 >= 2) {
-									countdownOutput(STRINGS.closedAbsolute[LANGUAGE] + STRINGS.on[LANGUAGE] + STRINGS.weekdays[openingNext.day][LANGUAGE] + STRINGS.at[LANGUAGE] + openingNext.openingTime + '.');
-									break week;
-								}
+								// Is it further in the future?
+							} else if ((new Date(weeks[w].days[d].date) - currentDay) / 1000 / 60 / 60 / 24 >= 2) {
+								countdownOutput(
+									STRINGS.closedAbsolute[LANGUAGE] +
+										STRINGS.on[LANGUAGE] +
+										STRINGS.weekdays[openingNext.day][LANGUAGE] +
+										STRINGS.at[LANGUAGE] +
+										openingNext.openingTime +
+										'.',
+								);
+								break week;
 							}
 						}
 					}
 				}
+			}
 		};
 
 		// Run the calculations once.
@@ -1009,7 +1109,6 @@ let OpeningHours = (function () {
 	 *  @private
 	 */
 	let getData = async function () {
-
 		'use strict';
 
 		let weeks = 20;
@@ -1026,33 +1125,32 @@ let OpeningHours = (function () {
 		let getWeekday = function (weekdayNumber) {
 			let day;
 			switch (weekdayNumber) {
-			case 0:
-				day = 'Monday';
-				break;
-			case 1:
-				day = 'Tuesday';
-				break;
-			case 2:
-				day = 'Wednesday';
-				break;
-			case 3:
-				day = 'Thursday';
-				break;
-			case 4:
-				day = 'Friday';
-				break;
-			case 5:
-				day = 'Saturday';
-				break;
-			case  6:
-				day = 'Sunday';
-				break;
+				case 0:
+					day = 'Monday';
+					break;
+				case 1:
+					day = 'Tuesday';
+					break;
+				case 2:
+					day = 'Wednesday';
+					break;
+				case 3:
+					day = 'Thursday';
+					break;
+				case 4:
+					day = 'Friday';
+					break;
+				case 5:
+					day = 'Saturday';
+					break;
+				case 6:
+					day = 'Sunday';
+					break;
 			}
 			return day;
 		};
 
 		let fetchData = async function () {
-
 			const normalizeData = (data) => {
 				let response = {};
 
@@ -1076,7 +1174,7 @@ let OpeningHours = (function () {
 						if (data[w][weekday].times.note) {
 							currentWeek.days[d].note = {};
 							let note = data[w][weekday].times.note.split('/');
-							note = (note.length === 1) ? [note[0], note[0]] : note;
+							note = note.length === 1 ? [note[0], note[0]] : note;
 							currentWeek.days[d].note.sv = note[0];
 							currentWeek.days[d].note.en = note[1];
 						}
@@ -1109,11 +1207,14 @@ let OpeningHours = (function () {
 				set: (cacheName, data, expires) => {
 					const expiryTime = new Date();
 					expiryTime.setSeconds(expiryTime.getSeconds() + expires);
-					localStorage.setItem(cacheName, JSON.stringify({
-						expires: expiryTime.toISOString(),
-						data: data
-					}));
-				}
+					localStorage.setItem(
+						cacheName,
+						JSON.stringify({
+							expires: expiryTime.toISOString(),
+							data: data,
+						}),
+					);
+				},
 			};
 
 			// Grab data from the API
@@ -1131,19 +1232,24 @@ let OpeningHours = (function () {
 
 				return normalizeData(data.locations[0].weeks);
 			}
-
 		};
 
 		return new Promise(async function (resolve) {
 			const data = await fetchData();
-			if (document.readyState === 'complete'
-				|| document.readyState === 'loaded'
-				|| document.readyState === 'interactive') {
+			if (
+				document.readyState === 'complete' ||
+				document.readyState === 'loaded' ||
+				document.readyState === 'interactive'
+			) {
 				resolve(data);
 			} else {
-				document.addEventListener('DOMContentLoaded', function () {
-					resolve(data);
-				}, false);
+				document.addEventListener(
+					'DOMContentLoaded',
+					function () {
+						resolve(data);
+					},
+					false,
+				);
 			}
 		});
 	};
@@ -1157,7 +1263,7 @@ let OpeningHours = (function () {
 	 */
 	let setLanguage = function (lang) {
 		LANGUAGE = lang;
-		'use strict';
+		('use strict');
 		if (LANGUAGE === 'sv') {
 			return LANGUAGE;
 		} else {
@@ -1178,7 +1284,10 @@ let OpeningHours = (function () {
 			isInitialized = true;
 
 			if (typeof iid !== 'number') {
-				console.error('[Opening Hours]', 'iid parameter needs to be set as the number of the LibCal instanceId to display hours from.');
+				console.error(
+					'[Opening Hours]',
+					'iid parameter needs to be set as the number of the LibCal instanceId to display hours from.',
+				);
 			} else {
 				if (language.length) {
 					setLanguage(language[0]);
@@ -1198,4 +1307,4 @@ let OpeningHours = (function () {
 	};
 
 	return publicFunctions;
-}());
+})();

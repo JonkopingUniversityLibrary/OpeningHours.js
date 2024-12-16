@@ -1,0 +1,20 @@
+{
+	"singleQuote": true,
+	"overrides": [
+		{
+			"files": [
+				"sass/**/*.scss",
+				"**/*.html",
+				"**/*.php"
+			],
+			"options": {
+				"singleQuote": false,
+				"useTabs": true
+			}
+		}
+	],
+	"plugins": [
+		"prettier-plugin-css-order",
+		"prettier-eslint"
+	]
+}
