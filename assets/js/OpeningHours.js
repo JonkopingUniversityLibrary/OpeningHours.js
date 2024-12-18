@@ -456,6 +456,41 @@ let OpeningHours = (function () {
 
 			const calendarElement = document.getElementById('oh-calendar');
 
+			const calendarToolbar = document.createElement('div');
+
+			calendarToolbar.setAttribute('role', 'toolbar');
+			calendarToolbar.classList.add('oh-calendar__toolbar');
+			calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
+			calendarToolbar.setAttribute('aria-controls', 'oh-calendar__calendar');
+
+			const calendarButtonPreviousMonth = document.createElement('button');
+			calendarButtonPreviousMonth.classList.add('oh-calendar__toolbar-button');
+			calendarButtonPreviousMonth.setAttribute('id', 'oh-calendar__toolbar-button__previous');
+			calendarButtonPreviousMonth.setAttribute('aria-label', STRINGS.previousMonth[LANGUAGE]);
+			calendarButtonPreviousMonth.setAttribute('tabindex', '-1');
+			calendarButtonPreviousMonth.innerText = '❮';
+			calendarButtonPreviousMonth.value = 'PreviousMonth';
+			calendarButtonPreviousMonth.setAttribute('aria-disabled', 'true');
+
+			const calendarButtonNextMonth = document.createElement('button');
+			calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
+			calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
+			calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
+			calendarButtonNextMonth.setAttribute('tabindex', '0');
+			calendarButtonNextMonth.innerText = '❯';
+			calendarButtonNextMonth.value = 'NextMonth';
+			calendarButtonNextMonth.setAttribute('aria-disabled', 'false');
+
+			const calendarCurrentMonth = document.createElement('div');
+			calendarCurrentMonth.classList.add('oh-calendar__toolbar-heading');
+			calendarCurrentMonth.innerText = monthFormat.format(now).capitalizeFirstLetter();
+
+			calendarToolbar.appendChild(calendarButtonPreviousMonth);
+			calendarToolbar.appendChild(calendarCurrentMonth);
+			calendarToolbar.appendChild(calendarButtonNextMonth);
+
+			calendarElement.appendChild(calendarToolbar);
+
 			const calendarHelpButton = document.createElement('button');
 			calendarHelpButton.classList.add('oh-calendar__help-button');
 			calendarHelpButton.innerText = STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter();
@@ -464,7 +499,6 @@ let OpeningHours = (function () {
 			calendarHelpDialog.classList.add('oh-calendar__help-dialog');
 			calendarHelpDialog.setAttribute('aria-label', STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter());
 			calendarHelpDialog.setAttribute('closed', 'true');
-			calendarHelpDialog.setAttribute('tabindex', '-1');
 
 			const calendarHelpDialogLead = document.createElement('p');
 			calendarHelpDialogLead.innerText = STRINGS.keyboardShortcutsAre[LANGUAGE];
@@ -503,47 +537,6 @@ let OpeningHours = (function () {
 				calendarHelpDialog.focus();
 			});
 
-			const calendarToolbar = document.createElement('div');
-
-			calendarToolbar.setAttribute('role', 'application');
-			calendarToolbar.classList.add('oh-calendar__toolbar');
-			calendarToolbar.setAttribute('tabindex', '0');
-			calendarToolbar.setAttribute('aria-label', STRINGS.calendarNavigation[LANGUAGE]);
-			calendarToolbar.setAttribute('aria-controls', 'oh-calendar__calendar');
-
-			const calendarButtonPreviousMonth = document.createElement('button');
-			calendarButtonPreviousMonth.classList.add('oh-calendar__toolbar-button');
-			calendarButtonPreviousMonth.setAttribute('id', 'oh-calendar__toolbar-button__previous');
-			calendarButtonPreviousMonth.setAttribute('aria-label', STRINGS.previousMonth[LANGUAGE]);
-			calendarButtonPreviousMonth.setAttribute('tabindex', '-1');
-			calendarButtonPreviousMonth.innerText = '❮';
-			calendarButtonPreviousMonth.value = 'PreviousMonth';
-			calendarButtonPreviousMonth.setAttribute('aria-disabled', 'true');
-
-			const calendarButtonNextMonth = document.createElement('button');
-			calendarButtonNextMonth.classList.add('oh-calendar__toolbar-button');
-			calendarButtonNextMonth.setAttribute('id', 'oh-calendar__toolbar-button__next');
-			calendarButtonNextMonth.setAttribute('aria-label', STRINGS.nextMonth[LANGUAGE]);
-			calendarButtonNextMonth.setAttribute('tabindex', '-1');
-			calendarButtonNextMonth.innerText = '❯';
-			calendarButtonNextMonth.value = 'NextMonth';
-			calendarButtonNextMonth.setAttribute('aria-disabled', 'false');
-
-			const calendarCurrentMonth = document.createElement('div');
-			calendarCurrentMonth.classList.add('oh-calendar__toolbar-heading');
-			calendarCurrentMonth.innerText = monthFormat.format(now).capitalizeFirstLetter();
-
-			calendarToolbar.appendChild(calendarButtonPreviousMonth);
-			calendarToolbar.appendChild(calendarCurrentMonth);
-			calendarToolbar.appendChild(calendarButtonNextMonth);
-
-			calendarElement.appendChild(calendarToolbar);
-
-			calendarHelpDialogCloseButton.addEventListener('click', () => {
-				calendarHelpDialog.close();
-				calendarToolbar.focus();
-			});
-
 			const weekDayHeaders = document.createElement('div');
 			weekDayHeaders.classList.add('oh-calendar__weekdays');
 			weekDayHeaders.setAttribute('aria-hidden', 'true');
@@ -567,6 +560,10 @@ let OpeningHours = (function () {
 			monthList.setAttribute('id', 'oh-calendar__calendar');
 			monthList.setAttribute('role', 'application');
 			monthList.setAttribute('aria-label', STRINGS.calendar[LANGUAGE]);
+
+			calendarHelpDialogCloseButton.addEventListener('click', () => {
+				calendarHelpDialog.close();
+			});
 
 			calendarData.forEach((month, index) => {
 				const monthElement = document.createElement('div');
@@ -793,7 +790,7 @@ let OpeningHours = (function () {
 					}
 
 					// If user is interacting with the toolbar or with the calendar grid
-					if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar') {
+					if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar-button') {
 						announce(nextMonth.getAttribute('data-name').capitalizeFirstLetter());
 					} else {
 						next.focus();
@@ -804,19 +801,30 @@ let OpeningHours = (function () {
 			};
 
 			const toolbarOnKeydown = (event) => {
+				const previousMonthButton = document.getElementById('oh-calendar__toolbar-button__previous');
+				const nextMonthButton = document.getElementById('oh-calendar__toolbar-button__next');
 				const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
+				const target = event.target;
 				const key = event.key.replace('Arrow', '');
 
-				if (key.match(/Left|Right/)) {
+				if (key.match(/Left|Right|Enter/)) {
 					switch (key) {
 						case 'Right':
-							changeMonth('NextMonthFirstDay', selectedDate);
-							event.target.focus();
+							previousMonthButton.setAttribute('tabindex', '-1');
+							nextMonthButton.setAttribute('tabindex', '0');
+							nextMonthButton.focus();
 							break;
 						case 'Left':
-							changeMonth('PreviousMonthFirstDay', selectedDate);
-							event.target.focus();
+							nextMonthButton.setAttribute('tabindex', '-1');
+							previousMonthButton.setAttribute('tabindex', '0');
+							previousMonthButton.focus();
 							break;
+						case 'Enter':
+							if (target.value === 'NextMonth') {
+								changeMonth('NextMonthFirstDay', selectedDate);
+							} else if (target.value === 'PreviousMonth') {
+								changeMonth('PreviousMonthFirstDay', selectedDate);
+							}
 					}
 					event.preventDefault();
 				}
@@ -945,11 +953,8 @@ let OpeningHours = (function () {
 				element.addEventListener('keydown', calendarOnKeydown);
 			});
 
-			document.querySelectorAll('.oh-calendar__toolbar').forEach((element) => {
-				element.addEventListener('keydown', toolbarOnKeydown);
-			});
-
 			document.querySelectorAll('.oh-calendar__toolbar-button').forEach((element) => {
+				element.addEventListener('keydown', toolbarOnKeydown);
 				element.addEventListener('click', toolbarOnClick);
 			});
 		}
