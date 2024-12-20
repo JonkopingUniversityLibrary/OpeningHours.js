@@ -10,9 +10,9 @@
 Date.prototype.getWeek = function (dowOffset) {
 	/*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
 
-	dowOffset = typeof dowOffset === 'number' ? dowOffset : 1; //default dowOffset to zero
+	dowOffset = typeof dowOffset === 'number' ? dowOffset : 1; // default dowOffset to one
 	let newYear = new Date(this.getFullYear(), 0, 1);
-	let day = newYear.getDay() - dowOffset; //the day of week the year begins on
+	let day = newYear.getDay() - dowOffset; // the day of week the year begins on
 	day = day >= 0 ? day : day + 7;
 	let daynum =
 		Math.floor(
@@ -20,15 +20,15 @@ Date.prototype.getWeek = function (dowOffset) {
 				86400000,
 		) + 1;
 	let weeknum;
-	//if the year starts before the middle of a week
+	// if the year starts before the middle of a week
 	if (day < 4) {
 		weeknum = Math.floor((daynum + day - 1) / 7) + 1;
 		if (weeknum > 52) {
 			nYear = new Date(this.getFullYear() + 1, 0, 1);
 			nday = nYear.getDay() - dowOffset;
 			nday = nday >= 0 ? nday : nday + 7;
-			/*if the next year starts before the middle of
-			 the week, it is week #1 of that year*/
+			/* if the next year starts before the middle of
+			 the week, it is week #1 of that year */
 			weeknum = nday < 4 ? 1 : 53;
 		}
 	} else {

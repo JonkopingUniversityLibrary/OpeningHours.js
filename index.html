@@ -1,77 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/OpeningHours.css?v2024-10-02_0757">
-    <link rel="stylesheet" href="assets/css/bootstrap-ju.css">
-    <script src="assets/js/OpeningHours.js?v2024-10-02_0757"></script>
-    <script>OpeningHours.initialize(3237, 'sv');</script>
-    <title>Opening Hours</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="assets/css/OpeningHours.css?v2024-10-02_0757">
+	<link rel="stylesheet" href="assets/css/bootstrap-ju.css">
+	<script src="assets/js/OpeningHours.js?v2024-10-02_0757"></script>
+	<script>OpeningHours.initialize(3237, 'sv');</script>
+	<title>Opening Hours</title>
 </head>
 
 <body>
 <main class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>OpeningHours.js</h1>
-            <a href="https://github.com/JonkopingUniversityLibrary/OpeningHours.js">Source Code and installation</a>
-            <h2>Dependencies</h2>
-            <ul>
-                <li>Springshare's LibCal <em>(For the API and data)</em></li>
-            </ul>
-        </div>
+	<div class="row">
+		<div class="col-md-12">
+			<h1>OpeningHours.js</h1>
+			<a href="https://github.com/JonkopingUniversityLibrary/OpeningHours.js">Source Code and installation</a>
+			<h2>Dependencies</h2>
+			<ul>
+				<li>Springshare's LibCal <em>(For the API and data)</em></li>
+			</ul>
+		</div>
 
-        <div class="col-md-8">
-            <h2>How to include</h2>
-            <p>Script can be included either in <code>&lt;head&gt;</code> or just before closing <code>&lt;/body&gt;</code>, the script will always wait for DOM to load before running.</p>
-            <p>First argument should be the instance id of your LibCal hours instance.</p>
-            <pre><code>&lt;script&gt;
+		<div class="col-md-8">
+			<h2>How to include</h2>
+			<p>Script can be included either in <code>&lt;head&gt;</code> or just before closing
+				<code>&lt;/body&gt;</code>, the script will always wait for DOM to load before running.</p>
+			<p>First argument should be the instance id of your LibCal hours instance.</p>
+			<pre><code>&lt;script&gt;
     OpeningHours.initialize(3237);
 &lt;/script&gt;</code></pre>
-            <p>It also takes an optional language argument in 2 letter language code, if not set defaults to english (<code>'en'</code>).</p>
-            <pre><code>&lt;script&gt;
+			<p>It also takes an optional language argument in 2 letter language code, if not set defaults to english
+				(<code>'en'</code>).</p>
+			<pre><code>&lt;script&gt;
     OpeningHours.initialize(3237, 'sv');
 &lt;/script&gt;</code></pre>
-            <p>With the <code>&lt;script&gt;</code> included you then add elements will specific classes to display the opening hours in various places.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-5">
-            <h2>Hours as a sentence</h2>
-            <p>This will display hours as a sentence which changes based on time of day. For example if it is currently open or if just before opening or if it is about to close.</p>
-            <p>Can be displayed an <code>n</code>-number of times per page.</p>
-            <pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
+			<p>With the <code>&lt;script&gt;</code> included you then add elements will specific classes to display the
+				opening hours in various places.</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-5">
+			<h2>Hours as a sentence</h2>
+			<p>This will display hours as a sentence which changes based on time of day. For example if it is currently
+				open or if just before opening or if it is about to close.</p>
+			<p>Can be displayed an <code>n</code>-number of times per page.</p>
+			<pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
     &lt;p class=&quot;oh-countdown&quot;&gt;&lt;/p&gt;
 &lt;/div&gt;</pre>
-            <div class="oh-opening-hours">
-                <p class="oh-countdown"></p>
-            </div>
+			<div class="oh-opening-hours">
+				<p class="oh-countdown"></p>
+			</div>
 
-            <h2>Current week</h2>
-            <p>Can be displayed an <code>n</code>-number of times per page.</p>
-            <p>Any code can be included in the <code>.oh-week</code>-element as that will get replaced. For example if you want to display your standard hours for those without JavaScript.</p>
-            <pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
+			<h2>Current week</h2>
+			<p>Can be displayed an <code>n</code>-number of times per page.</p>
+			<p>Any code can be included in the <code>.oh-week</code>-element as that will get replaced. For example if
+				you want to display your standard hours for those without JavaScript.</p>
+			<pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
     &lt;ul class=&quot;oh-week&quot;&gt;&lt;/ul&gt;
 &lt;/div&gt;</pre>
-            <div class="oh-opening-hours">
-                <ul class="oh-week"></ul>
-            </div>
-        </div>
-        <div class="col-md-5 col-md-offset-1">
-            <h2>Monthly calendar widget</h2>
-            <p>Only <code>1</code> can be displayed per page due to interactivity.</p>
-            <p>Accessible with keyboard navigation and screen readers.</p>
-            <pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
+			<div class="oh-opening-hours">
+				<ul class="oh-week"></ul>
+			</div>
+		</div>
+		<div class="col-md-5 col-md-offset-1">
+			<h2>Monthly calendar widget</h2>
+			<p>Only <code>1</code> can be displayed per page due to interactivity.</p>
+			<p>Accessible with keyboard navigation and screen readers.</p>
+			<pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
     &lt;div class=&quot;oh-calendar&quot; id=&quot;oh-calendar&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;</pre>
-        </div>
-        <div class="col-md-6 col-md-offset-1">
-            <div class="oh-opening-hours">
-                <div class="oh-calendar" id="oh-calendar"></div>
-            </div>
-        </div>
-    </div>
+		</div>
+		<div class="col-md-6 col-md-offset-1">
+			<div class="oh-opening-hours">
+				<div class="oh-calendar" id="oh-calendar"></div>
+			</div>
+		</div>
+	</div>
 </main>
 
 </body>
