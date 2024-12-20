@@ -562,7 +562,9 @@ let OpeningHours = (function () {
 			monthList.setAttribute('aria-label', STRINGS.calendar[LANGUAGE]);
 
 			calendarHelpDialogCloseButton.addEventListener('click', () => {
+				const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
 				calendarHelpDialog.close();
+				selectedDate.focus();
 			});
 
 			calendarData.forEach((month, index) => {
