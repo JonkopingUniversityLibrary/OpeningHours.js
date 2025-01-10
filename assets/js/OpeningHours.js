@@ -108,7 +108,7 @@ let OpeningHours = (function () {
 		},
 		moveMonthToMonth: {
 			sv: '<kbd lang="en">Page Up</kbd> och <kbd lang="en">Page Down</kbd> för att gå från månad till månad.',
-			en: '<kbd>Page Up</kbd> and <kbd>Page Up</kbd> to move month to month.',
+			en: '<kbd>Page Up</kbd> and <kbd>Page Down</kbd> to move month to month.',
 		},
 		nextMonth: {
 			sv: 'Visa nästa månad',
