@@ -49,24 +49,6 @@ String.prototype.capitalizeFirstLetter = function () {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-String.prototype.addSoftHyphenToWords = function () {
-	const wordList = {
-		Midsommarafton: 'Midsommar­afton!',
-		'Kristi himmelfärdsdag': 'Kristi himmelfärds­dag!',
-		'Sveriges nationaldag': 'Sveriges National­dag!',
-		Valborgsmässoafton: 'Valborgs­mässo­afton!',
-		Skärtorsdagen: 'Skär­torsdagen!',
-		Pingstafton: 'Pingst­afton!',
-	};
-
-	// for (let word of wordList) {
-	// 	if (this === word) {
-	// 		return word;
-	// 	}
-	// }
-	return this;
-};
-
 /**
  *  ## OpeningHours
  *  Opening Hours script for Jönköping University Library
@@ -306,19 +288,19 @@ let OpeningHours = (function () {
 				day.classList.add('oh-day');
 				// If it is the current day, add current-day attribute.
 				if (indexDate - currentDay === 0) {
-					day.setAttribute('current-day', '');
+					day.setAttribute('data-current-day', '');
 				}
 				// Create day element & add the weekday to it
+				let weekday = document.createElement('time');
+				weekday.classList.add('oh-day-weekday');
+				weekday.innerText = `${longWeekdayFormat.format(indexDate).capitalizeFirstLetter()} (${indexDate.getDate()}/${numberMonthFormat.format(indexDate)})`;
+				weekday.setAttribute('datetime', indexDate.toISOString());
+
+				// Add a notes column
 				let label = document.createElement('span');
 				label.classList.add('oh-day-label');
-				label.innerText = `${longWeekdayFormat.format(indexDate).capitalizeFirstLetter()} (${indexDate.getDate()}/${numberMonthFormat.format(indexDate)})`;
-				label.setAttribute('datetime', indexDate.toISOString());
-
-				// Add note if there is one
-				if (weeks[w].days[d].note) {
-					label.classList.add('-note');
-					label.setAttribute('title', weeks[w].days[d].note[LANGUAGE].addSoftHyphenToWords());
-					label.setAttribute('tabindex', '0');
+				if (typeof weeks[w].days[d].note !== 'undefined' && typeof weeks[w].days[d].note[LANGUAGE] === 'string') {
+					label.innerText = weeks[w].days[d].note[LANGUAGE];
 				}
 
 				// Show the opening/closed message
@@ -341,6 +323,8 @@ let OpeningHours = (function () {
 						},
 					);
 				}
+
+				day.append(weekday);
 				day.append(label);
 				day.append(hours);
 

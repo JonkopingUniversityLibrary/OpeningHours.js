@@ -6,7 +6,7 @@ import gulp_sass from 'gulp-sass';
 import sassGlob from 'gulp-sass-glob';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
-import minifycss from 'gulp-clean-css';
+import cssnano from 'gulp-cssnano';
 import rename from 'gulp-rename';
 
 const sass = gulp_sass(sassModule);
@@ -17,7 +17,7 @@ function compileCSS() {
 		.pipe(sassGlob())
 		.pipe(sass())
 		.pipe(autoprefixer())
-		.pipe(minifycss())
+		.pipe(cssnano())
 		.pipe(
 			rename({
 				basename: 'OpeningHours',
