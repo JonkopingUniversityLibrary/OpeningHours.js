@@ -1,300 +1,277 @@
 .oh-calendar {
-    --grid-gap: 1px;
-    --header-size: 2em;
+	--grid-gap: 1px;
+	--header-size: 2em;
 
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 
 .oh-calendar__toolbar {
-    --toolbar-height: 50px;
-    --toolbar-icon-size: 20px;
-    --toolbar-heading: 25px;
+	--toolbar-height: 50px;
+	--toolbar-icon-size: 20px;
+	--toolbar-heading: 25px;
 
-    display: flex;
-    height: var(--toolbar-height);
-    width: 100%;
-    margin-bottom: 1em;
-    &:has(:focus-visible) {
-        outline: 5px auto Highlight;
-        outline: 5px auto -webkit-focus-ring-color;
-    }
-    &-button {
-        height: var(--toolbar-height);
-        width: var(--toolbar-height);
-        font-size: var(--toolbar-icon-size);
-        border: 2px solid var(--color-purple);
-        border-radius: 3px;
-        background: transparent;
-        color: var(--color-purple);
-        cursor: pointer;
+	display: flex;
+	height: var(--toolbar-height);
+	width: 100%;
+	margin-bottom: 1em;
 
-        &:hover, &:focus-visible {
-            background: var(--color-purple);
-            color: white;
-        }
+	&:has(:focus-visible) {
+		outline: 5px auto Highlight;
+		outline: 5px auto -webkit-focus-ring-color;
+	}
 
-        &[aria-disabled=true] {
-            background: var(--color-beige-light);
-            border-color: var(--color-beige-light);
-            color: var(--color-beige);
-            cursor: default;
-            &:hover, &:focus-visible {
-                background: var(--color-beige-light);
-                color: var(--color-beige);
-            }
-        }
-    }
+	&-button {
+		height: var(--toolbar-height);
+		width: var(--toolbar-height);
+		font-size: var(--toolbar-icon-size);
+		border: 2px solid var(--color-purple);
+		border-radius: 3px;
+		background: transparent;
+		color: var(--color-purple);
+		cursor: pointer;
 
-    &-heading {
-        flex: 1;
-        text-align: center;
-        height: var(--toolbar-height);
-        line-height: var(--toolbar-height);
-        font-size: var(--toolbar-heading);
-    }
+		&:hover, &:focus-visible {
+			background: var(--color-purple);
+			color: white;
+		}
+
+		&[aria-disabled=true] {
+			background: var(--color-beige-light);
+			border-color: var(--color-beige-light);
+			color: var(--color-beige);
+			cursor: default;
+
+			&:hover, &:focus-visible {
+				background: var(--color-beige-light);
+				color: var(--color-beige);
+			}
+		}
+	}
+
+	&-heading {
+		flex: 1;
+		text-align: center;
+		height: var(--toolbar-height);
+		line-height: var(--toolbar-height);
+		font-size: var(--toolbar-heading);
+	}
 }
 
 .oh-calendar__help {
 
-    &-button {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        border-radius: 3px;
-        background: var(--color-purple);
-        color: #fff;
-        cursor: pointer;
-        font-size: 1.2em;
-        padding: .5em;
+	&-button {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		border-radius: 3px;
+		background: var(--color-purple);
+		color: #fff;
+		cursor: pointer;
+		font-size: 1.2em;
+		padding: .5em;
 
-        &:not(:focus) {
-            clip: rect(.063rem, .063rem, .063rem, .063rem);
-            color: #fff;
-            font-size: .063rem;
-            height: .5px;
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            white-space: nowrap;
-            width: .5px;
-        }
-    }
+		&:not(:focus) {
+			clip: rect(.063rem, .063rem, .063rem, .063rem);
+			color: #fff;
+			font-size: .063rem;
+			height: .5px;
+			overflow: hidden;
+			position: absolute;
+			top: 50%;
+			white-space: nowrap;
+			width: .5px;
+		}
+	}
 
-    &-dialog {
-        kbd {
-            text-transform: uppercase;
-        }
+	&-dialog {
+		kbd {
+			text-transform: uppercase;
+		}
 
-        button {
-            border: 2px solid var(--color-purple);
-            background: white;
-            color: var(--color-purple);
-            cursor: pointer;
-            &:hover, &:focus-visible {
-                background: var(--color-purple);
-                color: white;
-            }
-        }
-    }
+		button {
+			border: 2px solid var(--color-purple);
+			background: white;
+			color: var(--color-purple);
+			cursor: pointer;
+
+			&:hover, &:focus-visible {
+				background: var(--color-purple);
+				color: white;
+			}
+		}
+	}
 }
 
 .oh-calendar__calendar {
-    grid-area: weeks;
+	grid-area: weeks;
 
-    &:has(:focus-visible) {
-        outline: 5px auto Highlight;
-        outline: 5px auto -webkit-focus-ring-color;
-    }
+	&:has(:focus-visible) {
+		outline: 5px auto Highlight;
+		outline: 5px auto -webkit-focus-ring-color;
+	}
 }
 
 .oh-calendar__weekdays {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: var(--grid-gap);
-    margin: 0;
-    font-size: 1em;
-    text-align: center;
-    text-transform: uppercase;
-    z-index: initial;
+	display: grid;
+	grid-template-columns: var(--header-size) 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-gap: var(--grid-gap);
+	margin: 0;
+	font-size: 1em;
+	text-align: center;
+	//text-transform: uppercase;
+	z-index: initial;
 
-    @media screen and (max-width: 40em) {
-        font-size: .8em;
-    }
+	@media screen and (max-width: 40em) {
+		font-size: .8em;
+	}
 
-    abbr[title], abbr[data-original-title] {
-        border-bottom: none;
-    }
-
-    @media screen and (min-width: 35em) {
-        margin: 0 0 0 var(--header-size);
-    }
+	abbr[title], abbr[data-original-title] {
+		border-bottom: none;
+	}
 }
-
-
 
 .oh-calendar__month {
-    display: flex;
-    grid-gap: var(--grid-gap);
-    flex-direction: column;
+	display: flex;
+	grid-gap: var(--grid-gap);
+	flex-direction: column;
 
-    &[aria-selected=false] {
-        display: none;
-    }
+	&[aria-selected=false] {
+		display: none;
+	}
 }
+
 .oh-calendar__week {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-areas: "monday tuesday wednesday thursday friday saturday sunday";
-    grid-gap: var(--grid-gap);
+	--grid-cell-min-height: 4em;
+	display: grid;
+	grid-template-columns: var(--header-size) repeat(7, 1fr);
+	grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
+	grid-gap: var(--grid-gap);
 
-    .oh-calendar__day {
-        padding: .25em;
-        min-height: 4em;
-    }
+	.oh-calendar__week-number {
+		grid-area: weeknumber;
+		line-height: var(--grid-cell-min-height, 4em);
 
-    &.-current-week {
-        --weeknumber-background: var(--color-blue);
-        --weeknumber-foreground: white;
-    }
+		&.-current-week {
+			font-weight: bold;
+		}
+	}
 
-    /* Week number */
-    @media screen and (min-width: 35em) {
-        grid-template-columns: var(--header-size) repeat(7, 1fr);
-        grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
-        &:before {
-            content: attr(data-weeknumber);
-            background: var(--weeknumber-background, transparent);
-            color: var(--weeknumber-foreground, inherit);
-            display: block;
-            width: var(--header-size);
-            height: var(--header-size);
-            margin: auto;
-            border-radius: 50%;
-            font-size: 1em;
-            text-align: center;
-            grid-area: weeknumber;
-
-            &.-current-week {
-                background: var(--_weeknumber-background);
-                color: var(--_weeknumber-foreground);
-            }
-        }
-
-        .oh-calendar__day {
-            min-height: 5em;
-        }
-    }
+	.oh-calendar__day {
+		padding: .25em;
+		min-height: var(--grid-cell-min-height, 4em);
+	}
 }
 
 .oh-calendar__week .oh-calendar__days {
-    flex: 1;
+	flex: 1;
 }
 
 .oh-calendar__day {
 
-    --_day-background: var(--day-background, var(--color-beige-light, transparent));
-    --_day-foreground: var(--day-foreground, var(--color-beige, inherit));
+	--_day-background: var(--day-background, var(--color-beige-light, transparent));
+	--_day-foreground: var(--day-foreground, var(--color-beige, inherit));
 
-    color: var(--_day-foreground);
-    background-color: var(--_day-background);
-    line-height: 1;
-    overflow: hidden;
-    border: 0;
+	color: var(--_day-foreground);
+	background-color: var(--_day-background);
+	line-height: 1;
+	overflow: hidden;
+	border: 0;
 
-    .oh-calendar__date {
-        display: block;
-        font-size: 1em;
-        margin-bottom: 0.5em;
+	.oh-calendar__date {
+		display: block;
+		font-size: 1em;
+		margin-bottom: 0.5em;
 
-        @media screen and (max-width: 40em) {
-            font-size: .8em;
-        }
-    }
+		@media screen and (max-width: 40em) {
+			font-size: .8em;
+		}
+	}
 
-    &.-outside-month {
-        opacity: .5;
-    }
+	&.-outside-month {
+		opacity: .5;
+	}
 
-    &.-monday {
-        grid-area: monday;
-    }
+	&.-monday {
+		grid-area: monday;
+	}
 
-    &.-tuesday {
-        grid-area: tuesday;
-    }
+	&.-tuesday {
+		grid-area: tuesday;
+	}
 
-    &.-wednesday {
-        grid-area: wednesday;
-    }
+	&.-wednesday {
+		grid-area: wednesday;
+	}
 
-    &.-thursday {
-        grid-area: thursday;
-    }
+	&.-thursday {
+		grid-area: thursday;
+	}
 
-    &.-friday {
-        grid-area: friday;
-    }
+	&.-friday {
+		grid-area: friday;
+	}
 
-    &.-saturday {
-        grid-area: saturday;
-    }
+	&.-saturday {
+		grid-area: saturday;
+	}
 
-    &.-sunday {
-        grid-area: sunday;
-    }
+	&.-sunday {
+		grid-area: sunday;
+	}
 
-    &.-open {
-        --day-background: var(--color-green-light);
-        --day-foreground: var(--color-green);
-    }
+	&.-open {
+		--day-background: var(--color-green-light);
+		--day-foreground: var(--color-green);
+	}
 
-    &.-closed {
-        --day-background: var(--color-red-light);
-        --day-background-alt: var(--color-red-light-alt);
-        --day-foreground: var(--color-red);
+	&.-closed {
+		--day-background: var(--color-red-light);
+		--day-background-alt: var(--color-red-light-alt);
+		--day-foreground: var(--color-red);
 
-        background: repeating-linear-gradient(
-                        45deg,
-                        var(--day-background-alt),
-                        var(--day-background-alt) 2px,
-                        var(--_day-background) 2px,
-                        var(--_day-background) 4px
-        );
-    }
+		background: repeating-linear-gradient(
+				45deg,
+				var(--day-background-alt),
+				var(--day-background-alt) 2px,
+				var(--_day-background) 2px,
+				var(--_day-background) 4px
+		);
+	}
 
-    &.-today {
-        opacity: 1;
-        --day-foreground: white;
-        &.-open {
-            --day-background: var(--color-green);
-        }
+	&.-today {
+		opacity: 1;
+		--day-foreground: white;
 
-        &.-closed {
-            --day-background: var(--color-red);
-            --day-background-alt: var(--color-red-dark);
-        }
-    }
+		&.-open {
+			--day-background: var(--color-green);
+		}
+
+		&.-closed {
+			--day-background: var(--color-red);
+			--day-background-alt: var(--color-red-dark);
+		}
+	}
 }
 
 .oh-calendar__day__hours {
-    display: block;
-    font-size: 1.2em;
-    font-weight: 700;
-    text-transform: capitalize;
+	display: block;
+	font-size: 1.2em;
+	font-weight: 700;
+	text-transform: capitalize;
 
-    @media screen and (max-width: 40em) {
-        font-size: 1em;
-    }
+	@media screen and (max-width: 40em) {
+		font-size: 1em;
+	}
 }
 
 .oh-calendar__day__note {
-    font-size: .6em;
-    line-height: 1;
-    font-weight: 700;
-    @media screen and (max-width: 40em) {
-        display: none;
-    }
+	font-size: .6em;
+	line-height: 1;
+	font-weight: 700;
+	@media screen and (max-width: 40em) {
+		display: none;
+	}
 }

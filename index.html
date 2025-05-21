@@ -21,25 +21,21 @@
 				<li>Springshare's LibCal <em>(For the API and data)</em></li>
 			</ul>
 		</div>
-
-		<div class="col-md-8">
-			<h2>How to include</h2>
-			<p>Script can be included either in <code>&lt;head&gt;</code> or just before closing
-				<code>&lt;/body&gt;</code>, the script will always wait for DOM to load before running.</p>
-			<p>First argument should be the instance id of your LibCal hours instance.</p>
-			<pre><code>&lt;script&gt;
-    OpeningHours.initialize(3237);
-&lt;/script&gt;</code></pre>
-			<p>It also takes an optional language argument in 2 letter language code, if not set defaults to english
-				(<code>'en'</code>).</p>
-			<pre><code>&lt;script&gt;
-    OpeningHours.initialize(3237, 'sv');
-&lt;/script&gt;</code></pre>
-			<p>With the <code>&lt;script&gt;</code> included you then add elements will specific classes to display the
-				opening hours in various places.</p>
-		</div>
 	</div>
 	<div class="row">
+		<div class="col-md-5">
+			<h2>Monthly calendar widget</h2>
+			<p>Only <code>1</code> can be displayed per page due to interactivity.</p>
+			<p>Accessible with keyboard navigation and screen readers.</p>
+			<pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
+    &lt;div class=&quot;oh-calendar&quot; id=&quot;oh-calendar&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+		</div>
+		<div class="col-md-6 col-md-offset-1">
+			<div class="oh-opening-hours">
+				<div class="oh-calendar" id="oh-calendar"></div>
+			</div>
+		</div>
 		<div class="col-md-5">
 			<h2>Hours as a sentence</h2>
 			<p>This will display hours as a sentence which changes based on time of day. For example if it is currently
@@ -63,18 +59,24 @@
 				<ul class="oh-week"></ul>
 			</div>
 		</div>
-		<div class="col-md-5 col-md-offset-1">
-			<h2>Monthly calendar widget</h2>
-			<p>Only <code>1</code> can be displayed per page due to interactivity.</p>
-			<p>Accessible with keyboard navigation and screen readers.</p>
-			<pre>&lt;div class=&quot;oh-opening-hours&quot;&gt;
-    &lt;div class=&quot;oh-calendar&quot; id=&quot;oh-calendar&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;</pre>
-		</div>
-		<div class="col-md-6 col-md-offset-1">
-			<div class="oh-opening-hours">
-				<div class="oh-calendar" id="oh-calendar"></div>
-			</div>
+	</div>
+	<div class="row">
+
+		<div class="col-md-8">
+			<h2>How to include</h2>
+			<p>Script can be included either in <code>&lt;head&gt;</code> or just before closing
+				<code>&lt;/body&gt;</code>, the script will always wait for DOM to load before running.</p>
+			<p>First argument should be the instance id of your LibCal hours instance.</p>
+			<pre><code>&lt;script&gt;
+    OpeningHours.initialize(3237);
+&lt;/script&gt;</code></pre>
+			<p>It also takes an optional language argument in 2 letter language code, if not set defaults to english
+				(<code>'en'</code>).</p>
+			<pre><code>&lt;script&gt;
+    OpeningHours.initialize(3237, 'sv');
+&lt;/script&gt;</code></pre>
+			<p>With the <code>&lt;script&gt;</code> included you then add elements will specific classes to display the
+				opening hours in various places.</p>
 		</div>
 	</div>
 </main>

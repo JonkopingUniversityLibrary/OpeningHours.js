@@ -491,85 +491,16 @@ let OpeningHours = (function () {
 
 			calendarElement.appendChild(calendarToolbar);
 
-			const calendarHelpButton = document.createElement('button');
-			calendarHelpButton.classList.add('oh-calendar__help-button');
-			calendarHelpButton.innerText = STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter();
-
-			const calendarHelpDialog = document.createElement('dialog');
-			calendarHelpDialog.classList.add('oh-calendar__help-dialog');
-			calendarHelpDialog.setAttribute('aria-label', STRINGS.keyboardShortcuts[LANGUAGE].capitalizeFirstLetter());
-			calendarHelpDialog.setAttribute('closed', 'true');
-
-			const calendarHelpDialogLead = document.createElement('p');
-			calendarHelpDialogLead.innerText = STRINGS.keyboardShortcutsAre[LANGUAGE];
-
-			const calendarHelpDialogShortcutList = document.createElement('ul');
-
-			const calendarHelpDialogShortcutDay = document.createElement('li');
-			calendarHelpDialogShortcutDay.innerHTML = STRINGS.moveDayToDay[LANGUAGE];
-			calendarHelpDialogShortcutList.appendChild(calendarHelpDialogShortcutDay);
-
-			const calendarHelpDialogShortcutWeek = document.createElement('li');
-			calendarHelpDialogShortcutWeek.innerHTML = STRINGS.moveWeekToWeek[LANGUAGE];
-			calendarHelpDialogShortcutList.appendChild(calendarHelpDialogShortcutWeek);
-
-			const calendarHelpDialogShortcutMonth = document.createElement('li');
-			calendarHelpDialogShortcutMonth.innerHTML = STRINGS.moveMonthToMonth[LANGUAGE];
-			calendarHelpDialogShortcutList.appendChild(calendarHelpDialogShortcutMonth);
-
-			const calendarHelpDialogShortcutToday = document.createElement('li');
-			calendarHelpDialogShortcutToday.innerHTML = STRINGS.moveToToday[LANGUAGE];
-			calendarHelpDialogShortcutList.appendChild(calendarHelpDialogShortcutToday);
-
-			const calendarHelpDialogCloseButton = document.createElement('button');
-			calendarHelpDialogCloseButton.classList.add('oh-calendar__help-dialog__close-button');
-			calendarHelpDialogCloseButton.innerText = STRINGS.closeDialog[LANGUAGE].capitalizeFirstLetter();
-
-			calendarHelpDialog.appendChild(calendarHelpDialogLead);
-			calendarHelpDialog.appendChild(calendarHelpDialogShortcutList);
-			calendarHelpDialog.appendChild(calendarHelpDialogCloseButton);
-
-			calendarElement.appendChild(calendarHelpButton);
-			calendarElement.appendChild(calendarHelpDialog);
-
-			calendarHelpButton.addEventListener('click', () => {
-				calendarHelpDialog.showModal();
-				calendarHelpDialog.focus();
-			});
-
-			const weekDayHeaders = document.createElement('div');
-			weekDayHeaders.classList.add('oh-calendar__weekdays');
-			weekDayHeaders.setAttribute('aria-hidden', 'true');
-
-			// Print out the names of the wekdays as a header
-			calendarData[0].weeks[0].days.forEach((day) => {
-				const listItem = document.createElement('span');
-				const abbreviatedWeekday = document.createElement('abbr');
-
-				abbreviatedWeekday.setAttribute('title', longWeekdayFormat.format(day.date).capitalizeFirstLetter());
-				abbreviatedWeekday.innerText = shortWeekdayFormat.format(day.date);
-
-				listItem.appendChild(abbreviatedWeekday);
-				weekDayHeaders.appendChild(listItem);
-			});
-
-			calendarElement.appendChild(weekDayHeaders);
-
 			const monthList = document.createElement('section');
 			monthList.classList.add('oh-calendar__calendar');
 			monthList.setAttribute('id', 'oh-calendar__calendar');
-			monthList.setAttribute('role', 'application');
+			monthList.setAttribute('role', 'table');
 			monthList.setAttribute('aria-label', STRINGS.calendar[LANGUAGE]);
-
-			calendarHelpDialogCloseButton.addEventListener('click', () => {
-				const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
-				calendarHelpDialog.close();
-				selectedDate.focus();
-			});
 
 			calendarData.forEach((month, index) => {
 				const monthElement = document.createElement('div');
 				monthElement.classList.add('oh-calendar__month');
+				monthElement.setAttribute('role', 'rowgroup');
 				monthElement.value = month.month + 1;
 				monthElement.setAttribute('aria-label', month.name);
 				monthElement.setAttribute('data-name', month.name);
@@ -580,103 +511,121 @@ let OpeningHours = (function () {
 					monthElement.setAttribute('aria-selected', 'false');
 				}
 
+				const weekDayHeaders = document.createElement('div');
+				weekDayHeaders.classList.add('oh-calendar__weekdays');
+				weekDayHeaders.setAttribute('role', 'row');
+
+				const weekDayHeaderEmpty = document.createElement('span');
+				weekDayHeaderEmpty.setAttribute('role', 'columnheader');
+				weekDayHeaderEmpty.classList.add('oh-calendar__weekdays__empty');
+				weekDayHeaderEmpty.innerHTML = '<span class="visually-hidden">Week numbers</span>';
+				weekDayHeaders.appendChild(weekDayHeaderEmpty);
+
+				// Print out the names of the wekdays as a header
+				calendarData[0].weeks[0].days.forEach((day) => {
+					const listItem = document.createElement('span');
+					const abbreviatedWeekday = document.createElement('abbr');
+					const fullWeekDay = document.createElement('span');
+
+					abbreviatedWeekday.setAttribute('aria-hidden', 'true');
+					fullWeekDay.classList.add('visually-hidden');
+					fullWeekDay.innerText = longWeekdayFormat.format(day.date).capitalizeFirstLetter();
+					abbreviatedWeekday.innerText = shortWeekdayFormat.format(day.date);
+
+					listItem.appendChild(abbreviatedWeekday);
+					listItem.appendChild(fullWeekDay);
+					listItem.setAttribute('role', 'columnheader');
+					weekDayHeaders.appendChild(listItem);
+				});
+				monthElement.appendChild(weekDayHeaders);
+
 				month.weeks.forEach((week) => {
 					const weekElement = document.createElement('div');
 					weekElement.classList.add('oh-calendar__week');
-					weekElement.setAttribute('data-weeknumber', week.week_number);
+					weekElement.setAttribute('role', 'row');
+
+					const weekNumber = document.createElement('span');
+					weekNumber.classList.add('oh-calendar__week-number');
+					weekNumber.setAttribute('role', 'rowheader');
+					weekNumber.innerHTML = '<span class="visually-hidden">Week</span> ' + week.week_number;
 
 					if (week.week_number === now.getWeek()) {
-						weekElement.classList.add('-current-week');
+						weekNumber.classList.add('-current-week');
 					}
 
+					weekElement.appendChild(weekNumber);
+
 					week.days.forEach((day) => {
-						if (day.date.getMonth() === month.month) {
-							let openingTime = STRINGS.noDefinedOpeningHours[LANGUAGE];
-							if (day.open !== undefined && !day.is_past) {
-								openingTime = day.open
-									? STRINGS.open[LANGUAGE] +
-										' ' +
-										day.opening_time.replace(/^0+/, '').replace(':00', '') +
-										' ' +
-										STRINGS.to[LANGUAGE] +
-										' ' +
-										day.closing_time.replace(/^0+/, '').replace(':00', '')
-									: STRINGS.closed[LANGUAGE];
-							}
-							const note = day.note !== undefined ? ', ' + day.note : '';
-							const isToday = day.is_today ? ', ' + STRINGS.today[LANGUAGE] : '';
-
-							const dayElement = document.createElement('div');
-							dayElement.classList.add('oh-calendar__day');
-							dayElement.classList.add('-' + longWeekdayFormatEnglish.format(day.date).toLowerCase());
-							dayElement.setAttribute('data-weekday', longWeekdayFormatEnglish.format(day.date).toLowerCase());
-							dayElement.setAttribute('data-date', day.date.getDate());
-							dayElement.setAttribute('role', 'presentation');
-							dayElement.setAttribute('tabindex', '-1');
-							dayElement.setAttribute(
-								'aria-label',
-								day.date.getDate() +
+						let openingTime = STRINGS.noDefinedOpeningHours[LANGUAGE];
+						if (day.open !== undefined && !day.is_past) {
+							openingTime = day.open
+								? STRINGS.open[LANGUAGE] +
 									' ' +
-									monthFormat.format(day.date) +
-									', ' +
-									longWeekdayFormat.format(day.date) +
-									isToday +
-									', ' +
-									openingTime +
-									note +
-									'.',
-							);
-
-							const dayDateElement = document.createElement('span');
-							dayDateElement.classList.add('oh-calendar__date');
-							dayDateElement.innerText = day.date.getDate();
-
-							dayDateElement.setAttribute('aria-hidden', 'true');
-
-							const dayHoursElement = document.createElement('span');
-							dayHoursElement.classList.add('oh-calendar__day__hours');
-							dayHoursElement.setAttribute('aria-hidden', 'true');
-
-							if (day.open !== undefined && !day.is_past) {
-								dayHoursElement.innerText = day.open
-									? day.opening_time.replace(/^0+/, '').replace(':00', '') +
-										'–' +
-										day.closing_time.replace(/^0+/, '').replace(':00', '')
-									: STRINGS.closed[LANGUAGE];
-								dayElement.classList.add(day.open ? '-open' : '-closed');
-							}
-
-							dayElement.appendChild(dayDateElement);
-							dayElement.appendChild(dayHoursElement);
-
-							if (day.note !== undefined) {
-								const dayNoteElement = document.createElement('span');
-								dayNoteElement.classList.add('oh-calendar__day__note');
-								dayNoteElement.innerText = day.note;
-
-								dayNoteElement.setAttribute('aria-hidden', 'true');
-								dayElement.appendChild(dayNoteElement);
-							}
-
-							if (day.is_past) {
-								dayHoursElement.innerText = '';
-								dayElement.classList.add('-is-past');
-							}
-
-							if (day.is_today) {
-								dayElement.classList.add('-today');
-								dayElement.setAttribute('tabindex', '0');
-								dayElement.setAttribute('aria-selected', 'true');
-							} else {
-								dayElement.setAttribute('aria-selected', 'false');
-							}
-
-							if (!day.is_in_month) {
-								dayElement.classList.add('-outside-month');
-							}
-
-							weekElement.appendChild(dayElement);
+									day.opening_time.replace(/^0+/, '').replace(':00', '') +
+									' ' +
+									STRINGS.to[LANGUAGE] +
+									' ' +
+									day.closing_time.replace(/^0+/, '').replace(':00', '')
+								: STRINGS.closed[LANGUAGE];
 						}
+						const note = day.note !== undefined ? ', ' + day.note : '';
+						const isToday = day.is_today ? ', ' + STRINGS.today[LANGUAGE] : '';
+
+						const dayElement = document.createElement('div');
+						dayElement.classList.add('oh-calendar__day');
+						dayElement.classList.add('-' + longWeekdayFormatEnglish.format(day.date).toLowerCase());
+						dayElement.setAttribute('role', 'cell');
+
+						const dayDateElement = document.createElement('span');
+						dayDateElement.classList.add('oh-calendar__date');
+						dayDateElement.innerText = day.date.getDate();
+						dayDateElement.setAttribute('aria-hidden', 'true');
+
+						const dayHoursElement = document.createElement('span');
+						dayHoursElement.classList.add('oh-calendar__day__hours');
+						dayHoursElement.setAttribute('aria-hidden', 'true');
+
+						const dayLabelElement = document.createElement('span');
+						dayLabelElement.classList.add('visually-hidden');
+						dayLabelElement.innerText =
+							day.date.getDate() + ' ' + monthFormat.format(day.date) + isToday + ', ' + openingTime + note + '.';
+
+						if (day.open !== undefined && !day.is_past) {
+							dayHoursElement.innerText = day.open
+								? day.opening_time.replace(/^0+/, '').replace(':00', '') +
+									'–' +
+									day.closing_time.replace(/^0+/, '').replace(':00', '')
+								: STRINGS.closed[LANGUAGE];
+							dayElement.classList.add(day.open ? '-open' : '-closed');
+						}
+
+						dayElement.appendChild(dayDateElement);
+						dayElement.appendChild(dayLabelElement);
+						dayElement.appendChild(dayHoursElement);
+
+						if (day.note !== undefined) {
+							const dayNoteElement = document.createElement('span');
+							dayNoteElement.classList.add('oh-calendar__day__note');
+							dayNoteElement.innerText = day.note;
+
+							dayNoteElement.setAttribute('aria-hidden', 'true');
+							dayElement.appendChild(dayNoteElement);
+						}
+
+						if (day.is_past) {
+							dayHoursElement.innerText = '';
+							dayElement.classList.add('-is-past');
+						}
+
+						if (day.is_today) {
+							dayElement.classList.add('-today');
+						}
+
+						if (!day.is_in_month) {
+							dayElement.classList.add('-outside-month');
+						}
+
+						weekElement.appendChild(dayElement);
 					});
 
 					monthElement.appendChild(weekElement);
@@ -694,8 +643,6 @@ let OpeningHours = (function () {
 			announceElement.setAttribute('aria-live', 'polite');
 			calendarElement.appendChild(announceElement);
 
-			calendarElement.appendChild(monthList);
-
 			const announce = function (text) {
 				announceElement.innerText = text;
 				setTimeout(() => {
@@ -703,88 +650,39 @@ let OpeningHours = (function () {
 				}, 500);
 			};
 
-			const changeMonth = (command, date) => {
-				const current = date;
-				const currentMonth = current.parentElement.parentElement;
-				let next = current;
-
+			const changeMonth = (command) => {
+				const currentMonth = document.querySelector('.oh-calendar__month[aria-selected="true"]');
 				const previousMonthButton = document.getElementById('oh-calendar__toolbar-button__previous');
 				const nextMonthButton = document.getElementById('oh-calendar__toolbar-button__next');
+				let monthTarget = currentMonth;
 
 				try {
 					switch (command) {
-						case 'NextMonthFirstWeekday':
-							next = currentMonth.nextSibling.querySelector(
-								`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`,
-							);
+						case 'NextMonth':
+							monthTarget = currentMonth.nextSibling;
 							break;
-						case 'PreviousMonthLastWeekday':
-							const allWeekDays = currentMonth.previousSibling.querySelectorAll(
-								`.oh-calendar__day[data-weekday="${current.getAttribute('data-weekday')}"]`,
-							);
-							next = allWeekDays[allWeekDays.length - 1];
-							break;
-						case 'NextMonthFirstDay':
-							next = currentMonth.nextSibling.querySelector('.oh-calendar__day');
-							break;
-						case 'PreviousMonthFirstDay':
-							next = currentMonth.previousSibling.querySelector('.oh-calendar__day');
-							break;
-						case 'PreviousMonthLastDay':
-							const allDays = currentMonth.previousSibling.querySelectorAll('.oh-calendar__day');
-							next = allDays[allDays.length - 1];
-							break;
-						case 'PreviousMonthSameDay':
-							if (
-								currentMonth.previousSibling.querySelector(
-									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
-								) !== null
-							) {
-								next = currentMonth.previousSibling.querySelector(
-									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
-								);
-							} else {
-								const allDays = currentMonth.previousSibling.querySelectorAll('.oh-calendar__day');
-								next = allDays[allDays.length - 1];
-							}
-
-							break;
-						case 'NextMonthSameDay':
-							if (
-								currentMonth.nextSibling.querySelector(
-									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
-								) !== null
-							) {
-								next = currentMonth.nextSibling.querySelector(
-									`.oh-calendar__day[data-date="${current.getAttribute('data-date')}"]`,
-								);
-							} else {
-								const allDays = currentMonth.nextSibling.querySelectorAll('.oh-calendar__day');
-								next = allDays[allDays.length - 1];
-							}
-							break;
-						case 'Today':
-							next = document.querySelector('.oh-calendar .-today');
+						case 'PreviousMonth':
+							monthTarget = currentMonth.previousSibling;
 							break;
 					}
 
-					const nextMonth = next.parentElement.parentElement;
-
 					monthList.childNodes.forEach((element) => element.setAttribute('aria-selected', 'false'));
-					nextMonth.setAttribute('aria-selected', 'true');
-					calendarCurrentMonth.innerText = nextMonth.getAttribute('data-name').capitalizeFirstLetter();
-					next.setAttribute('tabindex', '0');
-					current.setAttribute('tabindex', '-1');
+					monthTarget.setAttribute('aria-selected', 'true');
+					calendarCurrentMonth.innerText = monthTarget.getAttribute('data-name').capitalizeFirstLetter();
 
-					next.setAttribute('aria-selected', 'true');
-					current.setAttribute('aria-selected', 'false');
+					monthTarget.setAttribute('aria-selected', 'true');
+					currentMonth.setAttribute('aria-selected', 'false');
+
+					console.log('nextMonth:', monthTarget.nextSibling);
+					console.log('previousMonth:', monthTarget.previousSibling);
 
 					// Set active/disabled status for month navigation
-					if (nextMonth === nextMonth.parentElement.firstElementChild) {
+					if (!monthTarget.previousSibling) {
 						previousMonthButton.setAttribute('aria-disabled', 'true');
 						nextMonthButton.setAttribute('aria-disabled', 'false');
-					} else if (nextMonth === nextMonth.parentElement.lastElementChild) {
+					} else if (!monthTarget.nextSibling) {
 						previousMonthButton.setAttribute('aria-disabled', 'false');
+						previousMonthButton.removeAttribute('disabled');
 						nextMonthButton.setAttribute('aria-disabled', 'true');
 					} else {
 						previousMonthButton.setAttribute('aria-disabled', 'false');
@@ -793,9 +691,9 @@ let OpeningHours = (function () {
 
 					// If user is interacting with the toolbar or with the calendar grid
 					if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar-button') {
-						announce(nextMonth.getAttribute('data-name').capitalizeFirstLetter());
+						announce(monthTarget.getAttribute('data-name').capitalizeFirstLetter());
 					} else {
-						next.focus();
+						monthTarget.focus();
 					}
 				} catch (e) {
 					announce(STRINGS.cantSelectDate[LANGUAGE]);
@@ -805,7 +703,6 @@ let OpeningHours = (function () {
 			const toolbarOnKeydown = (event) => {
 				const previousMonthButton = document.getElementById('oh-calendar__toolbar-button__previous');
 				const nextMonthButton = document.getElementById('oh-calendar__toolbar-button__next');
-				const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
 				const target = event.target;
 				const key = event.key.replace('Arrow', '');
 
@@ -822,10 +719,8 @@ let OpeningHours = (function () {
 							previousMonthButton.focus();
 							break;
 						case 'Enter':
-							if (target.value === 'NextMonth') {
-								changeMonth('NextMonthFirstDay', selectedDate);
-							} else if (target.value === 'PreviousMonth') {
-								changeMonth('PreviousMonthFirstDay', selectedDate);
+							if (target.getAttribute('aria-disabled') === 'false') {
+								changeMonth(target.value);
 							}
 					}
 					event.preventDefault();
@@ -833,127 +728,13 @@ let OpeningHours = (function () {
 			};
 
 			const toolbarOnClick = (event) => {
-				const selectedDate = document.querySelector('.oh-calendar__day[aria-selected=true]');
 				const target = event.target;
 
-				if (target.value === 'NextMonth') {
-					changeMonth('NextMonthFirstDay', selectedDate);
-				} else if (target.value === 'PreviousMonth') {
-					changeMonth('PreviousMonthFirstDay', selectedDate);
+				if (target.getAttribute('aria-disabled') === 'false') {
+					changeMonth(target.value);
 				}
 				event.preventDefault();
 			};
-
-			const calendarOnKeydown = (event) => {
-				const changeSelectedDate = function (current, command) {
-					const selectNewDateElement = function (current, next) {
-						current.setAttribute('aria-selected', 'false');
-						current.setAttribute('tabindex', '-1');
-						next.setAttribute('tabindex', '0');
-						next.setAttribute('aria-selected', 'true');
-						next.focus();
-					};
-					let next = current;
-					switch (command) {
-						case 'PreviousWeek':
-							if (
-								current.parentElement.previousSibling &&
-								current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'))
-							) {
-								next = current.parentElement.previousSibling.querySelector('.-' + current.getAttribute('data-weekday'));
-								selectNewDateElement(current, next);
-							} else {
-								changeMonth('PreviousMonthLastWeekday', current);
-							}
-							break;
-						case 'NextWeek':
-							if (
-								current.parentElement.nextSibling &&
-								current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'))
-							) {
-								next = current.parentElement.nextSibling.querySelector('.-' + current.getAttribute('data-weekday'));
-								selectNewDateElement(current, next);
-							} else {
-								changeMonth('NextMonthFirstWeekday', current);
-							}
-							break;
-						case 'PreviousDay':
-							if (current.previousSibling) {
-								next = current.previousSibling;
-								selectNewDateElement(current, next);
-							} else {
-								if (current.parentElement.previousSibling) {
-									next = current.parentElement.previousSibling.querySelector('.oh-calendar__day.-sunday');
-									selectNewDateElement(current, next);
-								} else {
-									changeMonth('PreviousMonthLastDay', current);
-								}
-							}
-							break;
-						case 'NextDay':
-							if (current.nextSibling) {
-								next = current.nextSibling;
-								selectNewDateElement(current, next);
-							} else {
-								if (current.parentElement.nextSibling) {
-									next = current.parentElement.nextSibling.querySelector('.oh-calendar__day.-monday');
-									selectNewDateElement(current, next);
-								} else {
-									changeMonth('NextMonthFirstDay', current);
-								}
-							}
-							break;
-						case 'PreviousMonth':
-							changeMonth('PreviousMonthSameDay', current);
-							break;
-						case 'NextMonth':
-							changeMonth('NextMonthSameDay', current);
-							break;
-						case 'Today':
-							const today = document.querySelector('.oh-calendar .-today');
-							if (current.parentElement.parentElement === today.parentElement.parentElement) {
-								next = today;
-								selectNewDateElement(current, next);
-							} else {
-								changeMonth('Today', current);
-							}
-							break;
-					}
-				};
-				const target = event.target;
-				const key = event.key.replace('Arrow', '');
-
-				if (target.classList.contains('oh-calendar__day') && key.match(/Up|Down|Left|Right|Home|PageUp|PageDown/)) {
-					switch (key) {
-						case 'Right':
-							changeSelectedDate(target, 'NextDay');
-							break;
-						case 'Left':
-							changeSelectedDate(target, 'PreviousDay');
-							break;
-						case 'Up':
-							changeSelectedDate(target, 'PreviousWeek');
-							break;
-						case 'Down':
-							changeSelectedDate(target, 'NextWeek');
-							break;
-						case 'Home':
-							changeSelectedDate(target, 'Today');
-							break;
-						case 'PageUp':
-							changeSelectedDate(target, 'PreviousMonth');
-							break;
-						case 'PageDown':
-							changeSelectedDate(target, 'NextMonth');
-							break;
-					}
-					event.preventDefault();
-				}
-			};
-
-			document.querySelectorAll('.oh-calendar__day').forEach((element) => {
-				element.addEventListener('keydown', calendarOnKeydown);
-			});
 
 			document.querySelectorAll('.oh-calendar__toolbar-button').forEach((element) => {
 				element.addEventListener('keydown', toolbarOnKeydown);
