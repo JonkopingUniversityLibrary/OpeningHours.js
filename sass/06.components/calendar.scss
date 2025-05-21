@@ -107,11 +107,6 @@
 
 .oh-calendar__calendar {
 	grid-area: weeks;
-
-	&:has(:focus-visible) {
-		outline: 5px auto Highlight;
-		outline: 5px auto -webkit-focus-ring-color;
-	}
 }
 
 .oh-calendar__weekdays {
@@ -258,13 +253,9 @@
 
 .oh-calendar__day__hours {
 	display: block;
-	font-size: 1.2em;
+	font-size: 1em;
 	font-weight: 700;
 	text-transform: capitalize;
-
-	@media screen and (max-width: 40em) {
-		font-size: 1em;
-	}
 }
 
 .oh-calendar__day__note {

@@ -455,6 +455,7 @@ let OpeningHours = (function () {
 			const shortWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'short' });
 
 			const calendarElement = document.getElementById('oh-calendar');
+			calendarElement.setAttribute('lang', LANGUAGE);
 
 			const calendarToolbar = document.createElement('div');
 
