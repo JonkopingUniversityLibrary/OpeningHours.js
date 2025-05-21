@@ -4,17 +4,19 @@ Colors used in the design
 --------------- */
 
 :root {
-  --color-blue: #003865;
-  --color-purple: rgb(172, 32, 167);
-  --color-yellow: rgb(252, 184, 20);
-  --color-red: #9f1914;
-  --color-red-dark: #410200;
-  --color-red-light: #f0cccb;
-  --color-red-light-alt: #ffebeb;
-  --color-green: #005a26;
-  --color-green-light: #bfdecc;
-  --color-beige: #56563d;
-  --color-beige-light: #ebebdf;
+	--color-blue: oklch(0.33 0.095 250);
+	--color-purple: oklch(0.53 0.22 330);
+	--color-yellow: oklch(0.82 0.17 81);
+	--color-red: oklch(0.45 0.17 28);
+	--color-red-dark: oklch(0.24 0.094 30);
+	--color-red-light: oklch(0.87 0.04 30);
+	--color-red-light-alt: oklch(0.96 0.02 30);
+	--color-green: oklch(0.4 0.11 150);
+	--color-green-light: oklch(0.9 0.04 150);
+	--color-green-light-alt: oklch(0.97 0.02 150);
+	--color-beige: oklch(0.446 0.039 107);
+	--color-beige-light: oklch(0.95 0.016 107);
+	--color-beige-light-alt: oklch(0.99 0.01 107);
 }
 
 /* BREAKPOINTS
@@ -23,9 +25,9 @@ Breakpoints used in the design
 --------------- */
 
 $breakpoints: (
-    'small': 500px,
-    'medium': 900px,
-    'large': 1200px
+	'small': 500px,
+	'medium': 900px,
+	'large': 1200px
 );
 
 /// Get a z-index value from a layer name
@@ -34,5 +36,5 @@ $breakpoints: (
 /// @return {Number}
 /// @require $z-indexes
 @function width($breakpoint) {
-  @return map-get($breakpoints, $breakpoint);
+	@return map-get($breakpoints, $breakpoint);
 }

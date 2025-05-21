@@ -49,6 +49,24 @@ String.prototype.capitalizeFirstLetter = function () {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
+String.prototype.addSoftHyphenToWords = function () {
+	const wordList = {
+		Midsommarafton: 'Midsommar­afton!',
+		'Kristi himmelfärdsdag': 'Kristi himmelfärds­dag!',
+		'Sveriges nationaldag': 'Sveriges National­dag!',
+		Valborgsmässoafton: 'Valborgs­mässo­afton!',
+		Skärtorsdagen: 'Skär­torsdagen!',
+		Pingstafton: 'Pingst­afton!',
+	};
+
+	// for (let word of wordList) {
+	// 	if (this === word) {
+	// 		return word;
+	// 	}
+	// }
+	return this;
+};
+
 /**
  *  ## OpeningHours
  *  Opening Hours script for Jönköping University Library
@@ -299,7 +317,7 @@ let OpeningHours = (function () {
 				// Add note if there is one
 				if (weeks[w].days[d].note) {
 					label.classList.add('-note');
-					label.setAttribute('title', weeks[w].days[d].note[LANGUAGE]);
+					label.setAttribute('title', weeks[w].days[d].note[LANGUAGE].addSoftHyphenToWords());
 					label.setAttribute('tabindex', '0');
 				}
 
@@ -529,13 +547,17 @@ let OpeningHours = (function () {
 					const fullWeekDay = document.createElement('span');
 
 					abbreviatedWeekday.setAttribute('aria-hidden', 'true');
+					abbreviatedWeekday.innerText = shortWeekdayFormat.format(day.date).capitalizeFirstLetter();
+					abbreviatedWeekday.setAttribute('title', longWeekdayFormat.format(day.date).capitalizeFirstLetter());
+
 					fullWeekDay.classList.add('visually-hidden');
 					fullWeekDay.innerText = longWeekdayFormat.format(day.date).capitalizeFirstLetter();
-					abbreviatedWeekday.innerText = shortWeekdayFormat.format(day.date);
+
+					listItem.setAttribute('role', 'columnheader');
+					listItem.classList.add('oh-calendar__weekday');
 
 					listItem.appendChild(abbreviatedWeekday);
 					listItem.appendChild(fullWeekDay);
-					listItem.setAttribute('role', 'columnheader');
 					weekDayHeaders.appendChild(listItem);
 				});
 				monthElement.appendChild(weekDayHeaders);
@@ -546,10 +568,21 @@ let OpeningHours = (function () {
 					weekElement.setAttribute('role', 'row');
 
 					const weekNumber = document.createElement('span');
+					const abbreviatedWeekNumber = document.createElement('abbr');
+					const fullWeekNumber = document.createElement('span');
+
+					abbreviatedWeekNumber.setAttribute('aria-hidden', 'true');
+					abbreviatedWeekNumber.innerText = week.week_number;
+					abbreviatedWeekNumber.setAttribute('title', `${STRINGS.time.week['singular'][LANGUAGE]} ` + week.week_number);
+
+					fullWeekNumber.classList.add('visually-hidden');
+					fullWeekNumber.innerHTML = `<span>${STRINGS.time.week['singular'][LANGUAGE]}</span> ` + week.week_number;
+
+					weekNumber.appendChild(abbreviatedWeekNumber);
+					weekNumber.appendChild(fullWeekNumber);
+
 					weekNumber.classList.add('oh-calendar__week-number');
 					weekNumber.setAttribute('role', 'rowheader');
-					weekNumber.innerHTML =
-						`<span class="visually-hidden">${STRINGS.time.week['singular'][LANGUAGE]}</span> ` + week.week_number;
 
 					if (week.week_number === now.getWeek()) {
 						weekNumber.classList.add('-current-week');
@@ -674,9 +707,6 @@ let OpeningHours = (function () {
 
 					monthTarget.setAttribute('aria-selected', 'true');
 					currentMonth.setAttribute('aria-selected', 'false');
-
-					console.log('nextMonth:', monthTarget.nextSibling);
-					console.log('previousMonth:', monthTarget.previousSibling);
 
 					// Set active/disabled status for month navigation
 					if (!monthTarget.previousSibling) {

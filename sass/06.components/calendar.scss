@@ -1,10 +1,16 @@
 .oh-calendar {
-	--grid-gap: 1px;
+	--grid-gap: 2px;
 	--header-size: 2em;
 
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+
+	font-size: 0.8em;
+
+	@media screen and (min-width: 40em) {
+		font-size: 1em;
+	}
 }
 
 .oh-calendar__toolbar {
@@ -40,12 +46,12 @@
 		&[aria-disabled=true] {
 			background: var(--color-beige-light);
 			border-color: var(--color-beige-light);
-			color: var(--color-beige);
+			color: white;
 			cursor: default;
 
 			&:hover, &:focus-visible {
 				background: var(--color-beige-light);
-				color: var(--color-beige);
+				color: white;
 			}
 		}
 	}
@@ -111,14 +117,22 @@
 
 .oh-calendar__weekdays {
 	display: grid;
-	grid-template-columns: var(--header-size) 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	grid-gap: var(--grid-gap);
 	margin: 0;
-	font-size: 1em;
 	text-align: center;
-	//text-transform: uppercase;
 	z-index: initial;
 
+	.oh-calendar__weekdays__empty {
+		display: none;
+		@media screen and (min-width: 40em) {
+			display: block;
+		}
+	}
+
+	@media screen and (min-width: 40em) {
+		grid-template-columns: var(--header-size) 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	}
 	@media screen and (max-width: 40em) {
 		font-size: .8em;
 	}
@@ -126,6 +140,13 @@
 	abbr[title], abbr[data-original-title] {
 		border-bottom: none;
 	}
+}
+
+.oh-calendar__weekday {
+	abbr {
+		text-transform: uppercase;
+	}
+
 }
 
 .oh-calendar__month {
@@ -139,24 +160,34 @@
 }
 
 .oh-calendar__week {
-	--grid-cell-min-height: 4em;
+	--grid-cell-min-height: 5em;
 	display: grid;
-	grid-template-columns: var(--header-size) repeat(7, 1fr);
-	grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
+	grid-template-columns: repeat(7, 1fr);
+	grid-template-areas: "monday tuesday wednesday thursday friday saturday sunday";
 	grid-gap: var(--grid-gap);
 
 	.oh-calendar__week-number {
+		display: none;
 		grid-area: weeknumber;
-		line-height: var(--grid-cell-min-height, 4em);
+		line-height: var(--grid-cell-min-height);
 
 		&.-current-week {
 			font-weight: bold;
+		}
+
+		@media screen and (min-width: 40em) {
+			display: block;
 		}
 	}
 
 	.oh-calendar__day {
 		padding: .25em;
-		min-height: var(--grid-cell-min-height, 4em);
+		min-height: var(--grid-cell-min-height);
+	}
+
+	@media screen and (min-width: 40em) {
+		grid-template-columns: var(--header-size) repeat(7, 1fr);
+		grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
 	}
 }
 
@@ -165,7 +196,6 @@
 }
 
 .oh-calendar__day {
-
 	--_day-background: var(--day-background, var(--color-beige-light, transparent));
 	--_day-foreground: var(--day-foreground, var(--color-beige, inherit));
 
@@ -179,14 +209,22 @@
 		display: block;
 		font-size: 1em;
 		margin-bottom: 0.5em;
-
-		@media screen and (max-width: 40em) {
-			font-size: .8em;
-		}
 	}
 
 	&.-outside-month {
-		opacity: .5;
+		--day-background: var(--color-beige-light-alt);
+		--day-foreground: var(--color-beige);
+
+		&.-open {
+			--day-background: var(--color-green-light-alt);
+			--day-foreground: var(--color-green);
+		}
+
+		&.-closed {
+			--day-background: var(--color-red-light-alt);
+			--day-background-alt: white;
+			--day-foreground: var(--color-red);
+		}
 	}
 
 	&.-monday {
@@ -262,7 +300,4 @@
 	font-size: .6em;
 	line-height: 1;
 	font-weight: 700;
-	@media screen and (max-width: 40em) {
-		display: none;
-	}
 }
