@@ -548,7 +548,8 @@ let OpeningHours = (function () {
 					const weekNumber = document.createElement('span');
 					weekNumber.classList.add('oh-calendar__week-number');
 					weekNumber.setAttribute('role', 'rowheader');
-					weekNumber.innerHTML = '<span class="visually-hidden">Week</span> ' + week.week_number;
+					weekNumber.innerHTML =
+						`<span class="visually-hidden">${STRINGS.time.week['singular'][LANGUAGE]}</span> ` + week.week_number;
 
 					if (week.week_number === now.getWeek()) {
 						weekNumber.classList.add('-current-week');
