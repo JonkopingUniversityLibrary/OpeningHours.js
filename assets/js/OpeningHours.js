@@ -82,34 +82,6 @@ let OpeningHours = (function () {
 			sv: 'Vi har stängt och öppnar ',
 			en: 'We are currently closed and are opening ',
 		},
-		keyboardShortcuts: {
-			sv: 'tangentbordsgenvägar',
-			en: 'Keyboard shortcuts',
-		},
-		keyboardShortcutsAre: {
-			sv: 'Tangentbordsgenvägarna är följande:',
-			en: 'The Keyboard shortcuts are the following:',
-		},
-		closeDialog: {
-			sv: 'Stäng dialogrutan',
-			en: 'Close dialog',
-		},
-		moveToToday: {
-			sv: '<kbd>Hem</kbd> för att gå till idag.',
-			en: '<kbd>Home</kbd> to move to today.',
-		},
-		moveDayToDay: {
-			sv: '<kbd>Vänsterpil</kbd> och <kbd>högerpil</kbd> för att gå från dag till dag.',
-			en: '<kbd>Left Arrow</kbd> and <kbd>Right Arrow</kbd> to move day to day.',
-		},
-		moveWeekToWeek: {
-			sv: '<kbd>Uppåtpil</kbd> och <kbd>högerpil</kbd> för att gå från vecka till vecka.',
-			en: '<kbd>Up Arrow</kbd> and <kbd>Down Arrow</kbd> to move week to week.',
-		},
-		moveMonthToMonth: {
-			sv: '<kbd lang="en">Page Up</kbd> och <kbd lang="en">Page Down</kbd> för att gå från månad till månad.',
-			en: '<kbd>Page Up</kbd> and <kbd>Page Down</kbd> to move month to month.',
-		},
 		nextMonth: {
 			sv: 'Visa nästa månad',
 			en: 'Show next month',
@@ -153,6 +125,10 @@ let OpeningHours = (function () {
 		months: {
 			sv: 'månader',
 			en: 'months',
+		},
+		weekNumbers: {
+			sv: 'Veckonummer',
+			en: 'Week numbers',
 		},
 		time: {
 			minutes: {
@@ -521,7 +497,7 @@ let OpeningHours = (function () {
 				const weekDayHeaderEmpty = document.createElement('span');
 				weekDayHeaderEmpty.setAttribute('role', 'columnheader');
 				weekDayHeaderEmpty.classList.add('oh-calendar__weekdays__empty');
-				weekDayHeaderEmpty.innerHTML = '<span class="visually-hidden">Week numbers</span>';
+				weekDayHeaderEmpty.innerHTML = `<span class="visually-hidden">${STRINGS.weekNumbers[LANGUAGE]}</span>`;
 				weekDayHeaders.appendChild(weekDayHeaderEmpty);
 
 				// Print out the names of the wekdays as a header
