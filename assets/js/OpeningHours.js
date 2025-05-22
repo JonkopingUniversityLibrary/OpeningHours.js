@@ -114,10 +114,6 @@ let OpeningHours = (function () {
 			sv: 'Kalendernavigeringsmeny',
 			en: 'Calendar navigation',
 		},
-		cantSelectDate: {
-			sv: 'Kan inte välja det datumet',
-			en: "Can't select that date",
-		},
 		lessThanOne: {
 			sv: ' mindre än en',
 			en: ' less than one',
@@ -701,13 +697,9 @@ let OpeningHours = (function () {
 				if (key.match(/Left|Right|Enter/)) {
 					switch (key) {
 						case 'Right':
-							previousMonthButton.setAttribute('tabindex', '-1');
-							nextMonthButton.setAttribute('tabindex', '0');
 							nextMonthButton.focus();
 							break;
 						case 'Left':
-							nextMonthButton.setAttribute('tabindex', '-1');
-							previousMonthButton.setAttribute('tabindex', '0');
 							previousMonthButton.focus();
 							break;
 						case 'Enter':
