@@ -6,22 +6,14 @@ Dependencies
 
 *   Springshare's LibCal _(For the API and data)_
 
-How to include
---------------
-
-Script can be included either in `<head>` or just before closing `</body>`, the script will always wait for DOM to load before running.
-
-First argument should be the instance id of your LibCal hours instance.
-
-    <script>
-        OpeningHours.initialize(3237);
-    </script>
-
-It also takes an optional language argument in 2 letter language code, if not set defaults to english (`'en'`).
-
-    <script>
-        OpeningHours.initialize(3237, 'sv');
-    </script>
+<h2>How to include</h2>
+<p>Script can be included either in <code>&lt;head&gt;</code> or just before closing <code>&lt;/body&gt;</code>, the 
+script will always wait for DOM to load before running.</p>
+<p>First argument should be the instance id of your LibCal hours instance.</p>
+<p>It also takes an optional language argument in 2 letter language code, currently compatible with english (<code>'en'</code>), swedish (<code>'sv'</code>).</p>
+<pre><code>&lt;script&gt;
+  OpeningHours.initialize(3237, 'sv');
+&lt;/script&gt;</code></pre>
 
 With the `<script>` included you then add elements will specific classes to display the opening hours in various places.
 
