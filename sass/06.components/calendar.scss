@@ -1,5 +1,5 @@
 .oh-calendar {
-	--grid-gap: 2px;
+	--grid-gap: 3px;
 	--header-size: 2em;
 
 	display: flex;
@@ -32,26 +32,26 @@
 		height: var(--toolbar-height);
 		width: var(--toolbar-height);
 		font-size: var(--toolbar-icon-size);
-		border: 2px solid var(--color-purple);
-		border-radius: 3px;
+		border: 2px solid var(--color-purple-500);
+		border-radius: 4px;
 		background: transparent;
-		color: var(--color-purple);
+		color: var(--color-purple-500);
 		cursor: pointer;
 
 		&:hover, &:focus-visible {
-			background: var(--color-purple);
+			background: var(--color-purple-500);
 			color: white;
 		}
 
 		&[aria-disabled=true] {
-			background: var(--color-beige-light);
-			border-color: var(--color-beige-light);
-			color: white;
+			background: var(--color-grey-100);
+			border-color: var(--color-grey-100);
+			color: var(--color-grey-600);
 			cursor: default;
 
 			&:hover, &:focus-visible {
-				background: var(--color-beige-light);
-				color: white;
+				background: var(--color-grey-100);
+				color: var(--color-grey-600);
 			}
 		}
 	}
@@ -62,52 +62,6 @@
 		height: var(--toolbar-height);
 		line-height: var(--toolbar-height);
 		font-size: var(--toolbar-heading);
-	}
-}
-
-.oh-calendar__help {
-
-	&-button {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		border-radius: 3px;
-		background: var(--color-purple);
-		color: #fff;
-		cursor: pointer;
-		font-size: 1.2em;
-		padding: .5em;
-
-		&:not(:focus) {
-			clip: rect(.063rem, .063rem, .063rem, .063rem);
-			color: #fff;
-			font-size: .063rem;
-			height: .5px;
-			overflow: hidden;
-			position: absolute;
-			top: 50%;
-			white-space: nowrap;
-			width: .5px;
-		}
-	}
-
-	&-dialog {
-		kbd {
-			text-transform: uppercase;
-		}
-
-		button {
-			border: 2px solid var(--color-purple);
-			background: white;
-			color: var(--color-purple);
-			cursor: pointer;
-
-			&:hover, &:focus-visible {
-				background: var(--color-purple);
-				color: white;
-			}
-		}
 	}
 }
 
@@ -196,8 +150,8 @@
 }
 
 .oh-calendar__day {
-	--_day-background: var(--day-background, var(--color-beige-light, transparent));
-	--_day-foreground: var(--day-foreground, var(--color-beige, inherit));
+	--_day-background: var(--day-background, var(--color-grey-050, white));
+	--_day-foreground: var(--day-foreground, var(--color-grey-900, inherit));
 
 	color: var(--_day-foreground);
 	background-color: var(--_day-background);
@@ -212,18 +166,18 @@
 	}
 
 	&.-outside-month {
-		--day-background: var(--color-beige-light-alt);
-		--day-foreground: var(--color-beige);
+		--day-background: var(--color-grey-020);
+		--day-foreground: var(--color-grey-800);
 
 		&.-open {
-			--day-background: var(--color-green-light-alt);
-			--day-foreground: var(--color-green);
+			--day-background: var(--color-green-050);
+			--day-foreground: var(--color-green-800);
 		}
 
 		&.-closed {
-			--day-background: var(--color-red-light-alt);
+			--day-background: var(--color-red-050);
 			--day-background-alt: white;
-			--day-foreground: var(--color-red);
+			--day-foreground: var(--color-red-800)
 		}
 	}
 
@@ -256,14 +210,14 @@
 	}
 
 	&.-open {
-		--day-background: var(--color-green-light);
-		--day-foreground: var(--color-green);
+		--day-background: var(--color-green-100);
+		--day-foreground: var(--color-green-800);
 	}
 
 	&.-closed {
-		--day-background: var(--color-red-light);
-		--day-background-alt: var(--color-red-light-alt);
-		--day-foreground: var(--color-red);
+		--day-background: var(--color-red-100);
+		--day-background-alt: var(--color-red-050);
+		--day-foreground: var(--color-red-800);
 
 		background: repeating-linear-gradient(
 				45deg,
@@ -276,15 +230,16 @@
 
 	&.-today {
 		opacity: 1;
+		border-bottom-right-radius: 30px;
 		--day-foreground: white;
 
 		&.-open {
-			--day-background: var(--color-green);
+			--day-background: var(--color-green-600);
 		}
 
 		&.-closed {
-			--day-background: var(--color-red);
-			--day-background-alt: var(--color-red-dark);
+			--day-background: var(--color-red-700);
+			--day-background-alt: var(--color-red-900);
 		}
 	}
 }
