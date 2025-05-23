@@ -141,8 +141,8 @@
 		grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
 	}
 
-	@container oh-calendar (min-width: 40em) {
-		--grid-cell-min-height: 5em;
+	@container oh-calendar (min-width: 35em) {
+		--grid-cell-min-height: 5.5em;
 	}
 }
 
