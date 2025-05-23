@@ -784,12 +784,13 @@ let OpeningHours = (function () {
 
 								// If it's 60 minutes or less show relative time.
 							} else if ((closingTime - now) / 1000 / 60 < 60) {
-								countdownOutput(
-									STRINGS.openRelative[LANGUAGE] +
-										Math.round((closingTime - now) / 1000 / 60) +
-										STRINGS.time.minutes.plural[LANGUAGE] +
-										STRINGS.openRelativeSuffix[LANGUAGE],
-								);
+								const minutes = Math.round((closingTime - now) / 1000 / 60);
+
+								//Select singular och plural based on whether the rounded minutes is 1 or not.
+								const outputString =
+									(minutes === 1 ? STRINGS.time.minutes.singular[LANGUAGE] : STRINGS.time.minutes.plural[LANGUAGE]) +
+									STRINGS.openRelativeSuffix[LANGUAGE];
+								countdownOutput(outputString);
 								break week;
 
 								// Otherwise show absolute time.
