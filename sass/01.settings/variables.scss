@@ -38,15 +38,16 @@ Colors used in the design
 	--color-grey-400: oklch(0.6 0 0);
 	--color-grey-300: oklch(0.7 0 0);
 	--color-grey-200: oklch(0.8 0 0);
+	--color-grey-150: oklch(0.85 0 0);
 	--color-grey-100: oklch(0.9 0 0);
 	--color-grey-050: oklch(0.95 0 0);
 	--color-grey-020: oklch(0.98 0 0);
 
-	--color-blue-900: oklch(0.1 0.070 250);
-	--color-blue-800: oklch(0.2 0.080 250);
+	--color-blue-900: oklch(0.1 0.07 250);
+	--color-blue-800: oklch(0.2 0.08 250);
 	--color-blue-700: oklch(0.335 0.095 250);
 	--color-blue-600: oklch(0.4 0.095 250);
-	--color-blue-500: oklch(0.5 0.090 250);
+	--color-blue-500: oklch(0.5 0.09 250);
 	--color-blue-400: oklch(0.6 0.08 250);
 	--color-blue-300: oklch(0.7 0.06 250);
 	--color-blue-200: oklch(0.8 0.03 250);
@@ -70,12 +71,12 @@ Colors used in the design
 	--color-teal-800: oklch(0.2 0.08 192);
 	--color-teal-700: oklch(0.3 0.08 192);
 	--color-teal-600: oklch(0.4 0.08 192);
-	--color-teal-500: oklch(0.5 0.08 192);
-	--color-teal-400: oklch(0.6 0.08 192);
-	--color-teal-300: oklch(0.7 0.08 192);
-	--color-teal-200: oklch(0.8 0.08 192);
-	--color-teal-100: oklch(0.9 0.03 192);
-	--color-teal-050: oklch(0.95 0.01 192);
+	--color-teal-500: oklch(0.5 0.07 192);
+	--color-teal-400: oklch(0.6 0.06 192);
+	--color-teal-300: oklch(0.7 0.05 192);
+	--color-teal-200: oklch(0.8 0.04 192);
+	--color-teal-100: oklch(0.9 0.04 192);
+	--color-teal-050: oklch(0.95 0.02 192);
 	--color-teal-030: oklch(0.97 0.01 192);
 
 	--color-red-900: oklch(0.1 0.1 30);
@@ -111,9 +112,9 @@ Breakpoints used in the design
 --------------- */
 
 $breakpoints: (
-	'small': 500px,
-	'medium': 900px,
-	'large': 1200px
+	"small": 500px,
+	"medium": 900px,
+	"large": 1200px,
 );
 
 /// Get a z-index value from a layer name

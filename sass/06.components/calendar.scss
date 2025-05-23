@@ -5,12 +5,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-
-	font-size: 0.8em;
-
-	@media screen and (min-width: 40em) {
-		font-size: 1em;
-	}
+	font-size: 1em;
 }
 
 .oh-calendar__toolbar {
@@ -19,9 +14,9 @@
 	--toolbar-heading: 25px;
 
 	display: flex;
-	height: var(--toolbar-height);
-	width: 100%;
 	margin-bottom: 1em;
+	width: 100%;
+	height: var(--toolbar-height);
 
 	&:has(:focus-visible) {
 		outline: 5px auto Highlight;
@@ -29,27 +24,29 @@
 	}
 
 	&-button {
-		height: var(--toolbar-height);
-		width: var(--toolbar-height);
-		font-size: var(--toolbar-icon-size);
+		cursor: pointer;
 		border: 2px solid var(--color-purple-500);
 		border-radius: 4px;
 		background: transparent;
+		width: var(--toolbar-height);
+		height: var(--toolbar-height);
 		color: var(--color-purple-500);
-		cursor: pointer;
+		font-size: var(--toolbar-icon-size);
 
-		&:hover, &:focus-visible {
+		&:hover,
+		&:focus-visible {
 			background: var(--color-purple-500);
 			color: white;
 		}
 
-		&[aria-disabled=true] {
-			background: var(--color-grey-100);
-			border-color: var(--color-grey-100);
-			color: var(--color-grey-600);
+		&[aria-disabled="true"] {
 			cursor: default;
+			border-color: var(--color-grey-100);
+			background: var(--color-grey-100);
+			color: var(--color-grey-600);
 
-			&:hover, &:focus-visible {
+			&:hover,
+			&:focus-visible {
 				background: var(--color-grey-100);
 				color: var(--color-grey-600);
 			}
@@ -58,40 +55,41 @@
 
 	&-heading {
 		flex: 1;
-		text-align: center;
 		height: var(--toolbar-height);
-		line-height: var(--toolbar-height);
 		font-size: var(--toolbar-heading);
+		line-height: var(--toolbar-height);
+		text-align: center;
 	}
 }
 
 .oh-calendar__calendar {
 	grid-area: weeks;
+	container-name: oh-calendar;
+	container-type: inline-size;
 }
 
 .oh-calendar__weekdays {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	grid-gap: var(--grid-gap);
+	z-index: initial;
 	margin: 0;
 	text-align: center;
-	z-index: initial;
 
 	.oh-calendar__weekdays__empty {
 		display: none;
-		@media screen and (min-width: 40em) {
+
+		@container oh-calendar (min-width: 25em) {
 			display: block;
 		}
 	}
 
-	@media screen and (min-width: 40em) {
+	@container oh-calendar (min-width: 25em) {
 		grid-template-columns: var(--header-size) 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	}
-	@media screen and (max-width: 40em) {
-		font-size: .8em;
-	}
 
-	abbr[title], abbr[data-original-title] {
+	abbr[title],
+	abbr[data-original-title] {
 		border-bottom: none;
 	}
 }
@@ -100,7 +98,6 @@
 	abbr {
 		text-transform: uppercase;
 	}
-
 }
 
 .oh-calendar__month {
@@ -108,13 +105,13 @@
 	grid-gap: var(--grid-gap);
 	flex-direction: column;
 
-	&[aria-selected=false] {
+	&[aria-selected="false"] {
 		display: none;
 	}
 }
 
 .oh-calendar__week {
-	--grid-cell-min-height: 5em;
+	--grid-cell-min-height: 4em;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	grid-template-areas: "monday tuesday wednesday thursday friday saturday sunday";
@@ -129,19 +126,23 @@
 			font-weight: bold;
 		}
 
-		@media screen and (min-width: 40em) {
+		@container oh-calendar (min-width: 25em) {
 			display: block;
 		}
 	}
 
 	.oh-calendar__day {
-		padding: .25em;
+		padding: 0.25em;
 		min-height: var(--grid-cell-min-height);
 	}
 
-	@media screen and (min-width: 40em) {
+	@container oh-calendar (min-width: 25em) {
 		grid-template-columns: var(--header-size) repeat(7, 1fr);
 		grid-template-areas: "weeknumber monday tuesday wednesday thursday friday saturday sunday";
+	}
+
+	@container oh-calendar (min-width: 40em) {
+		--grid-cell-min-height: 5em;
 	}
 }
 
@@ -151,33 +152,31 @@
 
 .oh-calendar__day {
 	--_day-background: var(--day-background, var(--color-grey-050, white));
-	--_day-foreground: var(--day-foreground, var(--color-grey-900, inherit));
+	--_day-foreground: var(--day-foreground, black);
+	--day-border-radius: 20px;
+	border: 0;
+	background-color: var(--_day-background);
+	overflow: hidden;
 
 	color: var(--_day-foreground);
-	background-color: var(--_day-background);
 	line-height: 1;
-	overflow: hidden;
-	border: 0;
 
 	.oh-calendar__date {
 		display: block;
-		font-size: 1em;
 		margin-bottom: 0.5em;
+		font-size: 1em;
 	}
 
 	&.-outside-month {
 		--day-background: var(--color-grey-020);
-		--day-foreground: var(--color-grey-800);
 
 		&.-open {
-			--day-background: var(--color-green-050);
-			--day-foreground: var(--color-green-800);
+			--day-background: var(--color-green-100);
 		}
 
 		&.-closed {
-			--day-background: var(--color-red-050);
-			--day-background-alt: white;
-			--day-foreground: var(--color-red-800)
+			--day-background: var(--color-grey-100);
+			--day-background-alt: var(--color-grey-050);
 		}
 	}
 
@@ -210,27 +209,26 @@
 	}
 
 	&.-open {
-		--day-background: var(--color-green-100);
-		--day-foreground: var(--color-green-800);
+		--day-background: var(--color-green-200);
+		border-bottom-right-radius: var(--day-border-radius, 0px);
 	}
 
 	&.-closed {
-		--day-background: var(--color-red-100);
-		--day-background-alt: var(--color-red-050);
-		--day-foreground: var(--color-red-800);
+		--day-background: var(--color-grey-200);
+		--day-background-alt: var(--color-grey-150);
 
+		border-top-right-radius: var(--day-border-radius, 0px);
 		background: repeating-linear-gradient(
-				45deg,
-				var(--day-background-alt),
-				var(--day-background-alt) 2px,
-				var(--_day-background) 2px,
-				var(--_day-background) 4px
+			45deg,
+			var(--day-background-alt),
+			var(--day-background-alt) 2px,
+			var(--_day-background) 2px,
+			var(--_day-background) 4px
 		);
 	}
 
 	&.-today {
 		opacity: 1;
-		border-bottom-right-radius: 30px;
 		--day-foreground: white;
 
 		&.-open {
@@ -238,21 +236,31 @@
 		}
 
 		&.-closed {
-			--day-background: var(--color-red-700);
-			--day-background-alt: var(--color-red-900);
+			--day-background: var(--color-grey-800);
+			--day-background-alt: var(--color-grey-900);
 		}
 	}
 }
 
 .oh-calendar__day__hours {
 	display: block;
-	font-size: 1em;
 	font-weight: 700;
+	font-size: 1em;
 	text-transform: capitalize;
+
+	@supports (font-size: clamp(0.875em, 3cqw, 1.175em)) {
+		font-size: clamp(0.875em, 3cqw, 1.175em);
+	}
 }
 
 .oh-calendar__day__note {
-	font-size: .6em;
-	line-height: 1;
+	display: block;
+	margin-top: 5px;
 	font-weight: 700;
+	font-size: 0.6em;
+	line-height: 1;
+
+	@supports (font-size: clamp(0.875em, 3cqw, 1.175em)) {
+		font-size: clamp(.6em,2cqw,.8em);
+	}
 }
