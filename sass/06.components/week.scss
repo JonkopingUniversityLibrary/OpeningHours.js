@@ -7,9 +7,10 @@ Theme used for the web version of the widget
 	margin-bottom: 15px;
 
 	.oh-week {
-		display: flex;
-		flex-direction: column;
+		display: grid;
 		position: relative;
+		grid-template-rows: repeat(7, 1fr);
+		grid-template-columns: max-content 1fr;
 		box-sizing: border-box;
 		width: 100%;
 		min-width: 215px;
@@ -18,29 +19,29 @@ Theme used for the web version of the widget
 		-webkit-margin-before: 0;
 		-webkit-margin-after: 0;
 		-webkit-padding-start: 0;
+		container-name: oh-week;
+		container-type: inline-size;
 		margin: 0;
 		padding: 0;
-		container-type: inline-size;
-		container-name: oh-week;
+
+		@container oh-week (min-width: 20em) {
+			grid-template-columns: 16ch 1fr max-content;
+		}
 
 		.oh-day {
 			display: grid;
-			grid-template-columns: 1fr max-content;
-			column-gap: .5em;
+			grid-template-columns: subgrid;
+			grid-column: span 3;
+			column-gap: 0.5em;
 			font-weight: 300;
 
-			@container oh-week (min-width: 20em) {
-				grid-template-columns: 16ch 1fr max-content;
-			}
-
 			.oh-day-weekday {
-
 			}
 
 			.oh-day-label {
 				display: none;
-				text-overflow: ellipsis;
 				overflow: hidden;
+				text-overflow: ellipsis;
 				white-space: nowrap;
 				@container oh-week (min-width: 20em) {
 					display: inline;
@@ -49,19 +50,15 @@ Theme used for the web version of the widget
 
 			.oh-day-hours {
 				flex: 1;
-				text-align: right;
 				cursor: default;
+				text-align: right;
 			}
-
 
 			&[data-current-day] {
 				> * {
 					font-weight: 700;
 				}
 			}
-
-
 		}
 	}
 }
-
