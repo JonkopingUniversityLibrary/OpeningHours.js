@@ -432,7 +432,7 @@ let OpeningHours = (function () {
 			const longWeekdayFormatEnglish = new Intl.DateTimeFormat('en', { weekday: 'long' });
 			const shortWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'short' });
 
-			const calendarElement = document.getElementById('oh-calendar');
+			const calendarElement = document.createElement('div');
 			calendarElement.setAttribute('lang', LANGUAGE);
 
 			const calendarToolbar = document.createElement('div');
@@ -637,6 +637,8 @@ let OpeningHours = (function () {
 			announceElement.setAttribute('role', 'status');
 			announceElement.setAttribute('aria-live', 'polite');
 			calendarElement.appendChild(announceElement);
+
+			document.getElementById('oh-calendar').innerHTML = calendarElement.innerHTML;
 
 			const announce = function (text) {
 				announceElement.innerText = text;
