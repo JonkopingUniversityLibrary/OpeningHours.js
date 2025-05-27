@@ -171,7 +171,7 @@
 		--day-background: var(--color-grey-020);
 
 		&.-open {
-			--day-background: var(--color-green-100);
+			--day-background: var(--color-teal-100);
 		}
 
 		&.-closed {
@@ -209,7 +209,7 @@
 	}
 
 	&.-open {
-		--day-background: var(--color-green-200);
+		--day-background: var(--color-teal-200);
 		border-bottom-right-radius: var(--day-border-radius, 0px);
 	}
 
@@ -232,7 +232,7 @@
 		--day-foreground: white;
 
 		&.-open {
-			--day-background: var(--color-green-600);
+			--day-background: var(--color-teal-600);
 		}
 
 		&.-closed {
