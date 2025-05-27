@@ -6,7 +6,7 @@ Theme used for the web version of the widget
 .oh-opening-hours {
 	margin-bottom: 15px;
 
-	.oh-week {
+	.oh-week, .oh-week-static {
 		display: grid;
 		position: relative;
 		grid-template-rows: repeat(7, 1fr);
