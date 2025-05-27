@@ -33,7 +33,10 @@ Theme used for the web version of the widget
 			grid-template-columns: subgrid;
 			grid-column: span 3;
 			column-gap: 0.5em;
-			font-weight: 300;
+
+			&.-loaded {
+				font-weight: 300;
+			}
 
 			.oh-day-weekday {
 			}

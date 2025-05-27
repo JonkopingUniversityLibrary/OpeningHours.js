@@ -258,6 +258,7 @@ let OpeningHours = (function () {
 				let day = document.createElement('li');
 				let indexDate = new Date(weeks[w].days[d].date);
 				day.classList.add('oh-day');
+				day.classList.add('-loaded');
 				// If it is the current day, add current-day attribute.
 				if (indexDate - currentDay === 0) {
 					day.setAttribute('data-current-day', '');
@@ -308,8 +309,11 @@ let OpeningHours = (function () {
 				break;
 			}
 		}
+
 		let weekElements = document.querySelectorAll('.oh-week');
-		weekElements.forEach((element) => (element.innerHTML = weekElement.innerHTML));
+		weekElements.forEach((element) => {
+			element.innerHTML = weekElement.innerHTML;
+		});
 	};
 
 	/**
