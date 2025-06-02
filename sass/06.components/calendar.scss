@@ -248,8 +248,8 @@
 	font-size: 1em;
 	text-transform: capitalize;
 
-	@supports (font-size: clamp(0.875em, 3cqw, 1.175em)) {
-		font-size: clamp(0.875em, 3cqw, 1.175em);
+	@supports (font-size: clamp(0.75em, 3cqw, 1.175em)) {
+		font-size: clamp(0.75em, 3cqw, 1.175em);
 	}
 }
 

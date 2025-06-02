@@ -633,6 +633,7 @@ let OpeningHours = (function () {
 			calendarElement.appendChild(monthList);
 
 			const announceElement = document.createElement('div');
+			announceElement.setAttribute('id', 'oh-calendar-announce');
 			announceElement.classList.add('visually-hidden');
 			announceElement.setAttribute('role', 'status');
 			announceElement.setAttribute('aria-live', 'polite');
@@ -641,6 +642,7 @@ let OpeningHours = (function () {
 			document.getElementById('oh-calendar').innerHTML = calendarElement.innerHTML;
 
 			const announce = function (text) {
+				const announceElement = document.getElementById('oh-calendar-announce');
 				announceElement.innerText = text;
 				setTimeout(() => {
 					announceElement.innerText = '';
@@ -665,7 +667,9 @@ let OpeningHours = (function () {
 
 					monthList.childNodes.forEach((element) => element.setAttribute('aria-selected', 'false'));
 					monthTarget.setAttribute('aria-selected', 'true');
-					calendarCurrentMonth.innerText = monthTarget.getAttribute('data-name').capitalizeFirstLetter();
+
+					const targetMonthName = monthTarget.getAttribute('data-name').capitalizeFirstLetter();
+					document.querySelector('.oh-calendar__toolbar-heading').innerText = targetMonthName;
 
 					monthTarget.setAttribute('aria-selected', 'true');
 					currentMonth.setAttribute('aria-selected', 'false');
@@ -685,7 +689,7 @@ let OpeningHours = (function () {
 
 					// If user is interacting with the toolbar or with the calendar grid
 					if (document.activeElement.getAttribute('class') === 'oh-calendar__toolbar-button') {
-						announce(monthTarget.getAttribute('data-name').capitalizeFirstLetter());
+						announce(targetMonthName);
 					} else {
 						monthTarget.focus();
 					}
