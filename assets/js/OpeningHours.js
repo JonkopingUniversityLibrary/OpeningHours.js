@@ -99,7 +99,7 @@ let OpeningHours = (function () {
 			en: 'closed',
 		},
 		today: {
-			sv: 'i dag',
+			sv: 'idag',
 			en: 'today',
 		},
 		calendar: {
