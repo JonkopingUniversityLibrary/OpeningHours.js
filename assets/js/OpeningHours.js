@@ -798,7 +798,9 @@ let OpeningHours = (function () {
 
 								//Select singular och plural based on whether the rounded minutes is 1 or not.
 								const outputString =
-									(minutes === 1 ? STRINGS.time.minutes.singular[LANGUAGE] : STRINGS.time.minutes.plural[LANGUAGE]) +
+									(minutes === 1
+										? STRINGS.openRelative[LANGUAGE] + minutes + STRINGS.time.minutes.singular[LANGUAGE]
+										: STRINGS.openRelative[LANGUAGE] + minutes + STRINGS.time.minutes.plural[LANGUAGE]) +
 									STRINGS.openRelativeSuffix[LANGUAGE];
 								countdownOutput(outputString);
 								break week;
