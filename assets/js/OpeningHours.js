@@ -474,6 +474,7 @@ let OpeningHours = (function () {
 			monthList.classList.add('oh-calendar__calendar');
 			monthList.setAttribute('id', 'oh-calendar__calendar');
 			monthList.setAttribute('role', 'table');
+			monthList.setAttribute('tabindex', '0');
 			monthList.setAttribute('aria-label', STRINGS.calendar[LANGUAGE]);
 
 			calendarData.forEach((month, index) => {
