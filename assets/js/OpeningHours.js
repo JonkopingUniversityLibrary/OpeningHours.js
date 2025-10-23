@@ -235,7 +235,6 @@ let OpeningHours = (function () {
 	let showWeek = function (data) {
 		const longWeekdayFormat = new Intl.DateTimeFormat(LANGUAGE, { weekday: 'long' });
 		const numberMonthFormat = new Intl.DateTimeFormat(LANGUAGE, { month: 'numeric' });
-		const dateFormat = new Intl.DateTimeFormat('sv');
 
 		let weeks = data.weeks;
 		let weekElement;
