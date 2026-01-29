@@ -896,7 +896,7 @@ let OpeningHours = (function () {
 	let getData = async function () {
 		'use strict';
 
-		let weeks = 20;
+		let weeks = 22;
 		let iid = libCalInstanceId;
 
 		/**
@@ -1003,7 +1003,7 @@ let OpeningHours = (function () {
 			};
 
 			// Grab data from the API
-			const url = `https://api3-eu.libcal.com/api_hours_grid.php?iid=${iid}&format=json&weeks=${weeks}&systemTime=1`;
+			const url = `https://julia.library.ju.se/openinghours/5.0/opening-hours-proxy.php?iid=${iid}&weeks=${weeks}`;
 			let data = undefined;
 
 			if (cache.get('opening-hours')) {
