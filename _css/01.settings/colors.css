@@ -1,9 +1,10 @@
-/* COLORS
----------------
-Colors used in the design
---------------- */
+/* Colors
+-------------------
+All colors used throughout the theme
+------------------- */
 
 :root {
+	/* Base colors */
 	--color-blue: oklch(0.33 0.095 250);
 	--color-purple: oklch(0.53 0.22 330);
 	--color-yellow: oklch(0.82 0.17 81);
@@ -30,9 +31,12 @@ Colors used in the design
 	--color-purple-050: oklch(0.95 0.02 330);
 	--color-purple-030: oklch(0.97 0.02 330);
 
+	--color-grey-950: oklch(0.05 0 0);
 	--color-grey-900: oklch(0.1 0 0);
 	--color-grey-800: oklch(0.2 0 0);
+	--color-grey-750: oklch(0.25 0 0);
 	--color-grey-700: oklch(0.3 0 0);
+	--color-grey-650: oklch(0.35 0 0);
 	--color-grey-600: oklch(0.4 0 0);
 	--color-grey-500: oklch(0.5 0 0);
 	--color-grey-400: oklch(0.6 0 0);
@@ -106,22 +110,4 @@ Colors used in the design
 	--color-beige-050: oklch(0.97 0.01 107);
 }
 
-/* BREAKPOINTS
----------------
-Breakpoints used in the design
---------------- */
 
-$breakpoints: (
-	"small": 500px,
-	"medium": 900px,
-	"large": 1200px,
-);
-
-/// Get a z-index value from a layer name
-/// @access public
-/// @param {String} $layer - Layer’s name
-/// @return {Number}
-/// @require $z-indexes
-@function width($breakpoint) {
-	@return map-get($breakpoints, $breakpoint);
-}
