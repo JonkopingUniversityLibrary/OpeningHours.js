@@ -17,10 +17,6 @@
 	--color--calendar--day--open: var(--color-teal-200);
 	--color--calendar--day--closed: var(--color-grey-200);
 	--color--calendar--day--closed--alt: var(--color-grey-150);
-	--color--calendar--day--outside-month: var(--color-grey-020);
-	--color--calendar--day--outside-month--open: var(--color-teal-100);
-	--color--calendar--day--outside-month--closed: var(--color-grey-100);
-	--color--calendar--day--outside-month--closed--alt: var(--color-grey-050);
 	--color--calendar--day--today: var(--color-grey-600);
 	--color--calendar--day--today--open: var(--color-teal-600);
 	--color--calendar--day--today--closed: var(--color-grey-800);
@@ -39,10 +35,6 @@
 		--color--calendar--day--open: var(--color-teal-600);
 		--color--calendar--day--closed: var(--color-grey-600);
 		--color--calendar--day--closed--alt: var(--color-grey-700);
-		--color--calendar--day--outside-month: var(--color-grey-700);
-		--color--calendar--day--outside-month--open: var(--color-teal-700);
-		--color--calendar--day--outside-month--closed: var(--color-grey-750);
-		--color--calendar--day--outside-month--closed--alt: var(--color-grey-650);
 		--color--calendar--day--today: var(--color-grey-100);
 		--color--calendar--day--today--open: var(--color-teal-200);
 		--color--calendar--day--today--closed: var(--color-grey-100);
@@ -209,15 +201,15 @@
 	}
 
 	&.-outside-month {
-		--day-background: var(--color--calendar--day--outside-month);
+		--day-background: oklch(from var(--color--calendar--day) l c h / 50%);
 
 		&.-open {
-			--day-background: var(--color--calendar--day--outside-month--open);
+			--day-background: oklch(from var(--color--calendar--day--open) l c h / 50%);
 		}
 
 		&.-closed {
-			--day-background: var(--color--calendar--day--outside-month--closed);
-			--day-background-alt: var(--color--calendar--day--outside-month--closed--alt);
+			--day-background: oklch(from var(--color--calendar--day--closed) l c h / 50%);
+			--day-background-alt: oklch(from var(--color--calendar--day--closed--alt) l c h / 50%);
 		}
 	}
 
