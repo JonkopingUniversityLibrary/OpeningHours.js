@@ -63,24 +63,24 @@ let OpeningHours = (function () {
 	let libCalInstanceId = undefined;
 	let STRINGS = {
 		openRelative: {
-			sv: 'Vi har öppet i ',
-			en: 'We are open another ',
+			sv: 'Biblioteket har öppet i ',
+			en: 'The library is open for another ',
 		},
 		openRelativeSuffix: {
 			sv: ' till.',
 			en: '.',
 		},
 		closedRelative: {
-			sv: 'Vi har stängt och öppnar om ',
-			en: 'We are currently closed and are opening in ',
+			sv: 'Biblioteket har stängt och öppnar om ',
+			en: 'The library is currently closed and are opening in ',
 		},
 		openAbsolute: {
-			sv: 'Vi har öppet till klockan ',
-			en: 'We are open until ',
+			sv: 'Biblioteket har öppet till klockan ',
+			en: 'The library is open until ',
 		},
 		closedAbsolute: {
-			sv: 'Vi har stängt och öppnar ',
-			en: 'We are currently closed and are opening ',
+			sv: 'Biblioteket har stängt och öppnar ',
+			en: 'The library is currently closed and are opening ',
 		},
 		nextMonth: {
 			sv: 'Visa nästa månad',
